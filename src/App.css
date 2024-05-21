@@ -36,3 +36,31 @@
     transform: rotate(360deg);
   }
 }
+/* ... other styles */
+
+.custom-google-button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  position: relative; /* For icon positioning */
+}
+
+.custom-google-button img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); /* Center icon vertically */
+  left: 10px; /* Adjust icon position as needed */
+  width: 20px; /* Adjust icon size as needed */
+  height: 20px; /* Adjust icon size as needed */
+}
+
+.custom-google-button:hover {
+  background-color: #45A049; /* Green hover */
+}
