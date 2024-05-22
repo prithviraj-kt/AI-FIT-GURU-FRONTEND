@@ -21,19 +21,28 @@ function Home() {
   };
 
   const [answer, setAnswer] = useState("");
+
+  const [history, setHistory] = useState([]);
   const handleSubmit = async () => {
     setAnswer("Thamba Thamba..... aapka jawab aara hai");
-    const ans = await run(prompt.question);
+    run(prompt.question) // Call run without await
+      .then(async (ans) => {
+        setAnswer(ans.res.response.candidates[0].content.parts[0].text);
+        const response = await {
+          Coach: ans.res.response.candidates[0].content.parts[0].text,
+          You: prompt.question,
+        };
 
-    setPrompt({ question: "" });
-    setAnswer(ans);
+        setPrompt({ question: "" });
+        setHistory({...history, response})
+        console.log(history);
+      })
+      .catch((error) => {
+        // Handle potential errors
+        console.error("Error fetching answer:", error);
+        setAnswer("Something went wrong. Please try again later.");
+      });
   };
-
-  // const handleSubmit = async () => {
-  //   setAnswer("Thamba Thamba..... aapka jawab aara hai")
-  //   const answer = await run(prompt.question);
-  //   setAnswer(answer);
-  // };
 
   const logout = async () => {
     await localStorage.clear();
