@@ -5,7 +5,6 @@ import run from "./Aibot";
 
 function Home() {
   const [value, setValue] = useState("");
-
   useEffect(() => {
     auth();
   }, []);
@@ -19,16 +18,22 @@ function Home() {
   const [prompt, setPrompt] = useState({ question: "" });
   const handleChange = (e) => {
     setPrompt({ question: e.target.value });
-    console.log(prompt.question);
   };
 
   const [answer, setAnswer] = useState("");
-
   const handleSubmit = async () => {
-    setAnswer("Thamba Thamba..... aapka jawab aara hai")
-    const answer = await run(prompt.question);
-    setAnswer(answer);
+    setAnswer("Thamba Thamba..... aapka jawab aara hai");
+    const ans = await run(prompt.question);
+
+    setPrompt({ question: "" });
+    setAnswer(ans);
   };
+
+  // const handleSubmit = async () => {
+  //   setAnswer("Thamba Thamba..... aapka jawab aara hai")
+  //   const answer = await run(prompt.question);
+  //   setAnswer(answer);
+  // };
 
   const logout = async () => {
     await localStorage.clear();
@@ -63,7 +68,7 @@ function Home() {
               className="user-input"
               onChange={handleChange}
               placeholder="Ask your fitness question..."
-            //   value={prompt.question}
+              value={prompt.question}
             />
             <button onClick={handleSubmit} className="submit-button">
               Submit
