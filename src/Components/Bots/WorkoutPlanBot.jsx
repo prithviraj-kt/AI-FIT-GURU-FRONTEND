@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./Home.css"; // Import your CSS file
 
 // Assuming you have a separate file (Aibot.js) for handling AI interactions
-import run from "./Aibot";
+import run from "../../Aibot";
 
-function Home() {
+function WorkoutPlanBot() {
   const [email, setEmail] = useState(""); // Store user email (if applicable)
   const [prompt, setPrompt] = useState({ question: "" }); // User question state
   const [answer, setAnswer] = useState(""); // Coach's answer state
@@ -113,4 +113,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default WorkoutPlanBot;

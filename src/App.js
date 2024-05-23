@@ -3,31 +3,40 @@ import "./App.css";
 import { auth, provider } from "./config";
 import { signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
-import Home from "./Home";
-
+import LandingPage from "../src/Components/LandingPage/LandingPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Signup from "./Components/Signup/Signup";
+import Login from "./Components/Login/Login";
 function App() {
-  const [value, setValue] = useState("");
-  const handleClick = () => {
-    signInWithPopup(auth, provider).then(async (data) => {
-      setValue(data.user.email);
-      await localStorage.setItem("email", data.user);
-    });
-  };
+  // const [value, setValue] = useState("");
+  // const handleClick = () => {
+  //   signInWithPopup(auth, provider).then(async (data) => {
+  //     setValue(data.user.email);
+  //     await localStorage.setItem("email", data.user);
+  //   });
+  // };
 
-  useEffect(() => {
-    setValue(localStorage.getItem("email"));
-  });
+  // useEffect(() => {
+  //   setValue(localStorage.getItem("email"));
+  // });
 
   return (
     <div className="App">
-      {value ? (
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/Signup/Signup" element={<Signup />} />
+          <Route exact path="/Login/Login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+      {/* {value ? (
         <Home />
       ) : (
         <button className="custom-google-button" onClick={handleClick}>
-          {/* <img src="https://banner2.cleanpng.com/20180416/xlq/kisspng-g-suite-pearl-river-middle-school-google-software-sign-up-button-5ad4e1a9d11d62.1599053415239008418566.jpg" alt="Google logo" /> */}
+          
           Signin with Google
         </button>
-      )}
+      )} */}
     </div>
   );
 }
