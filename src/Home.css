@@ -1,140 +1,137 @@
-/* Home.css */
-
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f4f7;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Chatbot Container */
-  .chatbot-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
-  }
-  
-  /* Chat Box */
-  .chat-box {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  /* Chatbot Heading */
-  .chatbot-heading {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  /* Input Container */
-  .input-container {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .user-input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  .submit-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Message Container */
-  .message-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 400px;
-    overflow-y: auto;
-    margin-top: 20px;
-    padding-right: 10px; /* Add padding to prevent hiding text under scrollbar */
-  }
-  
-  .message {
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .user-message {
-    background-color: #e9f7ef;
-    align-self: flex-start;
-  }
-  
-  .trainer-message {
-    background-color: #f1f1f1;
-    align-self: flex-end;
-  }
-  
-  .message-text {
-    margin: 0;
-    font-size: 16px;
-  }
-  
-  /* Loading Indicator */
-  .loading-indicator {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    font-size: 16px;
-    color: #007bff;
-  }
-  /* ... other styles */
+  font-family: Arial, sans-serif;
+  background-color: #f0f4f7;
+  margin: 0;
+  padding: 0;
+}
 
+/* Chatbot Container */
+.chatbot-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Chat Box */
+.chat-box {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Chatbot Heading */
+.chatbot-heading {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333; /* Update color if desired */
+}
+
+/* Input Container */
+.input-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.user-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Update color if desired */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Message Container */
+.message-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding-right: 10px; /* Add padding to prevent hiding text under scrollbar */
+}
+
+.message {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.user-message {
+  background-color: #e9f7ef;
+  align-self: flex-start;
+}
+
+.trainer-message {
+  background-color: #f1f1f1;
+  align-self: flex-end;
+}
+
+.message-text {
+  margin: 0;
+  font-size: 16px; /* Update font size if desired */
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  font-size: 16px;
+  color: #007bff;
+}
+
+/* Logout Button */
 .logout-button {
-    background-color: #e74c3c; /* Red color */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 1rem 0; /* Add some margin for spacing */
+  background-color: #e74c3c; /* Update color if desired */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 1rem 0; /* Add some margin for spacing */
+}
+
+.logout-button:hover {
+  background-color: #c0392b; /* Update color if desired */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chat-box {
+    width: 100%;
+    padding: 10px;
   }
-  
-  .logout-button:hover {
-    background-color: #c0392b; /* Darker red on hover */
+
+  .submit-button {
+    padding: 10px;
   }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .chat-box {
-      width: 100%;
-      padding: 10px;
-    }
-  
-    .submit-button {
-      padding: 10px;
-    }
-  }
-  
+}
