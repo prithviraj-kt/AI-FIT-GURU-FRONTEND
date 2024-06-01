@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "./SingleWorkout.css";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Confetti from "react-confetti";
 import ProgressBar from "react-progressbar";
+import "./SingleWorkout.css"; // Import the custom CSS file
 
 function SingleWorkout() {
   const { workout } = useParams();
@@ -18,6 +18,7 @@ function SingleWorkout() {
   const [startCountdown, setStartCountdown] = useState(5);
   const [isPaused, setIsPaused] = useState(false);
   const [timerMessage, setTimerMessage] = useState("");
+  const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
     const getWorkoutDetails = async () => {
@@ -56,6 +57,7 @@ function SingleWorkout() {
         setProgress((prevProgress) => {
           if (prevProgress >= 100) {
             clearInterval(interval);
+            setShowOverlay(true); // Show overlay on completion
             setShowSuccess(true);
             setIsWorkoutStarted(false);
             setTimerMessage("");
@@ -94,12 +96,13 @@ function SingleWorkout() {
     setShowSuccess(false); // Reset the success message
     setProgress(0); // Reset the progress
     setTimerMessage(""); // Reset the timer message
+    setShowOverlay(false); // Hide overlay
   };
 
   return (
-    <div className="container my-4">
+    <div className="container-fluid workout-container">
       <div className="row justify-content-center">
-        <div className="col-md-8">
+        <div className="col-md-6">
           <div className="card shadow-lg">
             <div className="card-header bg-primary text-white text-center">
               <h1>{work ? work.name : "Workout"}</h1>
@@ -123,6 +126,15 @@ function SingleWorkout() {
                   <strong>Description:</strong> {work ? work.instructions : ""}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card shadow-lg">
+            <div className="card-header bg-primary text-white text-center">
+              <h1>Timer</h1>
+            </div>
+            <div className="card-body">
               <div className="text-center mb-4">
                 {showStartCountdown && !isWorkoutStarted && (
                   <ProgressBar
@@ -130,18 +142,20 @@ function SingleWorkout() {
                     height="20px"
                   />
                 )}
+
                 {isWorkoutStarted && (
                   <CountdownCircleTimer
                     isPlaying={!isPaused}
                     duration={workoutDuration}
                     colors={[
-                      ["#004777"],
-                      //   ["#F7B801", workoutDuration / 3],
-                      //   ["#A30000", workoutDuration / 3],
+                      ["#004777", workoutDuration / 3], // Blue color
+                      ["#F7B801", workoutDuration / 3], // Yellow color
+                      ["#A30000", workoutDuration / 3], // Red color
                     ]}
                     strokeWidth={12}
                     trailColor="#d9d9d9"
                     onComplete={() => {
+                      setShowOverlay(true); // Show overlay on completion
                       setShowSuccess(true);
                       setIsWorkoutStarted(false);
                       setTimerMessage("");
@@ -159,50 +173,52 @@ function SingleWorkout() {
                     )}
                   </CountdownCircleTimer>
                 )}
-              </div>
-              <div className="text-center mb-4">
-                <h4>{timerMessage}</h4>
-              </div>
-              {showStartCountdown && (
+                {showStartCountdown && (
+                  <div className="text-center mb-4">
+                    <h4>Workout starting in {startCountdown} seconds...</h4>
+                  </div>
+                )}
                 <div className="text-center mb-4">
-                  <h4>Workout starting in {startCountdown} seconds...</h4>
+                  <h4>{timerMessage}</h4>
                 </div>
-              )}
-              {isWorkoutStarted && (
-                <div className="text-center mb-4">
-                  <button className="btn btn-danger" onClick={pauseTimer}>
-                    Pause
-                  </button>{" "}
-                  <button className="btn btn-success" onClick={resumeTimer}>
-                    Resume
-                  </button>
-                </div>
-              )}
-              {!isWorkoutStarted && !showStartCountdown && (
-                <div className="text-center">
-                  <label htmlFor="duration" className="form-label">
-                    Enter Workout Duration (in seconds):
-                  </label>
-                  <input
-                    type="number"
-                    id="duration"
-                    className="form-control mb-3"
-                    value={workoutDuration}
-                    onChange={handleDurationChange}
-                  />
-                  <button className="btn btn-primary" onClick={startWorkout}>
-                    Start Workout
-                  </button>
-                </div>
-              )}
+              </div>
+              <div className="text-center">
+                {isWorkoutStarted && (
+                  <div className="text-center mb-4">
+                    <button className="btn btn-danger" onClick={pauseTimer}>
+                      Pause
+                    </button>{" "}
+                    <button className="btn btn-success" onClick={resumeTimer}>
+                      Resume
+                    </button>
+                  </div>
+                )}
+                {!isWorkoutStarted && !showStartCountdown && (
+                  <div className="text-center">
+                    <label htmlFor="duration" className="form-label">
+                      Enter Workout Duration (in seconds):
+                    </label>
+                    <input
+                      type="number"
+                      id="duration"
+                      className="form-control mb-3"
+                      value={workoutDuration}
+                      onChange={handleDurationChange}
+                    />
+                    <button className="btn btn-primary" onClick={startWorkout}>
+                      Start Workout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      {showSuccess && (
-        <div className="text-center mt-4">
-          <h2>Congratulations! You've completed the workout!</h2>
-          <div className="text-center mt-2">
+      {showOverlay && (
+        <div className="dark-overlay" onClick={() => setShowOverlay(false)}>
+          <div className="success-message">
+            <h2>Congratulations! You've completed the workout!</h2>
             <SuccessAnimation />
           </div>
         </div>
