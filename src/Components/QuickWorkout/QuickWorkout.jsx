@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import "./QuickWorkout.css"; // Create and import a CSS file for custom styles
 
 function QuickWorkout() {
   useEffect(() => {
@@ -29,6 +30,7 @@ function QuickWorkout() {
   const [workout, setWorkout] = useState([]);
   const [bodyPart, setBodyPart] = useState([]);
   const { purpose } = useParams();
+  const navigate = useNavigate();
 
   const getWorkout = async () => {
     const myWorkout = await localStorage.getItem("workout");
@@ -64,14 +66,16 @@ function QuickWorkout() {
     return item[purpose] && item[purpose].includes(fil);
   });
 
+  const navigateToWorkout = (workoutName) => {
+    navigate(`/${encodeURIComponent(workoutName)}`);
+  };
+
   return (
     <div className="container-fluid my-4">
       <div className="row mb-4">
         <div className="col text-center">
           <h1>{purpose.toUpperCase()}</h1>
-          <button className="btn btn-primary mt-3" onClick={handleClick}>
-            Click me
-          </button>
+          {/* <button className="btn btn-primary mt-3" onClick={handleClick}>Click me</button> */}
         </div>
       </div>
       <div className="row mb-4">
@@ -93,32 +97,46 @@ function QuickWorkout() {
       </div>
       <div className="row">
         {filteredWorkouts.map((item, index) => (
-          <div key={index} className="col-md-4 mb-4">
-            <div className="card h-100 shadow-sm">
+          <div
+            key={index}
+            className="col-md-4 mb-4"
+            onClick={() => navigateToWorkout(item.name)}
+          >
+            <div className="card h-100 shadow-sm quick-workout-card">
               <div className="card-header d-flex justify-content-between align-items-center">
                 <div>
                   <strong>ID:</strong> {item.id}
                 </div>
                 <h5 className="card-title mb-0">{item.name}</h5>
               </div>
-              {item.gifUrl && (
-                <img
-                  src={item.gifUrl}
-                  className="card-img-top"
-                  alt={item.name}
-                />
-              )}
+              <div className="quick-workout-image-container">
+                {item.gifUrl && (
+                  <img
+                    src={item.gifUrl}
+                    className="card-img-top quick-workout-image"
+                    alt={item.name}
+                  />
+                )}
+                <div className="quick-workout-description-overlay">
+                  <p className="quick-workout-description">
+                    <strong>Description:</strong> {item.instructions}
+                  </p>
+                </div>
+              </div>
               <div className="card-body">
                 <p className="card-text">
                   <strong>Target:</strong> {item.target}
                 </p>
-                <p className="card-text">
-                  <strong>Target:</strong> {item.equipment}
-                </p>
-                <p className="card-text">
-                  <strong>Description:</strong> {item.instructions}
-                </p>
               </div>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the card's onClick event
+                  navigateToWorkout(item.name);
+                }}
+              >
+                View Details
+              </button>
             </div>
           </div>
         ))}

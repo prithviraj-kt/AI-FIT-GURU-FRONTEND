@@ -1,0 +1,42 @@
+.quick-workout-card {
+    transition: transform 0.3s ease;
+  }
+  
+  .quick-workout-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .quick-workout-image-container {
+    position: relative;
+  }
+  
+  .quick-workout-image {
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+  
+  .quick-workout-description-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 123, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+  }
+  
+  .quick-workout-image-container:hover .quick-workout-description-overlay {
+    opacity: 1;
+  }
+  
+  .quick-workout-description {
+    padding: 10px;
+    text-align: center;
+  }
+  

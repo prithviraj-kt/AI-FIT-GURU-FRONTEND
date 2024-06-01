@@ -9,6 +9,7 @@ import Signup from "./Components/Signup/Signup";
 import Login from "./Components/Login/Login";
 import Home from "./Components/Home/Home";
 import QuickWorkout from "./Components/QuickWorkout/QuickWorkout";
+import SIngleWOrkout from "./SingleWorkout/SIngleWOrkout";
 function App() {
   // const [value, setValue] = useState("");
   // const handleClick = () => {
@@ -35,6 +36,7 @@ function App() {
             path="/quickworkout/:purpose"
             element={<QuickWorkout />}
           />
+          <Route exact path="/:workout" element={<SIngleWOrkout/>} />
         </Routes>
       </BrowserRouter>
       {/* {value ? (
