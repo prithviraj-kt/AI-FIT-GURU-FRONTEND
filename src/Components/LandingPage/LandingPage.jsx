@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 function LandingPage() {
   const navigate = useNavigate();
   const login = () => {
-    navigate("../Login/Login");
+    navigate("./login");
   };
   const signup = () => {
-    navigate("../Signup/Signup");
+    navigate("./signup");
   };
 
   return (

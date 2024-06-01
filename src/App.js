@@ -7,6 +7,8 @@ import LandingPage from "../src/Components/LandingPage/LandingPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signup from "./Components/Signup/Signup";
 import Login from "./Components/Login/Login";
+import Home from "./Components/Home/Home";
+import QuickWorkout from "./Components/QuickWorkout/QuickWorkout";
 function App() {
   // const [value, setValue] = useState("");
   // const handleClick = () => {
@@ -25,8 +27,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
-          <Route exact path="/Signup/Signup" element={<Signup />} />
-          <Route exact path="/Login/Login" element={<Login />} />
+          <Route exact path="/signup" element={<Signup />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route
+            exact
+            path="/quickworkout/:purpose"
+            element={<QuickWorkout />}
+          />
         </Routes>
       </BrowserRouter>
       {/* {value ? (
