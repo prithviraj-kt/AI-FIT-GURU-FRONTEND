@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import "./SingleWorkout.css";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import Confetti from "react-confetti";
+import ProgressBar from "react-progressbar";
 
 function SingleWorkout() {
   const { workout } = useParams();
@@ -15,6 +16,8 @@ function SingleWorkout() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [progress, setProgress] = useState(0);
   const [startCountdown, setStartCountdown] = useState(5);
+  const [isPaused, setIsPaused] = useState(false);
+  const [timerMessage, setTimerMessage] = useState("");
 
   useEffect(() => {
     const getWorkoutDetails = async () => {
@@ -48,13 +51,14 @@ function SingleWorkout() {
   }, [showStartCountdown, startCountdown]);
 
   useEffect(() => {
-    if (isWorkoutStarted) {
+    if (isWorkoutStarted && !isPaused) {
       const interval = setInterval(() => {
         setProgress((prevProgress) => {
           if (prevProgress >= 100) {
             clearInterval(interval);
             setShowSuccess(true);
             setIsWorkoutStarted(false);
+            setTimerMessage("");
             return 100;
           }
           return prevProgress + 100 / workoutDuration;
@@ -63,7 +67,7 @@ function SingleWorkout() {
 
       return () => clearInterval(interval);
     }
-  }, [isWorkoutStarted, workoutDuration]);
+  }, [isWorkoutStarted, isPaused, workoutDuration]);
 
   const handleDurationChange = (e) => {
     const duration = parseInt(e.target.value);
@@ -72,6 +76,24 @@ function SingleWorkout() {
 
   const SuccessAnimation = () => {
     return <Confetti width={window.innerWidth} height={window.innerHeight} />;
+  };
+
+  const pauseTimer = () => {
+    setIsPaused(true);
+    setTimerMessage("Don't stop, continue working out!");
+  };
+
+  const resumeTimer = () => {
+    setIsPaused(false);
+    setTimerMessage("Let's goooo!");
+  };
+
+  const startWorkout = () => {
+    setShowStartCountdown(true);
+    setStartCountdown(5);
+    setShowSuccess(false); // Reset the success message
+    setProgress(0); // Reset the progress
+    setTimerMessage(""); // Reset the timer message
   };
 
   return (
@@ -101,22 +123,28 @@ function SingleWorkout() {
                   <strong>Description:</strong> {work ? work.instructions : ""}
                 </p>
               </div>
-              {showStartCountdown && (
-                <div className="text-center mb-4">
-                  <h4>Workout starting in {startCountdown} seconds...</h4>
-                </div>
-              )}
-              {isWorkoutStarted && !showStartCountdown && (
-                <div className="text-center mb-4">
+              <div className="text-center mb-4">
+                {showStartCountdown && !isWorkoutStarted && (
+                  <ProgressBar
+                    completed={(5 - startCountdown) * 20}
+                    height="20px"
+                  />
+                )}
+                {isWorkoutStarted && (
                   <CountdownCircleTimer
-                    isPlaying
+                    isPlaying={!isPaused}
                     duration={workoutDuration}
-                    colors={["#008000"]}
+                    colors={[
+                      ["#004777"],
+                      //   ["#F7B801", workoutDuration / 3],
+                      //   ["#A30000", workoutDuration / 3],
+                    ]}
                     strokeWidth={12}
                     trailColor="#d9d9d9"
                     onComplete={() => {
                       setShowSuccess(true);
                       setIsWorkoutStarted(false);
+                      setTimerMessage("");
                     }}
                   >
                     {({ remainingTime }) => (
@@ -130,6 +158,24 @@ function SingleWorkout() {
                       </div>
                     )}
                   </CountdownCircleTimer>
+                )}
+              </div>
+              <div className="text-center mb-4">
+                <h4>{timerMessage}</h4>
+              </div>
+              {showStartCountdown && (
+                <div className="text-center mb-4">
+                  <h4>Workout starting in {startCountdown} seconds...</h4>
+                </div>
+              )}
+              {isWorkoutStarted && (
+                <div className="text-center mb-4">
+                  <button className="btn btn-danger" onClick={pauseTimer}>
+                    Pause
+                  </button>{" "}
+                  <button className="btn btn-success" onClick={resumeTimer}>
+                    Resume
+                  </button>
                 </div>
               )}
               {!isWorkoutStarted && !showStartCountdown && (
@@ -144,13 +190,7 @@ function SingleWorkout() {
                     value={workoutDuration}
                     onChange={handleDurationChange}
                   />
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => {
-                      setShowStartCountdown(true);
-                      setStartCountdown(5);
-                    }}
-                  >
+                  <button className="btn btn-primary" onClick={startWorkout}>
                     Start Workout
                   </button>
                 </div>
@@ -159,7 +199,14 @@ function SingleWorkout() {
           </div>
         </div>
       </div>
-      {showSuccess && <SuccessAnimation />}
+      {showSuccess && (
+        <div className="text-center mt-4">
+          <h2>Congratulations! You've completed the workout!</h2>
+          <div className="text-center mt-2">
+            <SuccessAnimation />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
