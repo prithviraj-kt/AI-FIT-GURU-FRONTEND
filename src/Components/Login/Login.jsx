@@ -1,11 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { GoogleButton } from "react-google-button";
+import { auth, provider } from "../../config";
+import { signInWithPopup } from "firebase/auth";
+// import { UserAuth } from "../Context/AuthContext";
 const Login = () => {
   const navigate = useNavigate();
+  const [value, setValue] = useState("");
+
+  const handleGoogleSignIn = async () => {
+    signInWithPopup(auth, provider)
+      .then((data) => {
+        // setValue(data.user.email);
+        localStorage.setItem("email", data.user.email);
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    validate();
+  }, []);
+
+  const validate = async () => {
+    const auth = await localStorage.getItem("email");
+    console.log(auth);
+    if (auth) {
+      navigate("/home");
+    }
+  };
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email format")
@@ -24,7 +53,8 @@ const Login = () => {
 
       try {
         if (response.data.msg) {
-          alert(response.data.msg);
+          // console.log(values.email);
+          localStorage.setItem("email", values.email);
           navigate("/home");
         } else {
           alert(response.data.err);
@@ -102,9 +132,10 @@ const Login = () => {
           <button type="submit" className="btn btn-primary me-2">
             Login
           </button>
-          <button type="button" className="btn btn-outline-primary">
+          <GoogleButton onClick={handleGoogleSignIn} />
+          {/* <GoogleButton type="button" className="btn btn-outline-primary">
             Login with Google
-          </button>
+          </GoogleButton> */}
           <p className="mt-3 text-muted">
             Don't have an account?
             <a href="/signup" className="text-primary">

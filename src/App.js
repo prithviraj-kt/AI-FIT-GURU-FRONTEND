@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import "./App.css";
+// import "./App.css";
 import { auth, provider } from "./config";
 import { signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -9,7 +9,9 @@ import Signup from "./Components/Signup/Signup";
 import Login from "./Components/Login/Login";
 import Home from "./Components/Home/Home";
 import QuickWorkout from "./Components/QuickWorkout/QuickWorkout";
-import SIngleWOrkout from "./SingleWorkout/SIngleWOrkout";
+import SIngleWOrkout from "./Components/SingleWorkout/SIngleWOrkout";
+import { AuthContextProvider } from "./Components/Context/AuthContext";
+import Navbar from "./Components/Navbar/Navbar";
 function App() {
   // const [value, setValue] = useState("");
   // const handleClick = () => {
@@ -25,20 +27,24 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<LandingPage />} />
-          <Route exact path="/signup" element={<Signup />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/home" element={<Home />} />
-          <Route
-            exact
-            path="/quickworkout/:purpose"
-            element={<QuickWorkout />}
-          />
-          <Route exact path="/:workout" element={<SIngleWOrkout/>} />
-        </Routes>
-      </BrowserRouter>
+      {/* <AuthContextProvider> */}
+
+        <BrowserRouter>
+        <Navbar/>
+          <Routes>
+            <Route exact path="/" element={<LandingPage />} />
+            <Route exact path="/signup" element={<Signup />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/home" element={<Home />} />
+            <Route
+              exact
+              path="/quickworkout/:purpose"
+              element={<QuickWorkout />}
+            />
+            <Route exact path="/:workout" element={<SIngleWOrkout />} />
+          </Routes>
+        </BrowserRouter>
+      {/* </AuthContextProvider> */}
       {/* {value ? (
         <Home />
       ) : (

@@ -1,42 +1,100 @@
 .quick-workout-card {
-    transition: transform 0.3s ease;
+  transition: transform 0.3s ease, height 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  height: auto;
+}
+
+.quick-workout-card:hover {
+  transform: scale(1.05);
+}
+
+.quick-workout-image-container {
+  position: relative;
+}
+
+.quick-workout-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.quick-workout-description-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  text-align: center;
+  padding: 0.625rem; /* 10px */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.quick-workout-image-container:hover .quick-workout-description-overlay {
+  opacity: 1;
+}
+
+.quick-workout-description {
+  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 100%; /* Ensure the description doesn't exceed container height */
+}
+
+.card-body {
+  height: 100%; /* Make the body take up full height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align items to the bottom */
+  position: relative;
+  z-index: 1; /* Ensure this is behind the overlay */
+}
+
+.card-text {
+  margin: 0;
+}
+
+.btn {
+  margin-top: 0.5rem; /* Add some spacing */
+}
+
+.quick-workout-description-overlay {
+  z-index: 2; /* Ensure overlay is on top */
+}
+
+@media (max-width: 47.9375rem) { /* 767px */
+  .quick-workout-card {
+    margin-bottom: 0.9375rem; /* 15px */
   }
-  
-  .quick-workout-card:hover {
-    transform: scale(1.05);
+
+  .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
   }
-  
-  .quick-workout-image-container {
-    position: relative;
+}
+
+@media (max-width: 35.9375rem) { /* 575px */
+  .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
   }
-  
-  .quick-workout-image {
-    width: 100%;
-    height: auto;
-    transition: opacity 0.3s ease;
+
+  .quick-workout-card {
+    height: 18.75rem; /* 300px */
   }
-  
-  .quick-workout-description-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 123, 255, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    color: white;
+
+  .card-title {
+    font-size: 1rem;
   }
-  
-  .quick-workout-image-container:hover .quick-workout-description-overlay {
-    opacity: 1;
+
+  .card-body {
+    height: 100%; /* Ensure full height */
   }
-  
-  .quick-workout-description {
-    padding: 10px;
-    text-align: center;
-  }
-  
+}

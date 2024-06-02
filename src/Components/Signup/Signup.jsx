@@ -1,10 +1,34 @@
-import React from "yup";
+// import React from "yup";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { GoogleButton } from "react-google-button";
+import { auth, provider } from "../../config";
+import { signInWithPopup } from "firebase/auth";
 const Signup = () => {
+  useEffect(() => {
+    validate();
+  }, []);
+  const handleGoogleSignIn = async () => {
+    signInWithPopup(auth, provider)
+      .then((data) => {
+        // setValue(data.user.email);
+        localStorage.setItem("email", data.user.email);
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const validate = async () => {
+    const auth = await localStorage.getItem("email");
+    console.log(auth);
+    if (auth) {
+      navigate("/home");
+    }
+  };
   const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -156,9 +180,8 @@ const Signup = () => {
           >
             Sign Up
           </button>
-          <button type="button" className="btn btn-outline-primary">
-            Sign Up with Google
-          </button>
+          <GoogleButton onClick={handleGoogleSignIn} />
+
           <p className="mt-3 text-muted">
             Already have an account?
             <a href="/login" className="text-primary">

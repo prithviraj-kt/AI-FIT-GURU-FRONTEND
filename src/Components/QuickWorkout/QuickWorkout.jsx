@@ -4,31 +4,22 @@ import "./QuickWorkout.css"; // Create and import a CSS file for custom styles
 
 function QuickWorkout() {
   useEffect(() => {
+    auth();
     getWorkout();
   }, []);
 
-  const target = [
-    "abs",
-    "quads",
-    "lats",
-    "calves",
-    "pectorals",
-    "glutes",
-    "hamstrings",
-    "adductors",
-    "triceps",
-    "cardiovascular system",
-    "spice",
-    "upper back",
-    "biceps",
-    "delts",
-    "forearms",
-    "traps",
-    "serratus anterior",
-  ];
+  const auth = () => {
+    const auth = localStorage.getItem("email");
+    if (!auth) {
+      navigate("/login");
+    }
+  };
 
   const [workout, setWorkout] = useState([]);
-  const [bodyPart, setBodyPart] = useState([]);
+  const [bodyParts, setBodyParts] = useState([]);
+  const [targets, setTargets] = useState([]);
+  const [selectedBodyPart, setSelectedBodyPart] = useState("");
+  const [selectedTarget, setSelectedTarget] = useState("");
   const { purpose } = useParams();
   const navigate = useNavigate();
 
@@ -41,60 +32,109 @@ function QuickWorkout() {
 
       // Extract values of the key corresponding to `purpose`
       const purposeValues = parsedWorkout
-        .filter((item) => item[purpose])
+        .filter((item) => item[purpose] && item[purpose] !== "cardio")
         .map((item) => item[purpose]);
 
       // Flatten the array if it contains nested arrays and remove duplicates
       const uniqueBodyParts = [...new Set(purposeValues.flat())];
 
-      setBodyPart(uniqueBodyParts);
+      setBodyParts(uniqueBodyParts);
     }
   };
 
-  const handleClick = () => {
-    console.log(bodyPart);
+  const handleBodyPartChange = (e) => {
+    const selectedBodyPart = e.target.value;
+    setSelectedBodyPart(selectedBodyPart);
+
+    // Extract unique targets for the selected body part
+    const filteredTargets = workout
+      .filter((item) => item.bodyPart === selectedBodyPart)
+      .map((item) => item.target);
+
+    const uniqueTargets = [...new Set(filteredTargets.flat())];
+    setTargets(uniqueTargets);
+    setSelectedTarget(""); // Reset target selection when body part changes
   };
 
-  const [fil, setFil] = useState("");
-  const filterChange = (e) => {
-    setFil(e.target.value);
+  const handleTargetChange = (e) => {
+    setSelectedTarget(e.target.value);
   };
 
-  // Filter workouts based on the selected body part
+  // Filter workouts based on the selected body part and target
   const filteredWorkouts = workout.filter((item) => {
-    if (!fil) return true;
-    return item[purpose] && item[purpose].includes(fil);
+    if (purpose === "cardio") {
+      return item.bodyPart.includes("cardio");
+    }
+    if (!selectedBodyPart) {
+      return true; // Display all workouts if no body part is selected
+    }
+    if (purpose === "bodyPart") {
+      if (selectedTarget) {
+        return (
+          item.bodyPart === selectedBodyPart && item.target === selectedTarget
+        );
+      }
+      return item.bodyPart === selectedBodyPart;
+    } else {
+      return item[purpose] === selectedBodyPart;
+    }
   });
 
   const navigateToWorkout = (workoutName) => {
     navigate(`/${encodeURIComponent(workoutName)}`);
   };
 
+  const pageTitle = purpose === "bodyWeight" ? "Calisthenics" : purpose;
+
   return (
     <div className="container-fluid my-4">
       <div className="row mb-4">
         <div className="col text-center">
-          <h1>{purpose.toUpperCase()}</h1>
-          {/* <button className="btn btn-primary mt-3" onClick={handleClick}>Click me</button> */}
+          <h1>{pageTitle.toUpperCase()}</h1>
         </div>
       </div>
       <div className="row mb-4">
         <div className="col-md-6 offset-md-3">
-          <select
-            onChange={filterChange}
-            className="form-select"
-            aria-label="Default select example"
-            value={fil}
-          >
-            <option value="">Open this select menu</option>
-            {bodyPart.map((item, index) => (
-              <option key={index} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+          {purpose != "bodyWeight" && purpose != "cardio" ? (
+            <div>
+              <select
+                onChange={handleBodyPartChange}
+                className="form-select"
+                aria-label="Default select example"
+                value={selectedBodyPart}
+              >
+                <option value="">Select Body Part</option>
+                {bodyParts.map((item, index) => (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
+      {purpose === "bodyPart" && selectedBodyPart && (
+        <div className="row mb-4">
+          <div className="col-md-6 offset-md-3">
+            <select
+              onChange={handleTargetChange}
+              className="form-select"
+              aria-label="Default select example"
+              value={selectedTarget}
+            >
+              <option value="">Select Target</option>
+              {targets.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
       <div className="row">
         {filteredWorkouts.map((item, index) => (
           <div
@@ -135,7 +175,7 @@ function QuickWorkout() {
                   navigateToWorkout(item.name);
                 }}
               >
-                View Details
+                Let's start
               </button>
             </div>
           </div>

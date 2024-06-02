@@ -1,0 +1,104 @@
+.workout-container {
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.card-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.card-footer button {
+  width: 100%;
+}
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.timer .value {
+  font-size: 40px;
+}
+
+.timer .text {
+  font-size: 16px;
+}
+
+.dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0000009c; /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.success-message {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease; /* Fade-in animation */
+  position: relative;
+  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+}
+
+
+.success-message h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+
+}
+
+.success-message p {
+  font-size: 18px;
+  margin-bottom: 10px;
+  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+
+}
+
+.success-message button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+
+}
+
+.success-message button:hover {
+  background-color: #0056b3;
+  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
