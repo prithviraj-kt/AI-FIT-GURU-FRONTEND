@@ -11,6 +11,7 @@ import {
   Col,
   Form,
   Table,
+  Dropdown,
 } from "react-bootstrap";
 import { FaCalendarAlt, FaFileDownload } from "react-icons/fa";
 import { storage, db } from "../../config";
@@ -51,17 +52,23 @@ function Profile() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showHealthModal, setShowHealthModal] = useState(false);
   const [viewReportModal, setViewReportModal] = useState(false);
-  const [healthData, setHealthData] = useState({
-    // height: "0 cm",
-    // weight: "0 kg",
-    // BMI: "0",
-    // bodyFat: "0%",
-  });
+  const [healthData, setHealthData] = useState({});
   const [foodItems, setFoodItems] = useState([]);
-  const [height, setHeight] = useState(healthData.height);
-  const [weight, setWeight] = useState(healthData.weight);
-  const [BMI, setBMI] = useState(healthData.BMI);
-  const [bodyFat, setBodyFat] = useState(healthData.bodyFat);
+  const [formData, setFormData] = useState({
+    age: "",
+    height: "",
+    weight: "",
+    BMI: "",
+    bodyFat: "",
+    gender: "",
+    workoutFrequency: "",
+    goal: "",
+    fitnessLevel: "",
+    dailyActiveLevel: "",
+    workoutIntensity: "",
+    sleepDuration: "",
+    healthIssues: "",
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -87,10 +94,7 @@ function Profile() {
     if (healthDoc.exists()) {
       const healthData = healthDoc.data();
       setHealthData(healthData);
-      setHeight(healthData.height);
-      setWeight(healthData.weight);
-      setBMI(healthData.BMI);
-      setBodyFat(healthData.bodyFat);
+      setFormData(healthData);
     }
   };
 
@@ -215,27 +219,25 @@ function Profile() {
         setFoodItems(updatedFoodItems);
         setIsLoading(false);
         setFoodModal(false);
+        resetFoodForm();
       }
     );
   };
 
-  const handleSaveHealthData = async () => {
+  const handleSaveHealthData = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    setIsLoading(true); // Set loading state
+
     try {
-      const updatedHealthData = {
-        height,
-        weight,
-        BMI,
-        bodyFat,
-      };
-      await setDoc(doc(db, "healthdata", user.email), updatedHealthData);
-
-      // Update the local state immediately after saving
-      setHealthData(updatedHealthData);
-
-      // Close the modal
+      // Save the form data to Firestore
+      const healthDocRef = doc(db, "healthdata", user.email);
+      await setDoc(healthDocRef, formData, { merge: true });
+      setHealthData(formData);
       setShowHealthModal(false);
     } catch (error) {
       console.error("Error saving health data:", error);
+    } finally {
+      setIsLoading(false); // Reset loading state
     }
   };
 
@@ -243,8 +245,14 @@ function Profile() {
     const doc = new jsPDF();
     let yOffset = 10;
 
-    doc.text(`Name: ${user.firstName} ${user.lastName}`, 10, yOffset);
+    doc.text(`Name: ${user.displayName} `, 10, yOffset);
     doc.text(`Email: ${user.email}`, 10, (yOffset += 10));
+    doc.text("Health Data:", 10, (yOffset += 20));
+
+    Object.entries(healthData).forEach(([key, value]) => {
+      doc.text(`${key}: ${value}`, 10, (yOffset += 10));
+    });
+
     doc.text("Diet Data:", 10, (yOffset += 20));
 
     foodItems.forEach((item) => {
@@ -261,7 +269,7 @@ function Profile() {
       yOffset += 10;
     });
 
-    doc.save("diet_data.pdf");
+    doc.save("health_and_diet_data.pdf");
   };
 
   const resetFoodForm = () => {
@@ -271,6 +279,15 @@ function Profile() {
     setFoodSection("");
     setFoodFile(null);
     setFoodPreviewURL("");
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleButtonClick = (field, value) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   return (
@@ -316,10 +333,11 @@ function Profile() {
             >
               Edit Health Data
             </Button>
-            <p>Height: {healthData.height}</p>
-            <p>Weight: {healthData.weight}</p>
-            <p>BMI: {healthData.BMI}</p>
-            <p>Body Fat: {healthData.bodyFat}</p>
+            {/* {Object.entries(healthData).map(([key, value]) => (
+              <p key={key}>
+                {key.charAt(0).toUpperCase() + key.slice(1)}: {value}
+              </p>
+            ))} */}
 
             <h4>Diet Data</h4>
             <Button
@@ -535,23 +553,35 @@ function Profile() {
           <Modal.Title>Edit Health Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form onSubmit={handleSaveHealthData}>
+            <Form.Group controlId="formAge">
+              <Form.Label>Age</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter age"
+                name="age"
+                value={formData.age}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
             <Form.Group controlId="formHeight">
-              <Form.Label>Height</Form.Label>
+              <Form.Label>Height (in cm)</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter height"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
+                name="height"
+                value={formData.height}
+                onChange={handleInputChange}
               />
             </Form.Group>
             <Form.Group controlId="formWeight">
-              <Form.Label>Weight</Form.Label>
+              <Form.Label>Weight (in kg)</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter weight"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
+                name="weight"
+                value={formData.weight}
+                onChange={handleInputChange}
               />
             </Form.Group>
             <Form.Group controlId="formBMI">
@@ -559,29 +589,229 @@ function Profile() {
               <Form.Control
                 type="text"
                 placeholder="Enter BMI"
-                value={BMI}
-                onChange={(e) => setBMI(e.target.value)}
+                name="BMI"
+                value={formData.BMI}
+                onChange={handleInputChange}
               />
             </Form.Group>
             <Form.Group controlId="formBodyFat">
               <Form.Label>Body Fat</Form.Label>
               <Form.Control
+                as="select"
+                name="bodyFat"
+                value={formData.bodyFat}
+                onChange={handleInputChange}
+              >
+                {[
+                  "below 10%",
+                  "10-15%",
+                  "15-20%",
+                  "20-25%",
+                  "25-30%",
+                  "30-35%",
+                  "35-40%",
+                  "40-45%",
+                  "45-50%",
+                  "above 50%",
+                ].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formGender">
+              <Form.Label>Gender</Form.Label>
+              <div className="button-group">
+                {["male", "female", "cannot specify"].map((gender) => (
+                  <Button
+                    key={gender}
+                    variant={
+                      formData.gender === gender ? "primary" : "outline-primary"
+                    }
+                    onClick={() => handleButtonClick("gender", gender)}
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {gender}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formWorkoutFrequency">
+              <Form.Label>
+                Workout Frequency (No of times you do workout)
+              </Form.Label>
+              <div className="button-group">
+                {[1, 2, 3, 4, 5, 6, 7].map((frequency) => (
+                  <Button
+                    key={frequency}
+                    variant={
+                      formData.workoutFrequency === frequency.toString()
+                        ? "primary"
+                        : "outline-primary"
+                    }
+                    onClick={() =>
+                      handleButtonClick(
+                        "workoutFrequency",
+                        frequency.toString()
+                      )
+                    }
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {frequency}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formGoal">
+              <Form.Label>Goal</Form.Label>
+              <div className="button-group">
+                {[
+                  "Muscle gain",
+                  "Fat loss",
+                  "Maintain fitness",
+                  "Build strength",
+                ].map((goal) => (
+                  <Button
+                    key={goal}
+                    variant={
+                      formData.goal === goal ? "primary" : "outline-primary"
+                    }
+                    onClick={() => handleButtonClick("goal", goal)}
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {goal}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formFitnessLevel">
+              <Form.Label>Current Fitness Level</Form.Label>
+              <div className="button-group">
+                {[
+                  "Very lean",
+                  "Little fit",
+                  "Normal and healthy",
+                  "Obese",
+                  "Fat with muscle",
+                  "Intermediate fitness",
+                  "Athletic personality",
+                  "Body builder",
+                ].map((level) => (
+                  <Button
+                    key={level}
+                    variant={
+                      formData.fitnessLevel === level
+                        ? "primary"
+                        : "outline-primary"
+                    }
+                    onClick={() => handleButtonClick("fitnessLevel", level)}
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {level}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formDailyActiveLevel">
+              <Form.Label>Daily Active Level</Form.Label>
+              <div className="button-group">
+                {[
+                  "Very lazy",
+                  "Lazy",
+                  "Active",
+                  "Moderatively active",
+                  "Super active",
+                ].map((level) => (
+                  <Button
+                    key={level}
+                    variant={
+                      formData.dailyActiveLevel === level
+                        ? "primary"
+                        : "outline-primary"
+                    }
+                    onClick={() => handleButtonClick("dailyActiveLevel", level)}
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {level}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formWorkoutIntensity">
+              <Form.Label>Daily Preferred Workout Intensity</Form.Label>
+              <div className="button-group">
+                {["1 time", "2 times", "3 times"].map((intensity) => (
+                  <Button
+                    key={intensity}
+                    variant={
+                      formData.workoutIntensity === intensity
+                        ? "primary"
+                        : "outline-primary"
+                    }
+                    onClick={() =>
+                      handleButtonClick("workoutIntensity", intensity)
+                    }
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {intensity}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formSleepDuration">
+              <Form.Label>Avg Sleep Duration</Form.Label>
+              <div className="button-group">
+                {[
+                  "3-4 hours",
+                  "5-6 hours",
+                  "7-8 hours",
+                  "9-10 hours",
+                  "More than 10 hours",
+                ].map((duration) => (
+                  <Button
+                    key={duration}
+                    variant={
+                      formData.sleepDuration === duration
+                        ? "primary"
+                        : "outline-primary"
+                    }
+                    onClick={() => handleButtonClick("sleepDuration", duration)}
+                    className="mr-2"
+                    type="button" // Set type to button to prevent form submission
+                  >
+                    {duration}
+                  </Button>
+                ))}
+              </div>
+            </Form.Group>
+            <Form.Group controlId="formHealthIssues">
+              <Form.Label>
+                Any health issues? (e.g., shoulder pain, lower back pain)
+              </Form.Label>
+              <Form.Control
                 type="text"
-                placeholder="Enter body fat"
-                value={bodyFat}
-                onChange={(e) => setBodyFat(e.target.value)}
+                placeholder="Enter any health issues"
+                name="healthIssues"
+                value={formData.healthIssues}
+                onChange={handleInputChange}
               />
             </Form.Group>
+            <Button variant="primary" type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Spinner animation="border" size="sm" />
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
           </Form>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowHealthModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSaveHealthData}>
-            Save
-          </Button>
-        </Modal.Footer>
       </Modal>
 
       <Modal show={viewReportModal} onHide={() => setViewReportModal(false)}>
@@ -589,10 +819,11 @@ function Profile() {
           <Modal.Title>View Health Report</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Height: {healthData.height}</p>
-          <p>Weight: {healthData.weight}</p>
-          <p>BMI: {healthData.BMI}</p>
-          <p>Body Fat: {healthData.bodyFat}</p>
+          {Object.entries(healthData).map(([key, value]) => (
+            <p key={key}>
+              {key.charAt(0).toUpperCase() + key.slice(1)}: {value}
+            </p>
+          ))}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setViewReportModal(false)}>
