@@ -84,7 +84,7 @@ function QuickWorkout() {
     navigate(`/${encodeURIComponent(workoutName)}`);
   };
 
-  const pageTitle = purpose === "bodyWeight" ? "Calisthenics" : purpose;
+  const pageTitle = purpose === "calisthenics" ? "Calisthenics" : purpose;
 
   return (
     <div className="container-fluid my-4">
@@ -95,7 +95,7 @@ function QuickWorkout() {
       </div>
       <div className="row mb-4">
         <div className="col-md-6 offset-md-3">
-          {purpose != "bodyWeight" && purpose != "cardio" ? (
+          {purpose != "calisthenics" && purpose != "cardio" ? (
             <div>
               <select
                 onChange={handleBodyPartChange}

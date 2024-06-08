@@ -1,40 +1,85 @@
-// import React from "yup";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { GoogleButton } from "react-google-button";
-import { auth, provider } from "../../config";
+import { auth, provider, db } from "../../config";
 import { signInWithPopup } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import bcrypt from "bcryptjs";
+import "./Signup.css";
+
 const Signup = () => {
+  const navigate = useNavigate();
+
+  // Check if the user is already authenticated
   useEffect(() => {
     validate();
   }, []);
+
+  // Google Sign-In method
   const handleGoogleSignIn = async () => {
-    signInWithPopup(auth, provider)
-      .then((data) => {
-        // setValue(data.user.email);
-        localStorage.setItem("email", data.user.email);
-        navigate("/home");
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      console.log("Google Sign-In User:", user.email);
+
+      await localStorage.setItem("email", user.email);
+
+      const userData = {
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL || "https://www.pngall.com/wp-content/uploads/5/Profile.png",
+        phone: "",
+      };
+
+      // Store user data in Firestore
+      await setDoc(doc(db, "users", user.email), userData);
+
+      // Show success toast
+      toast.success("Signed up successfully with Google!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       });
-  };
-  const validate = async () => {
-    const auth = await localStorage.getItem("email");
-    console.log(auth);
-    if (auth) {
-      navigate("/home");
+
+      // Navigate to login after a short delay
+      setTimeout(() => navigate("/login"), 3000);
+    } catch (error) {
+      console.error("Google Sign-In error:", error);
+      toast.error("Google Sign-In failed. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
-  const navigate = useNavigate();
+
+  // Validate if the user is already authenticated
+  const validate = async () => {
+    const auth = await localStorage.getItem("email");
+    if (auth) {
+      navigate("/login");
+    }
+  };
+
+  // Validation schema for Formik
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email format")
       .required("Email is required"),
-    name: Yup.string().required("Name is required"),
+    displayName: Yup.string().required("Name is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters long")
       .required("Password is required"),
@@ -43,153 +88,173 @@ const Signup = () => {
       .required("Confirm password is required"),
   });
 
-  // const handleSubmit = () => {
-  //   console.log(form);
-  // };
-
-  // const [form, setForm] = useState({});
-  // const handleChange = (e) => {
-  //   setForm({ ...form, [e.target.name]: e.target.value });
-  // };
-
+  // Formik setup
   const formik = useFormik({
     initialValues: {
       email: "",
-      name: "",
+      displayName: "",
       password: "",
       confirmPassword: "",
     },
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await axios.post(
-          "http://localhost:8080/signup",
-          values
-        ); // Send form data in request body
-        if (response.data.msg == "User already exists") {
-          alert(response.data.msg);
-        } else if (response.status === 201 || response.status === 200) {
-          // Handle successful response (status code might vary)
-          alert(response.data.msg);
-          navigate("/Login/Login");
-        } else {
-          console.error("Signup failed:", response.data); // Handle unexpected response status code
-        }
+        // Encrypt the password using bcryptjs
+        const hashedPassword = await bcrypt.hash(values.password, 10);
+
+        const userData = {
+          email: values.email,
+          displayName: values.displayName,
+          password: hashedPassword,
+          phone: "", // Default value for phone
+          photoURL: "https://www.pngall.com/wp-content/uploads/5/Profile.png", // Default photo URL
+        };
+
+        // Store user data in Firestore
+        await setDoc(doc(db, "users", values.email), userData);
+
+        // Show success toast
+        toast.success("Signup successful!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        // Navigate to login after a short delay
+        setTimeout(() => navigate("/login"), 3000);
       } catch (error) {
-        console.error("Signup error:", error); // Handle errors during request
+        console.error("Signup error:", error);
+        toast.error("Signup failed. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     },
   });
 
   return (
-    <div className="container-fluid d-flex flex-row">
-      <div className="col-md-6 p-5">
-        {/* Replace with your desired image */}
-        <img
-          src="path/to/your/image.jpg"
-          alt="Signup Illustration"
-          className="img-fluid"
-        />
+    <div className="signup-container">
+      <div className="d-flex flex-row">
+        <div className="col-md-6 p-5">
+          <center>
+            <img
+              src="https://mfiles.alphacoders.com/683/683110.jpg"
+              alt="Signup Illustration"
+              className="signup-image"
+            />
+          </center>
+        </div>
+        <div className="col-md-6 p-5">
+          <form onSubmit={formik.handleSubmit} className="signup-form">
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email address
+              </label>
+              <input
+                type="email"
+                className={`signup-form-control ${
+                  formik.touched.email && formik.errors.email
+                    ? "is-invalid"
+                    : ""
+                }`}
+                id="email"
+                placeholder="Enter email"
+                {...formik.getFieldProps("email")}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className="signup-invalid-feedback">
+                  {formik.errors.email}
+                </div>
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label">
+                Name
+              </label>
+              <input
+                type="text"
+                className={`signup-form-control ${
+                  formik.touched.displayName && formik.errors.displayName
+                    ? "is-invalid"
+                    : ""
+                }`}
+                id="displayName"
+                placeholder="Enter name"
+                {...formik.getFieldProps("displayName")}
+              />
+              {formik.touched.displayName && formik.errors.displayName && (
+                <div className="signup-invalid-feedback">
+                  {formik.errors.displayName}
+                </div>
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className={`signup-form-control ${
+                  formik.touched.password && formik.errors.password
+                    ? "is-invalid"
+                    : ""
+                }`}
+                id="password"
+                placeholder="Enter password"
+                {...formik.getFieldProps("password")}
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className="signup-invalid-feedback">
+                  {formik.errors.password}
+                </div>
+              )}
+            </div>
+            <div className="mb-3">
+              <label htmlFor="confirmPassword" className="form-label">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                className={`signup-form-control ${
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                    ? "is-invalid"
+                    : ""
+                }`}
+                id="confirmPassword"
+                placeholder="Confirm password"
+                {...formik.getFieldProps("confirmPassword")}
+              />
+              {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword && (
+                  <div className="signup-invalid-feedback">
+                    {formik.errors.confirmPassword}
+                  </div>
+                )}
+            </div>
+            <button type="submit" className="signup-btn-primary me-2">
+              Sign Up
+            </button>
+            <GoogleButton onClick={handleGoogleSignIn} />
+            <p className="mt-3 signup-text-muted">
+              Already have an account?{" "}
+              <a href="/login" className="signup-link-primary">
+                Login
+              </a>
+            </p>
+          </form>
+        </div>
       </div>
-      <div className="col-md-6 p-5">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Email address
-            </label>
-            <input
-              type="email"
-              className={`form-control ${
-                formik.touched.email && formik.errors.email ? "is-invalid" : ""
-              }`}
-              id="email"
-              // name="email"
-              // onChange={(e) => handleChange(e)}
-              placeholder="Enter email"
-              {...formik.getFieldProps("email")}
-            />
-            {formik.touched.email && formik.errors.email ? (
-              <div className="invalid-feedback">{formik.errors.email}</div>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">
-              Name
-            </label>
-            <input
-              type="text"
-              className={`form-control ${
-                formik.touched.name && formik.errors.name ? "is-invalid" : ""
-              }`}
-              id="name"
-              // name="name"
-              // onChange={(e) => handleChange(e)}
-              placeholder="Enter name"
-              {...formik.getFieldProps("name")}
-            />
-            {formik.touched.name && formik.errors.name ? (
-              <div className="invalid-feedback">{formik.errors.name}</div>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">
-              Password
-            </label>
-            <input
-              type="password"
-              className={`form-control ${
-                formik.touched.password && formik.errors.password
-                  ? "is-invalid"
-                  : ""
-              }`}
-              id="password"
-              // name="password"
-              // onChange={(e) => handleChange(e)}
-              placeholder="Enter password"
-              {...formik.getFieldProps("password")}
-            />
-            {formik.touched.password && formik.errors.password ? (
-              <div className="invalid-feedback">{formik.errors.password}</div>
-            ) : null}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              className={`form-control ${
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-                  ? "is-invalid"
-                  : ""
-              }`}
-              id="confirmPassword"
-              placeholder="Confirm password"
-              {...formik.getFieldProps("confirmPassword")}
-            />
-            {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-              <div className="invalid-feedback">
-                {formik.errors.confirmPassword}
-              </div>
-            ) : null}
-          </div>
-          <button
-            type="submit"
-            // onClick={handleSubmit}
-            className="btn btn-primary me-2"
-          >
-            Sign Up
-          </button>
-          <GoogleButton onClick={handleGoogleSignIn} />
-
-          <p className="mt-3 text-muted">
-            Already have an account?
-            <a href="/login" className="text-primary">
-              Login
-            </a>
-          </p>
-        </form>
-      </div>
+      <ToastContainer />
     </div>
   );
 };

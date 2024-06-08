@@ -12,6 +12,7 @@ import QuickWorkout from "./Components/QuickWorkout/QuickWorkout";
 import SIngleWOrkout from "./Components/SingleWorkout/SIngleWOrkout";
 import { AuthContextProvider } from "./Components/Context/AuthContext";
 import Navbar from "./Components/Navbar/Navbar";
+import Profile from "./Components/Profile/Profile";
 function App() {
   // const [value, setValue] = useState("");
   // const handleClick = () => {
@@ -29,21 +30,22 @@ function App() {
     <div className="App">
       {/* <AuthContextProvider> */}
 
-        <BrowserRouter>
-        <Navbar/>
-          <Routes>
-            <Route exact path="/" element={<LandingPage />} />
-            <Route exact path="/signup" element={<Signup />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/home" element={<Home />} />
-            <Route
-              exact
-              path="/quickworkout/:purpose"
-              element={<QuickWorkout />}
-            />
-            <Route exact path="/:workout" element={<SIngleWOrkout />} />
-          </Routes>
-        </BrowserRouter>
+      <BrowserRouter>
+        
+        <Routes>
+          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/signup" element={<Signup />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route exact path="/profile" element={<Profile />} />
+          <Route
+            exact
+            path="/quickworkout/:purpose"
+            element={<QuickWorkout />}
+          />
+          <Route exact path="/:workout" element={<SIngleWOrkout />} />
+        </Routes>
+      </BrowserRouter>
       {/* </AuthContextProvider> */}
       {/* {value ? (
         <Home />

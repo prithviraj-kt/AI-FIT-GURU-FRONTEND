@@ -1,0 +1,182 @@
+.profile-dark-theme {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .profile-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  
+  .profile-img-col {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+  }
+  
+  .profile-upload-btn-container {
+    margin-top: 15px;
+  }
+  
+  .profile-upload-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .profile-upload-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .profile-info-col {
+    text-align: left;
+    padding: 0 15px;
+  }
+  
+  .profile-welcome {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .profile-calendar-btn,
+  .profile-workout-btn,
+  .profile-diet-btn,
+  .profile-health-btn,
+  .profile-close-btn,
+  .profile-download-btn,
+  .profile-modal-btn {
+    background-color: #ff5722;
+    color: #fff;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .profile-calendar-btn:hover,
+  .profile-workout-btn:hover,
+  .profile-diet-btn:hover,
+  .profile-health-btn:hover,
+  .profile-close-btn:hover,
+  .profile-download-btn:hover,
+  .profile-modal-btn:hover {
+    background-color: #e64a19;
+    transform: scale(1.05);
+  }
+  
+  .profile-workout-diet-row {
+    margin-top: 30px;
+  }
+  
+  .profile-card {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .profile-card-dark {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .profile-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .profile-list-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+  }
+  
+  .profile-list-activity {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .profile-diet-link {
+    color: #00f;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .profile-diet-link:hover {
+    color: #007bff;
+    text-decoration: underline;
+  }
+  
+  .modal-content {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .modal-header,
+  .modal-footer {
+    border: none;
+  }
+  
+  .spinner-border {
+    color: #fff;
+  }
+  
+  .food-images {
+    margin-top: 10px;
+  }
+  
+  .food-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 5px;
+    border-radius: 5px;
+  }
+  
+  .food-type-btn,
+  .food-category-btn {
+    background-color: #007bff;
+    color: #fff;
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .food-type-btn:hover,
+  .food-category-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  

@@ -2,14 +2,35 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import Navbar from "../Navbar/Navbar";
 
 function Home() {
   const navigate = useNavigate();
   const [workout, setWorkout] = useState([]);
+
   useEffect(() => {
     auth();
     getWorkout();
+    getUser();
   }, []);
+
+  const getUser = async () => {
+    const email = await localStorage.getItem("email");
+    // console.log(email);
+    await axios
+      .get(`http://localhost:8080/getuser/${email}`)
+      .then(async (succ) => {
+        const stringFormatUser = JSON.stringify(succ.data.msg[0]);
+        await localStorage.setItem("user", stringFormatUser);
+      })
+      .catch((err) => {
+        alert(
+          "Internal error occured, please try again later",
+          err.data.msg[0]
+        );
+        navigate("/login");
+      });
+  };
 
   const auth = () => {
     const auth = localStorage.getItem("email");
@@ -36,8 +57,13 @@ function Home() {
     },
     {
       id: 4,
-      purpose: "bodyWeight",
+      purpose: "calisthenics",
       url: "https://www.shutterstock.com/image-photo/very-strong-caucasian-boy-doing-600nw-1870337767.jpg",
+    },
+    {
+      id: 5,
+      purpose: "yoga",
+      url: "https://t4.ftcdn.net/jpg/05/21/08/41/360_F_521084195_tYS2okL4X2UWsiCzuODpzjxZ3EyF1amu.jpg",
     },
   ];
 
@@ -51,67 +77,55 @@ function Home() {
     }
   };
 
-  const handleClick = () => {
-    console.log(workout);
-  };
-
   const quickWorkout = (e) => {
-    navigate(`/quickworkout/${e}`);
+    if (e != "yoga") {
+      navigate(`/quickworkout/${e}`);
+    } else {
+      alert("Page under construction, please wait");
+    }
   };
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="row">
+    <div className="home-container-fluid">
+      <div className="home-row">
+        <Navbar />
+      </div>
+      <div className="home-row">
+        <div className="home-row">
           <center>
-            <h1>Quick Access</h1>
+            <h1 className="home-title">Quick Access</h1>
           </center>
         </div>
       </div>
-      <div className="row quick-access-container">
-        {quickAccess.map((item) => (
-          <div
-            key={item.id}
-            className="quick-access-item col-md-6 col-lg-4 mb-3 animate__animated animate__fadeIn"
-          >
-            <div className="card h-100 shadow-sm">
-              <img
-                src={item.url}
-                className="card-img-top"
-                alt={item.purpose.toUpperCase()}
-              />
-              <div className="card-body">
-                <h5 className="card-title">{item.purpose.toUpperCase()}</h5>
-                {/* <p className="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </p> */}
-                <button
-                  onClick={() => quickWorkout(item.purpose)}
-                  className="btn btn-primary"
-                >
-                  Let's workout
-                </button>
+      <div className="home-row home-quick-access-wrapper">
+        <div className="home-quick-access-container">
+          {quickAccess.map((item) => (
+            <div
+              key={item.id}
+              className="home-quick-access-item col-md-6 col-lg-4 mb-3 animate__animated animate__fadeIn"
+            >
+              <div className="home-card h-100 shadow-sm">
+                <img
+                  src={item.url}
+                  className="home-card-img-top"
+                  alt={item.purpose.toUpperCase()}
+                />
+                <div className="home-card-body">
+                  <h5 className="home-card-title">
+                    {item.purpose.toUpperCase()}
+                  </h5>
+                  <button
+                    onClick={() => quickWorkout(item.purpose)}
+                    className="home-btn-primary"
+                  >
+                    Let's workout
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      {/* {workout.map((item) => (
-        <div key={item.id} className="col-md-4 mb-3 animate__animated animate__fadeIn">
-          <div className="card shadow-sm">
-            <img src={item.gifUrl} className="card-img-top" alt={item.name} />
-            <div className="card-body">
-              <h5 className="card-title">{item.name}</h5>
-              <p className="card-text">
-                Some quick example text to build on the card title and make
-                up the bulk of the card's content.
-              </p>
-              <p>Body Part: {item.bodyPart}</p>
-            </div>
-          </div>
+          ))}
         </div>
-      ))} */}
+      </div>
     </div>
   );
 }
