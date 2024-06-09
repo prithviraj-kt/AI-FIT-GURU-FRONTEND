@@ -13,6 +13,7 @@ import SIngleWOrkout from "./Components/SingleWorkout/SIngleWOrkout";
 import { AuthContextProvider } from "./Components/Context/AuthContext";
 import Navbar from "./Components/Navbar/Navbar";
 import Profile from "./Components/Profile/Profile";
+import WorkoutPlanBot from "./Components/Bots/trainer";
 function App() {
   // const [value, setValue] = useState("");
   // const handleClick = () => {
@@ -31,7 +32,6 @@ function App() {
       {/* <AuthContextProvider> */}
 
       <BrowserRouter>
-        
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
           <Route exact path="/signup" element={<Signup />} />
@@ -44,6 +44,7 @@ function App() {
             element={<QuickWorkout />}
           />
           <Route exact path="/:workout" element={<SIngleWOrkout />} />
+          <Route exact path="/aibot" element={<WorkoutPlanBot />} />
         </Routes>
       </BrowserRouter>
       {/* </AuthContextProvider> */}

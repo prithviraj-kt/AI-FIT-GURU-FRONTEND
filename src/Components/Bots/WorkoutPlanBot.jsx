@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Home.css"; // Import your CSS file
-
-// Assuming you have a separate file (Aibot.js) for handling AI interactions
+import "./WorkoutPlanBot.css";
 import run from "../../Aibot";
 
 function WorkoutPlanBot() {
@@ -9,6 +7,22 @@ function WorkoutPlanBot() {
   const [prompt, setPrompt] = useState({ question: "" }); // User question state
   const [answer, setAnswer] = useState(""); // Coach's answer state
   const [history, setHistory] = useState([]); // Conversation history array
+
+  const data = {
+    Gender: "male",
+    Height: 181,
+    HealthIssues: ["Shoulder pain", "Lower back pain"],
+    BodyFat: null,
+    WorkoutIntensity: 1,
+    FitnessLevel: "Fat with muscle",
+    DailyActiveLevel: "Active",
+    Weight: 100,
+    BMI: 30.52, // Assuming BMI is calculated using weight and height
+    WorkoutFrequency: 6,
+    SleepDuration: 9.5, // Assuming an average of 9-10 hours
+    Goal: "Fat loss",
+    Age: 22,
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +32,10 @@ function WorkoutPlanBot() {
     fetchData();
   }, []); // Fetch email data on component mount
 
+  const getDetails = async () => {
+    await setPrompt({ question: JSON.stringify(data) });
+  };
+
   const handleChange = (e) => {
     setPrompt({ question: e.target.value });
   };
@@ -25,13 +43,12 @@ function WorkoutPlanBot() {
   const handleSubmit = async () => {
     try {
       const ans = await run(prompt.question);
-      const coachAnswer = JSON.parse(
-        ans.msg.response.candidates[0].content.parts[0].text
-      );
+      const coachAnswer =
+        ans.result.response.candidates[0].content.parts[0].text;
+
       console.log(coachAnswer);
-      // const response = { Coach: coachAnswer, You: prompt.question };
-      // setHistory([...history, response]); // Update history with spread operator
-      // setAnswer(coachAnswer);
+      const response = { question: prompt.question, answer: coachAnswer };
+      setHistory([...history, response]); // Update history with spread operator
       setPrompt({ question: "" });
     } catch (error) {
       console.error("Error fetching answer:", error);
@@ -44,6 +61,11 @@ function WorkoutPlanBot() {
     window.location.reload();
   };
 
+  const clickme = () => {
+    getDetails();
+    handleSubmit();
+  };
+
   return (
     <div className="chatbot-container">
       {email ? (
@@ -51,6 +73,7 @@ function WorkoutPlanBot() {
           <button onClick={logout} className="logout-button">
             Logout
           </button>
+          <button onClick={clickme}>Load my personal data</button>
 
           <h1>
             <center>FITNESS INSTRUCTOR</center>
@@ -61,28 +84,16 @@ function WorkoutPlanBot() {
               <p className="message-text">Pucho ji, kya chahte ho...</p>
             ) : (
               <>
-                {/* <div className="trainer-message message">
-                  <p className="message-text">Loading</p>
-                </div> */}
-
                 {answer && history.length > 0 && (
                   <div className="conversation-history">
                     {history.map((item, index) => (
                       <div key={index} className="conversation-item">
-                        <p
-                          className={
-                            item.You
-                              ? "you-message bg-warning"
-                              : "coach-message"
-                          }
-                        >
-                          {item.You}
+                        <p className="you-message">
+                          <strong>You:</strong> {item.question}
                         </p>
-                        {item.Coach && (
-                          <p className="coach-message bg-danger">
-                            {item.Coach}
-                          </p>
-                        )}
+                        <p className="coach-message">
+                          <strong>Coach:</strong> {item.answer}
+                        </p>
                       </div>
                     ))}
                   </div>
