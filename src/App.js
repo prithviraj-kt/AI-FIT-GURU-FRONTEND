@@ -13,7 +13,11 @@ import SIngleWOrkout from "./Components/SingleWorkout/SIngleWOrkout";
 import { AuthContextProvider } from "./Components/Context/AuthContext";
 import Navbar from "./Components/Navbar/Navbar";
 import Profile from "./Components/Profile/Profile";
-import WorkoutPlanBot from "./Components/Bots/trainer";
+import WorkoutPlanBot from "./Components/Bots/Trainer/Trainer";
+import Neutritionist from "./Components/Bots/Neutritionist/Neutritionist";
+import PersonalWorkout from "./Components/PersonalWorkout/PersonalWorkout";
+import Demoexercise from "./Components/Profile/Demo";
+import Yoga from "./Components/Home/Yoga";
 function App() {
   // const [value, setValue] = useState("");
   // const handleClick = () => {
@@ -38,13 +42,18 @@ function App() {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/home" element={<Home />} />
           <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/personalworkout" element={<PersonalWorkout />} />
           <Route
             exact
             path="/quickworkout/:purpose"
             element={<QuickWorkout />}
           />
           <Route exact path="/:workout" element={<SIngleWOrkout />} />
-          <Route exact path="/aibot" element={<WorkoutPlanBot />} />
+          <Route exact path="/trainer" element={<WorkoutPlanBot />} />
+          <Route exact path="/neutritionist" element={<Neutritionist />} />
+          <Route exact path="/demo" element={<Demoexercise />} />
+          <Route exact path="/yoga" element={<Yoga />} />
+
         </Routes>
       </BrowserRouter>
       {/* </AuthContextProvider> */}

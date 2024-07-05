@@ -64,3 +64,13 @@
 .custom-google-button:hover {
   background-color: #65cf6b; 
 }
+.app {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}

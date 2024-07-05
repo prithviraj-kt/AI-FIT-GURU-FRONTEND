@@ -7,6 +7,7 @@ import useSound from "use-sound";
 import startSound from "./sounds/start.mp3";
 import applauseSound from "./sounds/applause.mp3";
 import "./SingleWorkout.css";
+import Navbar from "../Navbar/Navbar";
 
 function SingleWorkout() {
   const { workout } = useParams();
@@ -130,18 +131,29 @@ function SingleWorkout() {
     setTimerMessage("");
     setShowOverlay(false);
     setKey((prevKey) => prevKey + 1);
-    playStartSound(); // Play the start sound immediately on reset
+    playStartSound();
     setTimeout(() => {
       setShowStartCountdown(true);
-    }, 100); // Start countdown after 100ms delay
+    }, 100);
   };
 
   const SuccessAnimation = () => {
-    return <Confetti width={window.innerWidth} height={window.innerHeight} />;
+    return (
+      <div className="success-animation">
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          numberOfPieces={500}
+          recycle={false}
+          gravity={0.2}
+        />
+      </div>
+    );
   };
 
   return (
     <div className="container-fluid workout-container">
+      <Navbar />
       <div className="row justify-content-center">
         <div className="col-md-6 my-3">
           <div className="card shadow-lg">
@@ -150,7 +162,8 @@ function SingleWorkout() {
             </div>
             <div className="card-body">
               <div className="text-center mb-3">
-                <strong>ID:</strong> {work ? work.id : ""}
+                <strong className="text-white">ID:</strong>{" "}
+                {work ? work.id : ""}
               </div>
               <div className="text-center mb-3">
                 <img
@@ -160,10 +173,10 @@ function SingleWorkout() {
                 />
               </div>
               <div className="text-center">
-                <p>
+                <p className="text-white">
                   <strong>Target:</strong> {work ? work.target : ""}
                 </p>
-                <p>
+                <p className="text-white">
                   <strong>Description:</strong> {work ? work.instructions : ""}
                 </p>
               </div>
@@ -183,7 +196,6 @@ function SingleWorkout() {
                     height="20px"
                   />
                 )}
-
                 {isWorkoutStarted && (
                   <CountdownCircleTimer
                     key={key}
@@ -218,11 +230,13 @@ function SingleWorkout() {
                 )}
                 {showStartCountdown && (
                   <div className="text-center mb-4">
-                    <h4>Workout starting in {startCountdown} seconds...</h4>
+                    <h4 className="text-white">
+                      Workout starting in {startCountdown} seconds...
+                    </h4>
                   </div>
                 )}
                 <div className="text-center mb-4">
-                  <h4>{timerMessage}</h4>
+                  <h4 className="text-white">{timerMessage}</h4>
                 </div>
               </div>
               <div className="text-center">
@@ -256,7 +270,7 @@ function SingleWorkout() {
                 )}
                 {!isWorkoutStarted && !showStartCountdown && (
                   <div className="text-center">
-                    <label htmlFor="duration" className="form-label">
+                    <label htmlFor="duration" className="form-label text-white">
                       Enter Workout Duration (in seconds):
                     </label>
                     <input
@@ -285,8 +299,8 @@ function SingleWorkout() {
           }}
         >
           <div className="success-message">
-            <h2>Congratulations! You've nailed it</h2>
-            <SuccessAnimation />
+            <h2 className="text-white">Congratulations! You've nailed it</h2>
+            <SuccessAnimation /> {/* Show animation within overlay */}
           </div>
         </div>
       )}

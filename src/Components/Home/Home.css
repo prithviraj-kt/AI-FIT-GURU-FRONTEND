@@ -1,54 +1,256 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
 .home-container-fluid {
   background-color: #121212;
   color: #f0f0f0;
   min-height: 100vh;
   padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .home-row {
-  margin: 0;
-}
-
-.home-title {
-  margin-top: 20px;
-  font-size: 2.5em;
-  color: #bb86fc;
+  width: 100%;
+  margin: 20px 0;
 }
 
 .home-quick-access-wrapper {
-  overflow-x: auto;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .home-quick-access-container {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 10px;
+  justify-content: center;
+  width: 100%;
 }
 
 .home-quick-access-item {
-  flex: 0 0 auto;
-  width: calc(33.333% - 20px); /* Adjust this width as needed */
+  flex: 1;
+  min-width: 150px;
+}
+
+.home-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.home-horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.home-btn-primary {
+  background-color: #1f1f1f;
+  border: 2px solid rgb(255, 115, 0);
+  color: rgb(255, 115, 0);
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.home-btn-primary:hover {
+  background-color: rgb(255, 115, 0);
+  color: white;
+}
+
+.home-btn-selected {
+  background-color: rgb(255, 115, 0);
+  color: white;
+}
+
+.home-workout-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.home-workout-item {
+  width: 100%;
+  max-width: 300px;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
 }
 
 .home-card {
-  background-color: #1f1f1f;
-  color: #f0f0f0;
-  border: none;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
-.home-card:hover {
-  transform: scale(1.05);
+/* .home-card-img-top {
+  width: 100%;
+  height: auto;
+} */
+
+.home-card-body {
+  padding: 15px;
+}
+
+.home-card-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #bb86fc;
+}
+
+.home-instructions-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  z-index: 10;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate__animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+.home-yoga-category-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.home-yoga-category-item {
+  flex: 1;
+  min-width: 150px;
+}
+
+.home-yoga-pose-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.home-yoga-pose-item {
+  width: 100%;
+  max-width: 300px;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.home-card-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #bb86fc;
+}
+
+.home-quick-access-container button {
+  margin: 5px;
+}
+
+.home-btn-primary {
+  background-color: #1f1f1f;
+  border: 2px solid rgb(255, 115, 0);
+  color: rgb(255, 115, 0);
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.home-btn-primary:hover {
+  background-color: rgb(255, 115, 0);
+  color: white;
+}
+
+.home-btn-selected {
+  background-color: rgb(255, 115, 0);
+  color: white;
+}
+
+.home-workout-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.home-workout-item {
+  width: 100%;
+  max-width: 300px;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .home-card-img-top {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-bottom: 1px solid #333;
+  height: auto;
+  transition: transform 0.3s ease; /* Add a smooth transition effect */
+}
+
+.home-card-img-top:hover {
+  transform: scale(1.1); /* Scale the image to 110% on hover */
 }
 
 .home-card-body {
@@ -56,41 +258,75 @@
 }
 
 .home-card-title {
-  font-size: 1.5em;
-  margin-bottom: 15px;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #bb86fc;
 }
 
-.home-btn-primary {
-  background-color: #6200ea;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  color: #f0f0f0;
-  cursor: pointer;
+.instructions-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
   text-align: center;
+  z-index: 10;
 }
 
-.home-btn-primary:hover {
-  background-color: #3700b3;
-}
-
-@media (max-width: 768px) {
-  .home-card-img-top {
-    height: 150px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .home-card-title {
-    font-size: 1.2em;
-  }
-
-  .home-quick-access-item {
-    width: calc(50% - 20px); /* Adjust for smaller screens */
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 576px) {
-  .home-quick-access-item {
-    width: calc(100% - 20px); /* Full width for very small screens */
-  }
+.animate__animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
 }
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+.home-yoga-category-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.home-yoga-category-item {
+  flex: 1;
+  min-width: 150px;
+}
+
+.home-yoga-pose-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.home-yoga-pose-item {
+  width: 100%;
+  max-width: 300px;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+

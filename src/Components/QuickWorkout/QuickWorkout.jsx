@@ -26,6 +26,7 @@ function QuickWorkout() {
   const getWorkout = async () => {
     const myWorkout = await localStorage.getItem("workout");
     const parsedWorkout = JSON.parse(myWorkout);
+    // console.log(parsedWorkout);
 
     if (parsedWorkout) {
       setWorkout(parsedWorkout);
@@ -62,6 +63,7 @@ function QuickWorkout() {
 
   // Filter workouts based on the selected body part and target
   const filteredWorkouts = workout.filter((item) => {
+    console.log(workout);
     if (purpose === "cardio") {
       return item.bodyPart.includes("cardio");
     }

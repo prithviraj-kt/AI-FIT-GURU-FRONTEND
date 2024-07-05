@@ -1,0 +1,264 @@
+.personalworkout-container {
+    background-color: #222831; 
+    color: #f0f0f0;
+    /* min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    font-family: 'Roboto', sans-serif;  */
+  }
+  
+  .personalworkout-content {
+    width: 90%;
+    max-width: 700px; 
+    background-color: #393e46; /* Slightly lighter background for content */
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    text-align: center; 
+  }
+  
+  .personalworkout-heading {
+    color: #00adb5; /* Accent color */
+    font-size: 3em;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+  }
+  
+  .personalworkout-workout-item {
+    margin-bottom: 40px;
+  }
+  
+  .image-container {
+    width: 100%;
+    max-width: 500px;
+    height: 300px; /* Fixed height for the image container */
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Inner shadow */
+    display: flex; /* Center the image */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .personalworkout-workout-gif {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+  }
+  
+  .image-container:hover .personalworkout-workout-gif {
+    transform: scale(1.1); 
+  }
+  
+  .workout-name {
+    font-size: 2em;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  .personalworkout-timer {
+    font-size: 3em; 
+    color: #f0f0f0;
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+  
+  .timer-tick { 
+    animation: tickAnimation 1s infinite linear; 
+  }
+  
+  @keyframes tickAnimation {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  .personalworkout-controls {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 40px; 
+  }
+  
+  .personalworkout-controls button {
+    background-color: transparent;
+    border: none;
+    color: #f0f0f0;
+    padding: 15px 25px; 
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+  }
+  
+  .personalworkout-controls button:hover {
+    background-color: #00adb5;
+    color: #222831;
+    transform: translateY(-2px); 
+  }
+  
+  .personalworkout-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .personalworkout-instructions-list {
+    list-style-type: disc; 
+    padding-left: 40px; 
+    text-align: left;
+  }
+  
+  .personalworkout-no-workouts {
+    font-size: 1.5em; 
+    color: #aaa; 
+  }
+  .workout-info{
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .workout-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+  }
+  
+  .countdown-timer {
+    font-size: 5em; /* Large font size for countdown */
+    color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  /* Styling for circular progress bar */
+  .CircularProgressbar {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .CircularProgressbar .CircularProgressbar-text {
+    font-size: 1.5em;
+    fill: #f0f0f0;
+  }
+  
+  .img {
+    border: 8px solid #222831; /* Border color */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Hide content that overflows */
+  }
+  
+  /* Media Query for Responsiveness (adjust breakpoint as needed) */
+  @media (max-width: 768px) {
+    .workout-info {
+      margin-bottom: 20px; 
+    }
+  
+    .personalworkout-controls {
+      margin-top: 20px;
+    }
+  
+    .countdown-timer {
+      font-size: 2em; /* Adjust font size for smaller screens */
+    }
+  }
+  .personalworkout-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #282c34;
+    min-height: 100vh;
+    color: white;
+    padding: 20px;
+  }
+  
+  .personalworkout-content {
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+  }
+  
+  .personalworkout-workout-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .personalworkout-workout-gif {
+    max-width: 100%;
+  }
+  
+  .workout-info {
+    margin-top: 20px;
+  }
+  
+  .personalworkout-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .personalworkout-instructions-list {
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .personalworkout-no-workouts {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
+  .countdown-timer,
+  .break-timer {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .workout-completed-message {
+    text-align: center;
+  }
+  
+  .animation-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .flower-shower {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("https://images.pexels.com/photos/56866/garden-rose-red-pink-56866.jpeg?cs=srgb&dl=pexels-pixabay-56866.jpg&fm=jpg"); /* Path to your flower image */
+    background-repeat: repeat;
+    animation: flower-shower-animation 5s linear infinite;
+  }
+  
+  @keyframes flower-shower-animation {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .row {
+      flex-direction: column-reverse;
+    }
+  }
+  

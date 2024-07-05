@@ -102,7 +102,7 @@ function LandingPage() {
       {/* Trainers Section */}
       <section className="trainers py-5 bg-light">
         <Container>
-          <h2 className="text-center mb-5">Our Trainers</h2>
+          <h2 className="text-center mb-5 text-dark">Our Trainers</h2>
           <Row>
             <Col md={4}>
               <Card>

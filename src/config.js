@@ -17,8 +17,9 @@
 // export {auth, provider};
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCsbk58v7s7ty-lhQFs_2k7sOHG6CezY2Y",
   authDomain: "ai-fitness-guru-8e733.firebaseapp.com",
@@ -35,4 +36,4 @@ const provider = new GoogleAuthProvider();
 const storage = getStorage(app);
 const db = getFirestore(app);
 
-export { auth, provider, storage, db };
+export { auth, provider, db, storage, ref, listAll, getDownloadURL };

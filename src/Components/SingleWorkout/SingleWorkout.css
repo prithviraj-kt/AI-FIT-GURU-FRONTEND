@@ -1,11 +1,19 @@
 .workout-container {
-  background-color: #f2f2f2;
+  background-color: #181818; /* Dark background */
   padding: 20px;
+  color: #fff; /* Light text color */
+}
+
+.card {
+  background-color: #282828; /* Slightly lighter card background */
+  border: none;
 }
 
 .card-header {
-  background-color: #007bff;
+  background-color: #007bff; /* Primary blue color */
   color: white;
+  border-top-left-radius: 10px; /* Rounded corners */
+  border-top-right-radius: 10px; /* Rounded corners */
 }
 
 .card-body img {
@@ -48,31 +56,41 @@
   z-index: 99999;
 }
 
+.success-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000; /* Make sure it's on top */
+  pointer-events: none; /* Prevent clicking through confetti */
+}
+
 .success-message {
-  background-color: white;
+  background-color: #282828;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.5s ease; /* Fade-in animation */
-  position: relative;
-  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+  animation: fadeIn 0.5s ease;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  color: white;
 }
-
-
 .success-message h2 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
-
+  z-index: 1000;
 }
 
 .success-message p {
   font-size: 18px;
   margin-bottom: 10px;
-  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
-
+  z-index: 1000;
 }
 
 .success-message button {
@@ -84,13 +102,12 @@
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
-
+  z-index: 1000;
 }
 
 .success-message button:hover {
   background-color: #0056b3;
-  z-index: 9999; /* Adjust this value to ensure it's higher than other elements */
+  z-index: 1000;
 }
 
 
@@ -101,4 +118,80 @@
   to {
     opacity: 1;
   }
+}
+
+/* Additional styling for a dark theme */
+.btn-primary {
+  background-color: #007bff; /* Primary blue */
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.btn-success {
+  background-color: #28a745; /* Green */
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Red */
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Yellow */
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800; /* Darker yellow on hover */
+}
+
+.btn-secondary {
+  background-color: #6c757d; /* Gray */
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+.form-control {
+  background-color: #343a40; /* Darker input background */
+  color: white; /* Light text color */
+  border: none;
+}
+
+.form-label {
+  color: white; /* Light text color */
+}
+
+.progress {
+  background-color: #495057; /* Dark gray progress bar background */
+}
+
+.progress-bar {
+  background-color: #007bff; /* Primary blue progress bar fill */
+}
+
+
+.text-white {
+  color: white; /* Make sure any text that needs to be white is set */
+}
+
+.timer .value,
+.timer .text,
+.card-body strong,
+.card-body p {
+  color: white; /* Set white color for these elements */
 }

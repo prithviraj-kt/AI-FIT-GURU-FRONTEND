@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link, NavLink } from "react-router-dom";
-
+import "./Navbar.css";
 function Navbar() {
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ function Navbar() {
   };
 
   const logout = async () => {
-    await localStorage.clear();
+    await localStorage.removeItem("email");
     navigate("/login");
   };
 
@@ -55,6 +55,25 @@ function Navbar() {
                   to={`/profile`}
                 >
                   Profile
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link text-light"
+                  aria-current="page"
+                  to={`/neutritionist`}
+                >
+                  Personal Deitician
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className="nav-link text-light"
+                  aria-current="page"
+                  to={`/trainer`}
+                >
+                  Personal Trainer
                 </NavLink>
               </li>
               <li className="nav-item">
