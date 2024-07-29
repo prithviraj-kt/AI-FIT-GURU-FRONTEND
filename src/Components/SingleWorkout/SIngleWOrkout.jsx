@@ -45,7 +45,11 @@ function SingleWorkout() {
             item.name.trim().toLowerCase() ===
             decodedWorkoutName.trim().toLowerCase()
         );
+        // if (selectedWorkout.length > 1) {
         setWorkout(selectedWorkout);
+        // } else {
+        //   setWorkout(null);
+        // }
         setLoading(false);
       }
     };
@@ -154,142 +158,162 @@ function SingleWorkout() {
   return (
     <div className="container-fluid workout-container">
       <Navbar />
-      <div className="row justify-content-center">
-        <div className="col-md-6 my-3">
-          <div className="card shadow-lg">
-            <div className="card-header bg-primary text-white text-center">
-              <h1>{work ? work.name.toUpperCase() : "Workout"}</h1>
-            </div>
-            <div className="card-body">
-              <div className="text-center mb-3">
-                <strong className="text-white">ID:</strong>{" "}
-                {work ? work.id : ""}
+      {!work ? (
+        "No workout found"
+      ) : (
+        <div className="row justify-content-center">
+          <div className="col-md-6 my-3">
+            <div className="card shadow-lg">
+              <div className="card-header bg-primary text-white text-center">
+                <h1>
+                  {work
+                    ? work.name.charAt(0).toUpperCase() + work.name.slice(1)
+                    : "Workout"}
+                </h1>
               </div>
-              <div className="text-center mb-3">
-                <img
-                  src={work ? work.gifUrl : ""}
-                  className="img-fluid"
-                  alt={work ? work.name : "Workout"}
-                />
-              </div>
-              <div className="text-center">
-                <p className="text-white">
-                  <strong>Target:</strong> {work ? work.target : ""}
-                </p>
-                <p className="text-white">
-                  <strong>Description:</strong> {work ? work.instructions : ""}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-6 my-3">
-          <div className="card shadow-lg">
-            <div className="card-header bg-primary text-white text-center">
-              <h1>Timer</h1>
-            </div>
-            <div className="card-body">
-              <div className="text-center mb-4">
-                {showStartCountdown && !isWorkoutStarted && (
-                  <ProgressBar
-                    completed={(3 - startCountdown) * 33.33}
-                    height="20px"
+              <div className="card-body">
+                <div className="text-center mb-3">
+                  <img
+                    src={work ? work.gifUrl : ""}
+                    className="img-fluid"
+                    alt={work ? work.name : "Workout"}
                   />
-                )}
-                {isWorkoutStarted && (
-                  <CountdownCircleTimer
-                    key={key}
-                    isPlaying={!isPaused}
-                    duration={workoutDuration}
-                    colors={[
-                      ["#004777"],
-                      // ["#F7B801", workoutDuration / 3],
-                      // ["#A30000", workoutDuration / 3],
-                    ]}
-                    strokeWidth={12}
-                    trailColor="#d9d9d9"
-                    onComplete={() => {
-                      setShowOverlay(true);
-                      setShowSuccess(true);
-                      setIsWorkoutStarted(false);
-                      setTimerMessage("");
-                      playApplauseSound();
-                    }}
-                  >
-                    {({ remainingTime }) => (
-                      <div className="timer">
-                        <div className="value">
-                          {Math.floor(remainingTime / 60)}
-                        </div>
-                        <div className="text">Minutes</div>
-                        <div className="value">{remainingTime % 60}</div>
-                        <div className="text">Seconds</div>
+                </div>
+                <div className="text-center">
+                  <p className="text-white">
+                    <strong>Target -</strong> {work ? work.target : ""}
+                  </p>
+                  <p className="text-white instruction-card">
+                    <strong className="instruction-header">Instructions</strong>{" "}
+                    {work && work.instructions && (
+                      <div className="instruction-card-body">
+                        {work.instructions.map((instruction, index) => (
+                          <p key={index} className="instruction-classname">
+                            {instruction}
+                          </p>
+                        ))}
                       </div>
                     )}
-                  </CountdownCircleTimer>
-                )}
-                {showStartCountdown && (
-                  <div className="text-center mb-4">
-                    <h4 className="text-white">
-                      Workout starting in {startCountdown} seconds...
-                    </h4>
-                  </div>
-                )}
-                <div className="text-center mb-4">
-                  <h4 className="text-white">{timerMessage}</h4>
+                  </p>
                 </div>
               </div>
-              <div className="text-center">
-                {isWorkoutStarted && (
-                  <div className="text-center mb-4">
-                    <button
-                      className="btn btn-danger me-2"
-                      onClick={pauseTimer}
-                    >
-                      Pause
-                    </button>
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={resumeTimer}
-                    >
-                      Resume
-                    </button>
-                    <button
-                      className="btn btn-warning me-2"
-                      onClick={stopWorkout}
-                    >
-                      Stop
-                    </button>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={resetWorkout}
-                    >
-                      Reset
-                    </button>
-                  </div>
-                )}
-                {!isWorkoutStarted && !showStartCountdown && (
-                  <div className="text-center">
-                    <label htmlFor="duration" className="form-label text-white">
-                      Enter Workout Duration (in seconds):
-                    </label>
-                    <input
-                      type="number"
-                      id="duration"
-                      className="form-control mb-3"
-                      value={workoutDuration}
-                      onChange={handleDurationChange}
+            </div>
+          </div>
+          <div className="col-md-6 my-3">
+            <div className="card shadow-lg">
+              <div className="card-header bg-primary text-white text-center">
+                <h1>Timer</h1>
+              </div>
+              <div className="card-body">
+                <div className="text-center mb-4">
+                  {showStartCountdown && !isWorkoutStarted && (
+                    <ProgressBar
+                      completed={(3 - startCountdown) * 33.33}
+                      height="20px"
                     />
-                    <button className="btn btn-primary" onClick={startWorkout}>
-                      Start Workout
-                    </button>
+                  )}
+                  {isWorkoutStarted && (
+                    <CountdownCircleTimer
+                      key={key}
+                      isPlaying={!isPaused}
+                      duration={workoutDuration}
+                      colors={[
+                        ["#004777"],
+                        // ["#F7B801", workoutDuration / 3],
+                        // ["#A30000", workoutDuration / 3],
+                      ]}
+                      strokeWidth={12}
+                      trailColor="#d9d9d9"
+                      onComplete={() => {
+                        setShowOverlay(true);
+                        setShowSuccess(true);
+                        setIsWorkoutStarted(false);
+                        setTimerMessage("");
+                        playApplauseSound();
+                      }}
+                    >
+                      {({ remainingTime }) => (
+                        <div className="timer">
+                          <div className="value">
+                            {Math.floor(remainingTime / 60)}
+                          </div>
+                          <div className="text">Minutes</div>
+                          <div className="value">{remainingTime % 60}</div>
+                          <div className="text">Seconds</div>
+                        </div>
+                      )}
+                    </CountdownCircleTimer>
+                  )}
+                  {showStartCountdown && (
+                    <div className="text-center mb-4">
+                      <h4 className="text-white">
+                        Workout starting in {startCountdown} seconds...
+                      </h4>
+                    </div>
+                  )}
+                  <div className="text-center mb-4">
+                    <h4 className="text-white">{timerMessage}</h4>
                   </div>
-                )}
+                </div>
+                <div className="text-center">
+                  {isWorkoutStarted && (
+                    <div className="text-center mb-4">
+                      <button
+                        className="btn btn-danger me-2"
+                        onClick={pauseTimer}
+                      >
+                        Pause
+                      </button>
+                      <button
+                        className="btn btn-success me-2"
+                        onClick={resumeTimer}
+                      >
+                        Resume
+                      </button>
+                      <button
+                        className="btn btn-warning me-2"
+                        onClick={stopWorkout}
+                      >
+                        Stop
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={resetWorkout}
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  )}
+                  {!isWorkoutStarted && !showStartCountdown && (
+                    <div className="text-center">
+                      <label
+                        htmlFor="duration"
+                        className="form-label text-white"
+                      >
+                        Enter Workout Duration (in seconds):
+                      </label>
+                      <input
+                        type="number"
+                        id="duration"
+                        className="form-control mb-3"
+                        value={workoutDuration}
+                        onChange={handleDurationChange}
+                      />
+                      <button
+                        className="btn btn-primary"
+                        onClick={startWorkout}
+                      >
+                        Start Workout
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
       {showOverlay && (
         <div
           className="dark-overlay"

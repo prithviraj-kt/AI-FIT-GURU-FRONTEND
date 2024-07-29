@@ -1,25 +1,116 @@
-/* .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #1f1f1f;
-    padding: 10px 20px;
-    width: 100%;
+/* navigation.css */
+
+.navigation-navbar {
+  background-color: #343a40; /* Dark background color */
+  z-index: 1000; /* Ensure it stays on top */
+  padding: 10px 20px; /* Padding for content inside */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navigation-navbar-brand {
+  color: #ffffff; /* White text color */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navigation-navbar-toggler {
+  border: none; /* Remove default border */
+  cursor: pointer; /* Show pointer cursor */
+  background: none; /* Remove background */
+  display: none; /* Initially hide for small screens */
+  transition: white 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.navigation-navbar-toggler:hover {
+}
+
+.navigation-navbar-toggler-icon {
+  color: #ffffff; /* White color for icon */
+  font-size: 1.5rem;
+}
+
+.navigation-nav-links {
+  list-style: none; /* Remove default list styles */
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation-nav-link {
+  color: #c2c2c2; /* White text color */
+  font-size: 1.1rem;
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.navigation-nav-link:hover {
+  color: white; /* White text color */
+}
+
+.navigation-nav-link.active {
+  color: #ff7b07; /* Orange color for active link */
+}
+
+.navigation-btn-link {
+  color: #ffffff; /* White text color */
+  font-size: 1.1rem;
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s ease; /* Smooth color transition */
+  border: none; /* Remove border */
+  background: none; /* Remove background */
+  cursor: pointer; /* Show pointer cursor */
+}
+
+.navigation-btn-link:hover {
+  color: #ff6a07; /* Darker orange on hover */
+}
+/* CustomGoogleButton.css */
+
+.custom-google-button {
+  background-color: #4285f4; /* Google Blue */
+  color: #ffffff; /* White text */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Padding */
+  font-size: 1rem; /* Font size */
+  font-weight: bold; /* Bold text */
+  text-transform: uppercase; /* Uppercase text */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 4px; /* Rounded corners */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Shadow for depth */
+}
+
+.custom-google-button:hover {
+  background-color: #3c78dc; /* Darker shade of Google Blue on hover */
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 1000px) {
+  .navigation-navbar-toggler {
+    display: block; /* Show toggle button for small screens */
   }
-  
-  .navbar-brand {
-    font-size: 1.5em;
-    color: #bb86fc;
+
+  .navigation-nav-links {
+    display: none; /* Hide links by default on small screens */
+    flex-direction: column;
+    position: absolute;
+    top: 60px; /* Adjust according to your design */
+    left: 0;
+    background-color: #343a40; /* Dark background color */
+    width: 100%; /* Full width */
+    padding: 10px 20px; /* Padding for content */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for dropdown */
+    z-index: 999; /* Ensure it's above other content */
   }
-  
-  .navbar-links a {
-    color: #f0f0f0;
-    text-decoration: none;
-    margin: 0 10px;
-    transition: color 0.3s ease;
+
+  .navigation-nav-link {
+    padding: 10px 0; /* Vertical padding for links */
   }
-  
-  .navbar-links a:hover {
-    color: #bb86fc;
+
+  .navigation-navbar.active .navigation-nav-links {
+    display: flex; /* Show links when active */
   }
-   */
+}

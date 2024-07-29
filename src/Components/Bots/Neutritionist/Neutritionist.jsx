@@ -26,7 +26,7 @@ function Home() {
 
   const auth = async () => {
     const data = await localStorage.getItem("email");
-    console.log(data);
+    // console.log(data);
     setValue(data);
   };
 
@@ -138,17 +138,73 @@ function Home() {
     );
   };
   const renderJSONTable = (jsonData) => {
+    console.log(JSON.stringify(jsonData));
     return (
-      <table className="aitrainer-json-table">
-        <tbody>
-          {Object.entries(jsonData).map(([key, value]) => (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{JSON.stringify(value, null, 2)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="aitrainer-json-table">
+        <div>
+          {jsonData.modifydietplan ? (
+            <div>
+              <div className="container">
+                <h2 className="text-center mt-4 mb-4">Modify Diet Plan</h2>
+                <div className="table-responsive">
+                  <table className="table table-dark table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">Day</th>
+                        <th scope="col">Breakfast</th>
+                        <th scope="col">Lunch</th>
+                        <th scope="col">Evening Snack</th>
+                        <th scope="col">Mid-Morning Snack</th>
+                        <th scope="col">Mid-night Snack</th>
+                        <th scope="col">Dinner</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {jsonData.modifydietplan.diet.map((dayPlan, index) => (
+                        <tr key={index}>
+                          <td>{dayPlan.day}</td>
+                          <td>{dayPlan.meals?.Breakfast || "-"}</td>
+                          <td>{dayPlan.meals?.Lunch || "-"}</td>
+                          <td>{dayPlan.meals?.["Evening Snack"] || "-"}</td>
+                          <td>{dayPlan.meals?.["Mid-Morning Snack"] || "-"}</td>
+                          <td>{dayPlan.meals?.["Mid-night Snack"] || "-"}</td>
+                          <td>{dayPlan.meals?.Dinner || "-"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="container">
+              <h2 className="text-center mt-4 mb-4">My Health Report</h2>
+              <div className="table-responsive">
+                <table className="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Key</th>
+                      <th scope="col">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(jsonData).map(([key, value]) => (
+                      <tr key={key}>
+                        <td>{key}</td>
+                        <td>
+                          {typeof value === "object"
+                            ? JSON.stringify(value, null, 2)
+                            : value}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     );
   };
   const navigate = useNavigate();
@@ -238,7 +294,7 @@ function Home() {
       if (existingDietPlan.exists()) {
         const diets = existingDietPlan.data();
         const modifiedDiets = {
-          "modify this diet plan": diets,
+          modifydietplan: diets,
         }; // Create a new object with the desired key
 
         setExistingDietPlan(diets);
@@ -247,7 +303,7 @@ function Home() {
           question: JSON.stringify(modifiedDiets),
         });
         handleSubmit();
-        console.log(modifiedDiets);
+        // console.log(modifiedDiets);
       } else {
         console.log("No such document!");
       }
@@ -334,6 +390,9 @@ function Home() {
                   </p>
                 </div>
               ))}
+              {/* {
+                JSON.stringify(existingDietPlan)
+              } */}
               {currentQuestion && (
                 <div className="aitrainer-user-message aitrainer-message">
                   <p className="aitrainer-message-text">

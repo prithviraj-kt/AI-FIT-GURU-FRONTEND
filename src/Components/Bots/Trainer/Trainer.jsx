@@ -154,18 +154,92 @@ function Home() {
   };
 
   const renderJSONTable = (jsonData) => {
-    return (
-      <table className="aitrainer-json-table">
-        <tbody>
-          {Object.entries(jsonData).map(([key, value]) => (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{JSON.stringify(value, null, 2)}</td>
+    // console.log(JSON.stringify(jsonData.modifyworkoutplan))
+    if (jsonData.modifyworkoutplan) {
+      return <div>
+        <div className="aitrainer-container">
+      <h2 className="aitrainer-header">Weekly Workout Plan</h2>
+      <div className="aitrainer-table-responsive">
+        <table className="table table-dark table-bordered table-striped aitrainer-table aitrainer-dark-theme">
+          <thead>
+            <tr>
+              <th scope="col">Day</th>
+              <th scope="col">Body Part</th>
+              <th scope="col">Workout</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    );
+          </thead>
+          <tbody>
+            {jsonData.modifyworkoutplan.map((dayPlan, index) => (
+              <tr key={index}>
+                <td>{dayPlan.day}</td>
+                <td>
+                  <ul>
+                    {dayPlan.bodyPart.map((part, i) => (
+                      <li key={i}>{part}</li>
+                    ))}
+                  </ul>
+                </td>
+                <td>
+                  <ul>
+                    {dayPlan.workout.length > 0 ? (
+                      dayPlan.workout.map((workout, i) => (
+                        <li key={i}>
+                          {workout.bodyPart}: {workout.name}
+                        </li>
+                      ))
+                    ) : (
+                      <li>Rest</li>
+                    )}
+                  </ul>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+      </div>;
+    } else {
+      return (
+        <div className="container">
+          <h2 className="text-center mt-4 mb-4">JSON Data Table</h2>
+          <div className="table-responsive">
+            <table className="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Key</th>
+                  <th scope="col">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(jsonData).map(([key, value]) => (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>
+                      {typeof value === "object"
+                        ? JSON.stringify(value, null, 2)
+                        : value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+    // return (
+    //   <table className="aitrainer-json-table">
+    //     <tbody>
+    //       {Object.entries(jsonData).map(([key, value]) => (
+    //         <tr key={key}>
+    //           <td>{key}</td>
+    //           <td>{JSON.stringify(value, null, 2)}</td>
+    //         </tr>
+    //       ))}
+    //     </tbody>
+    //   </table>
+    // );
   };
 
   const isJSON = (str) => {
@@ -216,7 +290,7 @@ function Home() {
       if (existingWorkoutPlan.exists()) {
         const workouts = existingWorkoutPlan.data();
         const modifiedWorkouts = {
-          "modify this workout plan": workouts.workoutPlan,
+          modifyworkoutplan: workouts.workoutPlan,
         }; // Create a new object with the desired key
 
         setExistingWorkoutPlan(workouts);
@@ -237,17 +311,6 @@ function Home() {
   const letsExploreButton = () => {
     setExplore(true);
   };
-
-  // const getModifiedWorkoutPlan = async () => {
-  //   const existingWorkoutPlan = await getDoc(doc(db, "workoutplan", value));
-  //   if (existingWorkoutPlan.length > 1) {
-  //     setExistingWorkoutPlan(existingWorkoutPlan);
-  //     alert("Fetched wrokout plan");
-  //   }
-  // };
-  // getModifiedWorkoutPlan();
-
-  
 
   return (
     <div>
@@ -280,7 +343,11 @@ function Home() {
                     </Button>
                     {/* </Col> */}
                     {/* <Col xs="auto"> */}
-                    <Button onClick={()=>setExplore(true)} className="w-25 m-3" variant="secondary">
+                    <Button
+                      onClick={() => setExplore(true)}
+                      className="w-25 m-3"
+                      variant="secondary"
+                    >
                       Create Workout Plan
                     </Button>
                     {/* </Col> */}

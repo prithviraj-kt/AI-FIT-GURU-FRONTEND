@@ -15,6 +15,7 @@ import Navbar from "../Navbar/Navbar";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import Confetti from "react-confetti";
+
 const PersonalWorkout = () => {
   const navigate = useNavigate();
   const [personalWorkout, setPersonalWorkout] = useState([]);
@@ -26,6 +27,7 @@ const PersonalWorkout = () => {
   const [isBreakTime, setIsBreakTime] = useState(false);
   const [breakTimeRemaining, setBreakTimeRemaining] = useState(15000);
   const [workoutCompleted, setWorkoutCompleted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const timerId = useRef(null);
   const breakTimerId = useRef(null);
   const audioRef = useRef(null);
@@ -40,7 +42,7 @@ const PersonalWorkout = () => {
     const auth = async () => {
       const email = await localStorage.getItem("email");
       if (!email) {
-        navigate("/login");
+        navigate("/");
       }
     };
     auth();
@@ -55,6 +57,23 @@ const PersonalWorkout = () => {
     };
     getPersonalWorkout();
   }, [navigate]);
+
+  useEffect(() => {
+    if (personalWorkout.length > 0 && workoutData.length > 0) {
+      setCurrentWorkoutIndex((prevIndex) => {
+        let newIndex = prevIndex;
+        while (
+          newIndex < personalWorkout.length &&
+          !workoutData.some(
+            (workout) => workout.name === personalWorkout[newIndex].name
+          )
+        ) {
+          newIndex++;
+        }
+        return newIndex;
+      });
+    }
+  }, [personalWorkout, workoutData]);
 
   useEffect(() => {
     const matchedWorkout = workoutData.find(
@@ -154,16 +173,35 @@ const PersonalWorkout = () => {
   };
 
   const handleNextWorkout = () => {
-    setCurrentWorkoutIndex(
-      (prevIndex) => (prevIndex + 1) % personalWorkout.length
-    );
+    setCurrentWorkoutIndex((prevIndex) => {
+      let newIndex = (prevIndex + 1) % personalWorkout.length;
+      while (
+        newIndex < personalWorkout.length &&
+        !workoutData.some(
+          (workout) => workout.name === personalWorkout[newIndex].name
+        )
+      ) {
+        newIndex = (newIndex + 1) % personalWorkout.length;
+      }
+      return newIndex;
+    });
   };
 
   const handlePreviousWorkout = () => {
-    setCurrentWorkoutIndex(
-      (prevIndex) =>
-        (prevIndex - 1 + personalWorkout.length) % personalWorkout.length
-    );
+    setCurrentWorkoutIndex((prevIndex) => {
+      let newIndex =
+        (prevIndex - 1 + personalWorkout.length) % personalWorkout.length;
+      while (
+        newIndex >= 0 &&
+        !workoutData.some(
+          (workout) => workout.name === personalWorkout[newIndex].name
+        )
+      ) {
+        newIndex =
+          (newIndex - 1 + personalWorkout.length) % personalWorkout.length;
+      }
+      return newIndex;
+    });
   };
 
   const formatTime = (timeInMillis) => {
@@ -186,12 +224,6 @@ const PersonalWorkout = () => {
     timeRemaining !== null
       ? (timeRemaining / (currentWorkout?.length * 1000 || 60000)) * 100
       : 0;
-  const [showConfetti, setShowConfetti] = useState(false);
-
-  useEffect(() => {
-    audioRef.current = new Audio(tickSound);
-    clappingAudioRef.current = new Audio(clappingSound);
-  }, []);
 
   useEffect(() => {
     // Start confetti when workoutCompleted becomes true
@@ -206,97 +238,98 @@ const PersonalWorkout = () => {
   }, [workoutCompleted]);
 
   return (
-    <div className="personalworkout-container">
+    <div className="">
       <Navbar />
-      <div className="personalworkout-content">
-        {workoutCompleted ? (
-          <div className="workout-completed-message">
-            {showConfetti && <Confetti />} {/* Render Confetti */}
-            <h2>Congratulations! You've completed your workout!</h2>
-            <h3>Come back tomorrow</h3>
-            {/* <div className="animation-container">
-              <div className="flower-shower"></div>
-            </div> */}
-          </div>
-        ) : currentWorkout ? (
-          <div className="personalworkout-workout-item">
-            <h4>{currentWorkout.name.toUpperCase()}</h4>
-            <div className="row">
-              <div className="col-md-6 order-1 order-md-1">
-                <div className="img w-75">
-                  <img
-                    src={currentWorkout.gifUrl}
-                    className="personalworkout-workout-gif"
-                  />
+      <div className="personalworkout-container">
+        <div className="personalworkout-content">
+          {workoutCompleted ? (
+            <div className="workout-completed-message">
+              {showConfetti && <Confetti />} {/* Render Confetti */}
+              <h2>Congratulations! You've completed your workout!</h2>
+              <h3>Come back tomorrow</h3>
+            </div>
+          ) : currentWorkout ? (
+            <div className="personalworkout-workout-item">
+              <h4>{currentWorkout.name.toUpperCase()}</h4>
+              <div className="row">
+                <div className="col-md-6 order-1 order-md-1">
+                  <div className="img w-75">
+                    <img
+                      src={currentWorkout.gifUrl}
+                      className="personalworkout-workout-gif"
+                      alt="workout"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="col-md-6 order-3 order-md-2">
-                <div className="workout-info">
-                  {countdown !== null ? (
-                    <div className="countdown-timer">
-                      <p>Workout starts in {countdown}</p>
+                <div className="col-md-6 order-3 order-md-2">
+                  <div className="workout-info">
+                    {countdown !== null ? (
+                      <div className="countdown-timer">
+                        <p>Workout starts in {countdown}</p>
+                      </div>
+                    ) : isBreakTime ? (
+                      <div className="break-timer">
+                        <p>
+                          Next workout starts in{" "}
+                          {formatTime(breakTimeRemaining)}
+                        </p>
+                      </div>
+                    ) : (
+                      <div style={{ width: 200, height: 200 }}>
+                        <CircularProgressbar
+                          value={percentage}
+                          text={formatTime(timeRemaining)}
+                          styles={buildStyles({
+                            textColor: "#fff",
+                            pathColor: "#4caf50",
+                            trailColor: "#d6d6d6",
+                          })}
+                        />
+                      </div>
+                    )}
+                    <div className="personalworkout-workout-header mt-5"></div>
+                    <div className="personalworkout-controls mt-5">
+                      <button
+                        onClick={handlePreviousWorkout}
+                        disabled={currentWorkoutIndex === 0}
+                      >
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                      </button>
+                      <button onClick={handleStartPause}>
+                        <FontAwesomeIcon
+                          icon={isTimerRunning ? faPause : faPlay}
+                        />
+                      </button>
+                      <button onClick={handleReset}>
+                        <FontAwesomeIcon icon={faRedo} />
+                      </button>
+                      <button
+                        onClick={handleNextWorkout}
+                        disabled={
+                          currentWorkoutIndex === personalWorkout.length - 1
+                        }
+                      >
+                        <FontAwesomeIcon icon={faChevronRight} />
+                      </button>
                     </div>
-                  ) : isBreakTime ? (
-                    <div className="break-timer">
-                      <p>
-                        Next workout starts in {formatTime(breakTimeRemaining)}
-                      </p>
-                    </div>
-                  ) : (
-                    <div style={{ width: 200, height: 200 }}>
-                      <CircularProgressbar
-                        value={percentage}
-                        text={formatTime(timeRemaining)}
-                        styles={buildStyles({
-                          textColor: "#fff",
-                          pathColor: "#4caf50",
-                          trailColor: "#d6d6d6",
-                        })}
-                      />
-                    </div>
-                  )}
-                  <div className="personalworkout-workout-header mt-5"></div>
-                  <div className="personalworkout-controls mt-5">
-                    <button
-                      onClick={handlePreviousWorkout}
-                      disabled={currentWorkoutIndex === 0}
-                    >
-                      <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button onClick={handleStartPause}>
-                      <FontAwesomeIcon
-                        icon={isTimerRunning ? faPause : faPlay}
-                      />
-                    </button>
-                    <button onClick={handleReset}>
-                      <FontAwesomeIcon icon={faRedo} />
-                    </button>
-                    <button
-                      onClick={handleNextWorkout}
-                      disabled={
-                        currentWorkoutIndex === personalWorkout.length - 1
-                      }
-                    >
-                      <FontAwesomeIcon icon={faChevronRight} />
-                    </button>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <ol className="personalworkout-instructions-list">
-              {currentWorkout.instructions.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
-          </div>
-        ) : (
-          <p className="personalworkout-no-workouts">
-            {personalWorkout.length === 0
-              ? "No workouts in your plan."
-              : "Loading workouts..."}
-          </p>
-        )}
+              <ol className="personalworkout-instructions-list">
+                {currentWorkout.instructions.map((step, index) => (
+                  <li key={index}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          ) : (
+            <p className="personalworkout-no-workouts">
+              {personalWorkout.length === 0
+                ? "No workouts in your plan."
+                : "Please change the workout plan from profile page, these routein is harmful for you..."}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

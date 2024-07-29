@@ -11,7 +11,7 @@ function QuickWorkout() {
   const auth = () => {
     const auth = localStorage.getItem("email");
     if (!auth) {
-      navigate("/login");
+      navigate("/");
     }
   };
 

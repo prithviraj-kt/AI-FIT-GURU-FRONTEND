@@ -18,29 +18,18 @@ import Neutritionist from "./Components/Bots/Neutritionist/Neutritionist";
 import PersonalWorkout from "./Components/PersonalWorkout/PersonalWorkout";
 import Demoexercise from "./Components/Profile/Demo";
 import Yoga from "./Components/Home/Yoga";
+import Homedemo from "./Components/Home/Homedemo";
 function App() {
-  // const [value, setValue] = useState("");
-  // const handleClick = () => {
-  //   signInWithPopup(auth, provider).then(async (data) => {
-  //     setValue(data.user.email);
-  //     await localStorage.setItem("email", data.user);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   setValue(localStorage.getItem("email"));
-  // });
-
   return (
     <div className="App">
-      {/* <AuthContextProvider> */}
-
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<LandingPage />} />
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/home" element={<Home />} />
+          <Route exact path="/homedemo" element={<Homedemo />} />
+
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/personalworkout" element={<PersonalWorkout />} />
           <Route
@@ -48,23 +37,13 @@ function App() {
             path="/quickworkout/:purpose"
             element={<QuickWorkout />}
           />
-          <Route exact path="/:workout" element={<SIngleWOrkout />} />
+          <Route exact path="/workout/:workout" element={<SIngleWOrkout />} />
           <Route exact path="/trainer" element={<WorkoutPlanBot />} />
           <Route exact path="/neutritionist" element={<Neutritionist />} />
           <Route exact path="/demo" element={<Demoexercise />} />
-          <Route exact path="/yoga" element={<Yoga />} />
-
+          <Route exact path="/yoga/:id" element={<Yoga />} />
         </Routes>
       </BrowserRouter>
-      {/* </AuthContextProvider> */}
-      {/* {value ? (
-        <Home />
-      ) : (
-        <button className="custom-google-button" onClick={handleClick}>
-          
-          Signin with Google
-        </button>
-      )} */}
     </div>
   );
 }

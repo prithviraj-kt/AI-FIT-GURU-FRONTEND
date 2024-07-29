@@ -1,106 +1,62 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
-import {
-  Navbar,
-  Nav,
-  Button,
-  Container,
-  Row,
-  Col,
-  Card,
-} from "react-bootstrap";
+import { Nav, Button, Container, Row, Col, Card } from "react-bootstrap";
+import { GoogleButton } from "react-google-button";
+import { auth, provider, db } from "../../config";
+import { signInWithPopup } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
+import "react-toastify/dist/ReactToastify.css";
+import Navbar from "../Navbar/Navbar";
+import { FaGoogle } from "react-icons/fa"; // Import Google icon from react-icons/fa
 
 function LandingPage() {
-  const navigate = useNavigate();
-
-  const login = () => {
-    navigate("/login");
-  };
-
-  const signup = () => {
-    navigate("/signup");
-  };
-
   return (
     <div>
-      {/* Navbar */}
-      <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
-        <Container>
-          <Navbar.Brand href="#">Lets workout</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto">
-              {/* <Nav.Link href="#">Home</Nav.Link>
-              <Nav.Link href="#">Pages</Nav.Link>
-              <Nav.Link href="#">Shop</Nav.Link>
-              <Nav.Link href="#">Blogs</Nav.Link>
-              <Nav.Link href="#">Elements</Nav.Link>
-              <Nav.Link href="#">Contact</Nav.Link> */}
-              <Button
-                variant="outline-warning"
-                className="ml-2"
-                onClick={login}
-              >
-                Login
-              </Button>
-              <Button
-                variant="outline-success"
-                className="ml-2"
-                onClick={signup}
-              >
-                Signup
-              </Button>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <Navbar />
 
-      {/* Hero Section */}
-      <section className="hero text-white text-center d-flex align-items-center justify-content-center">
+      <section className="landing-hero text-white text-center d-flex align-items-center justify-content-center">
         <Container>
           <h1>Work Hard to Get a Better Life</h1>
-          <p>Start your trainings with our professional trainers</p>
-          <Button variant="warning" size="lg">
-            Get Started
-          </Button>
+          <p>Get your personalized training right now</p>
         </Container>
       </section>
 
       {/* Features Section */}
-      <section className="features py-5">
+      {/* <section className="landing-features py-5">
         <Container>
           <Row>
             <Col md={3} className="text-center">
-              <div className="feature-box">
+              <div className="landing-feature-box">
                 <h3>Our Classes</h3>
                 <p>Learn more</p>
               </div>
             </Col>
             <Col md={3} className="text-center">
-              <div className="feature-box">
+              <div className="landing-feature-box">
                 <h3>Our Trainers</h3>
                 <p>Learn more</p>
               </div>
             </Col>
             <Col md={3} className="text-center">
-              <div className="feature-box">
+              <div className="landing-feature-box">
                 <h3>Memberships</h3>
                 <p>Learn more</p>
               </div>
             </Col>
             <Col md={3} className="text-center">
-              <div className="feature-box">
+              <div className="landing-feature-box">
                 <h3>Our Timeline</h3>
                 <p>Learn more</p>
               </div>
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       {/* Trainers Section */}
-      <section className="trainers py-5 bg-light">
+      {/* <section className="landing-trainers py-5 bg-light">
         <Container>
           <h2 className="text-center mb-5 text-dark">Our Trainers</h2>
           <Row>
@@ -133,10 +89,10 @@ function LandingPage() {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       {/* Membership Section */}
-      <section className="membership py-5">
+      {/* <section className="landing-membership py-5">
         <Container>
           <h2 className="text-center mb-5">Our Membership</h2>
           <Row>
@@ -184,10 +140,10 @@ function LandingPage() {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       {/* Testimonials Section */}
-      <section className="testimonials py-5 bg-light">
+      {/* <section className="landing-testimonials py-5 bg-light">
         <Container>
           <h2 className="text-center mb-5">Testimonials</h2>
           <Row>
@@ -220,39 +176,12 @@ function LandingPage() {
                 </Card.Body>
               </Card>
             </Col>
-            <Col md={4}>
-              <Card>
-                <Card.Body>
-                  <Card.Text>"Highly recommend this gym!"</Card.Text>
-                  <Card.Title>Emma</Card.Title>
-                  <Card.Subtitle>Client</Card.Subtitle>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card>
-                <Card.Body>
-                  <Card.Text>"Highly recommend this gym!"</Card.Text>
-                  <Card.Title>Emma</Card.Title>
-                  <Card.Subtitle>Client</Card.Subtitle>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card>
-                <Card.Body>
-                  <Card.Text>"Highly recommend this gym!"</Card.Text>
-                  <Card.Title>Emma</Card.Title>
-                  <Card.Subtitle>Client</Card.Subtitle>
-                </Card.Body>
-              </Card>
-            </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       {/* Footer */}
-      <footer className="footer bg-dark text-white text-center py-4">
+      {/* <footer className="landing-footer bg-dark text-white text-center py-4">
         <Container>
           <Row>
             <Col md={4}>
@@ -269,7 +198,10 @@ function LandingPage() {
             </Col>
           </Row>
         </Container>
-      </footer>
+      </footer> */}
+
+      {/* ToastContainer */}
+      <ToastContainer />
     </div>
   );
 }

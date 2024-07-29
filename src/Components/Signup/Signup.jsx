@@ -51,7 +51,7 @@ const Signup = () => {
       });
 
       // Navigate to login after a short delay
-      setTimeout(() => navigate("/login"), 3000);
+      setTimeout(() => navigate("/"), 3000);
     } catch (error) {
       console.error("Google Sign-In error:", error);
       toast.error("Google Sign-In failed. Please try again.", {
@@ -70,7 +70,7 @@ const Signup = () => {
   const validate = async () => {
     const auth = await localStorage.getItem("email");
     if (auth) {
-      navigate("/login");
+      navigate("/");
     }
   };
 
@@ -125,7 +125,7 @@ const Signup = () => {
         });
 
         // Navigate to login after a short delay
-        setTimeout(() => navigate("/login"), 3000);
+        setTimeout(() => navigate("/"), 3000);
       } catch (error) {
         console.error("Signup error:", error);
         toast.error("Signup failed. Please try again.", {
@@ -247,7 +247,7 @@ const Signup = () => {
             <GoogleButton onClick={handleGoogleSignIn} />
             <p className="mt-3 signup-text-muted">
               Already have an account?{" "}
-              <a href="/login" className="signup-link-primary">
+              <a href="/" className="signup-link-primary">
                 Login
               </a>
             </p>

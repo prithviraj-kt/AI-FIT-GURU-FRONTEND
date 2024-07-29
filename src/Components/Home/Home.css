@@ -1,3 +1,6 @@
+/* Existing CSS */
+
+/* Reset and Global Styles */
 * {
   margin: 0;
   padding: 0;
@@ -5,16 +8,16 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', Arial, sans-serif;
   background-color: #121212;
   color: #f0f0f0;
+  line-height: 1.6;
 }
 
+/* Container Styles */
 .home-container-fluid {
-  background-color: #121212;
-  color: #f0f0f0;
   min-height: 100vh;
-  padding: 0 15px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,25 +28,99 @@ body {
   margin: 20px 0;
 }
 
-.home-quick-access-wrapper {
+.home-quick-access-wrapper,
+.home-yoga-category-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
-.home-quick-access-container {
+.home-quick-access-container,
+.home-yoga-category-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
   width: 100%;
 }
 
-.home-quick-access-item {
+.home-quick-access-item,
+.home-yoga-category-item {
   flex: 1;
   min-width: 150px;
 }
 
+/* Sidebar Styles */
+.home-sidebar {
+  display: flex;
+  flex-direction: column;
+  background-color: #2c2c2c;
+  padding: 20px;
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.home-sidebar-btn {
+  background-color: #2c2c2c;
+  border: 3px solid #ff7300;
+  color: #ff7300;
+  padding: 12px 16px;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  margin-bottom: 10px;
+}
+
+.home-sidebar-btn:hover,
+.home-btn-selected {
+  background-color: #ff7300;
+  color: white;
+  border-color: #ff7300;
+}
+
+.home-sidebar-btn:focus {
+  outline: none;
+}
+
+/* Button Styles */
+.home-btn-primary {
+  background-color: #1f1f1f;
+  border: 2px solid #ff7300;
+  color: #ff7300;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+.home-btn-primary-smallscreen{
+  background-color: #1f1f1f;
+  border: 2px solid #ff7300;
+  color: #ff7300;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.home-btn-primary:hover,
+.home-btn-selected {
+  background-color: #ff7300;
+  color: white;
+}
+
+/* Scrollable Containers */
 .home-horizontal-scroll {
   display: flex;
   overflow-x: auto;
@@ -55,118 +132,8 @@ body {
   display: none; /* Safari and Chrome */
 }
 
-.home-btn-primary {
-  background-color: #1f1f1f;
-  border: 2px solid rgb(255, 115, 0);
-  color: rgb(255, 115, 0);
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-  width: 100%;
-  cursor: pointer;
-}
-
-.home-btn-primary:hover {
-  background-color: rgb(255, 115, 0);
-  color: white;
-}
-
-.home-btn-selected {
-  background-color: rgb(255, 115, 0);
-  color: white;
-}
-
-.home-workout-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-.home-workout-item {
-  width: 100%;
-  max-width: 300px;
-  background-color: #1f1f1f;
-  border: 1px solid #333;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.home-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* .home-card-img-top {
-  width: 100%;
-  height: auto;
-} */
-
-.home-card-body {
-  padding: 15px;
-}
-
-.home-card-title {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  color: #bb86fc;
-}
-
-.home-instructions-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
-  z-index: 10;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate__animated {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-}
-
-.animate__fadeIn {
-  animation-name: fadeIn;
-}
-
-.home-yoga-category-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  width: 100%;
-}
-
-.home-yoga-category-item {
-  flex: 1;
-  min-width: 150px;
-}
-
+/* Workout and Yoga Item Styles */
+.home-workout-list,
 .home-yoga-pose-list {
   display: flex;
   flex-wrap: wrap;
@@ -175,6 +142,7 @@ body {
   padding: 20px;
 }
 
+.home-workout-item,
 .home-yoga-pose-item {
   width: 100%;
   max-width: 300px;
@@ -183,74 +151,17 @@ body {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-}
-
-.home-card-title {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  color: #bb86fc;
-}
-
-.home-quick-access-container button {
-  margin: 5px;
-}
-
-.home-btn-primary {
-  background-color: #1f1f1f;
-  border: 2px solid rgb(255, 115, 0);
-  color: rgb(255, 115, 0);
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-  width: 100%;
-  cursor: pointer;
-}
-
-.home-btn-primary:hover {
-  background-color: rgb(255, 115, 0);
-  color: white;
-}
-
-.home-btn-selected {
-  background-color: rgb(255, 115, 0);
-  color: white;
-}
-
-.home-workout-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-.home-workout-item {
-  width: 100%;
-  max-width: 300px;
-  background-color: #1f1f1f;
-  border: 1px solid #333;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.home-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  transition: transform 0.3s ease;
 }
 
 .home-card-img-top {
   width: 100%;
   height: auto;
-  transition: transform 0.3s ease; /* Add a smooth transition effect */
+  transition: transform 0.3s ease;
 }
 
 .home-card-img-top:hover {
-  transform: scale(1.1); /* Scale the image to 110% on hover */
+  transform: scale(1.1);
 }
 
 .home-card-body {
@@ -263,6 +174,7 @@ body {
   color: #bb86fc;
 }
 
+/* Overlay for Instructions */
 .instructions-overlay {
   position: absolute;
   top: 0;
@@ -279,6 +191,7 @@ body {
   z-index: 10;
 }
 
+/* Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -299,34 +212,162 @@ body {
   animation-name: fadeIn;
 }
 
-.home-yoga-category-container {
+/* General Styles for the Sidebar */
+.home-sidebar {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  flex-direction: column;
+  background-color: #2c2c2c;
+  padding: 70px 20px;
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  font-family: 'Roboto', Arial, sans-serif; /* Readable font family */
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Add subtle shadow */
+}
+
+/* General Styles for Sidebar Buttons */
+.home-sidebar-btn {
+  background-color: transparent;
+  border: 2px solid transparent;
+  color: #ff7300;
+  padding: 12px 16px;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  font-weight: 500; /* Medium font weight for buttons */
+  margin-bottom: 10px; /* Spacing between buttons */
+}
+
+/* Hover State for Buttons */
+.home-sidebar-btn:hover {
+  background-color: #ff7300;
+  color: #ffffff;
+  border-color: #ff7300;
   width: 100%;
 }
 
-.home-yoga-category-item {
-  flex: 1;
-  min-width: 150px;
+/* Selected Button State */
+.home-btn-selected {
+  background-color: #ff7300;
+  color: white;
+  border-color: #ff7300;
+  font-weight: bold; /* Bold font for selected button */
 }
 
-.home-yoga-pose-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
+/* Focus State for Accessibility */
+.home-sidebar-btn:focus {
+  outline: 2px dashed #ff7300; /* Custom focus outline for accessibility */
+}
+.mainButtonResponsive{
+  /* height: 100vh; */
+  /* display: none; */
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  /* .mainButtonResponsive{
+    background-color: blue;
+  } */
+  .home-sidebar {
+    top: 7%;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    position: absolute;
+    /* flex-direction: row;
+    justify-content: space-around; */
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
 }
 
-.home-yoga-pose-item {
-  width: 100%;
-  max-width: 300px;
-  background-color: #1f1f1f;
-  border: 1px solid #333;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
+.navbar {
+    --navbar-height: 100px; /* Adjust this value to match your navbar height */
 }
 
+
+.home-sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+
+  .home-sidebar-btn {
+    flex: 1;
+    text-align: center;
+    margin: 0 5px;
+    padding: 10px;
+  }
+
+  .home-btn-selected {
+    font-weight: 500; 
+  }
+  
+  
+}
+
+ /* .home-navbar{
+  background-color: red;
+ } */
+ .row{
+  /* margin: 0;
+  padding: 0; */
+ }
+
+/* New Custom CSS for Improved Responsiveness */
+@media (max-width: 1024px) {
+  .home-sidebar {
+    width: 150px;
+  }
+  .home-sidebar-btn {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 5px;
+  }
+  .home-sidebar-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 10px;
+  }
+  .home-btn-selected {
+    font-weight: 500; 
+  }
+}
+
+@media (max-width: 480px) {
+  
+}
+.home-quick-access-container-small-screen{
+  display: none;
+}
+@media (max-width: 768px) {
+  .home-sidebar {
+    overflow-y: auto;
+    scrollbar-width: none;
+    z-index: 1000;
+  }
+  .home-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+  .home-quick-access-container-small-screen{
+    display: flex;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .home-output{
+    width: 100vw;
+
+  }
+}

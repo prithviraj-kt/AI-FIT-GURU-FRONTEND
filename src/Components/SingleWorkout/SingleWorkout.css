@@ -2,6 +2,10 @@
   background-color: #181818; /* Dark background */
   padding: 20px;
   color: #fff; /* Light text color */
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Choose a readable font family */
+  line-height: 1.6; /* Improved line height for readability */
 }
 
 .card {
@@ -14,6 +18,9 @@
   color: white;
   border-top-left-radius: 10px; /* Rounded corners */
   border-top-right-radius: 10px; /* Rounded corners */
+  padding: 10px 20px; /* Padding for header */
+  font-family: 'Roboto', Arial, sans-serif; /* Different font family for header */
+  font-size: 1.2rem; /* Larger font size */
 }
 
 .card-body img {
@@ -24,6 +31,19 @@
 
 .card-footer button {
   width: 100%;
+  padding: 12px 20px; /* Larger padding for button */
+  font-size: 1rem; /* Font size for button */
+  font-family: 'Roboto', Arial, sans-serif; /* Font family for button */
+  background-color: #007bff; /* Primary blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.card-footer button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .timer {
@@ -31,16 +51,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-family: 'Montserrat', sans-serif; /* Stylish font for timer */
+  font-size: 2rem; /* Larger font size */
   font-weight: bold;
 }
 
 .timer .value {
-  font-size: 40px;
+  font-size: 3.5rem; /* Larger font size for timer value */
 }
 
 .timer .text {
-  font-size: 16px;
+  font-size: 1.2rem; /* Font size for timer text */
 }
 
 .dark-overlay {
@@ -79,37 +100,35 @@
   transform: translate(-50%, -50%);
   z-index: 1000;
   color: white;
+  font-family: 'Poppins', Arial, sans-serif; /* Elegant font for message */
 }
+
 .success-message h2 {
-  font-size: 24px;
+  font-size: 2.5rem; /* Larger font size for heading */
   font-weight: bold;
   margin-bottom: 20px;
-  z-index: 1000;
 }
 
 .success-message p {
-  font-size: 18px;
+  font-size: 1.5rem; /* Font size for paragraph */
   margin-bottom: 10px;
-  z-index: 1000;
 }
 
 .success-message button {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 12px 24px; /* Larger padding for button */
+  font-size: 1rem; /* Font size for button */
+  font-family: 'Roboto', Arial, sans-serif; /* Font family for button */
+  background-color: #007bff; /* Primary blue */
+  color: white;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  z-index: 1000;
 }
 
 .success-message button:hover {
-  background-color: #0056b3;
-  z-index: 1000;
+  background-color: #0056b3; /* Darker blue on hover */
 }
-
 
 @keyframes fadeIn {
   from {
@@ -184,7 +203,6 @@
   background-color: #007bff; /* Primary blue progress bar fill */
 }
 
-
 .text-white {
   color: white; /* Make sure any text that needs to be white is set */
 }
@@ -193,5 +211,49 @@
 .timer .text,
 .card-body strong,
 .card-body p {
-  color: white; /* Set white color for these elements */
+  color: rgb(205, 205, 205);
+}
+
+.instruction-card {
+  font-family: 'Roboto', Arial, sans-serif; /* Choose a readable font family */
+  background-color: #282828; /* Dark background */
+  padding: 20px;
+  border-radius: 8px ; /* Rounded corners */
+  margin-bottom: 20px; /* Space at the bottom */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.instruction-header {
+  font-weight: bold; /* Bold header */
+  font-size: x-large;
+}
+
+.instruction-card-body {
+  margin-top: 10px; /* Space above instructions */
+  width: 80%;
+  text-align: left;
+}
+
+.instruction-classname {
+  font-size: 16px; /* Font size for instructions */
+  line-height: 1.6; /* Line height for readability */
+  color: rgb(205, 205, 205);
+
+}
+
+@media (max-width: 768px) {
+  .instruction-card {
+    padding: 15px; /* Adjust padding for smaller screens */
+  }
+
+  .instruction-classname {
+    font-size: 14px; /* Decrease font size for smaller screens */
+  }
+  .instruction-card-body {
+    width: 100%;
+  
+  }
 }

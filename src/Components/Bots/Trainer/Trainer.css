@@ -234,3 +234,37 @@ body {
     flex-direction: column;
   }
 }
+.aitrainer-container {
+  padding: 20px;
+}
+
+.aitrainer-table-responsive {
+  overflow-x: auto;
+  text-align: left;
+}
+
+.aitrainer-table {
+  min-width: 100%;
+}
+
+.aitrainer-dark-theme {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.aitrainer-dark-theme th,
+.aitrainer-dark-theme td {
+  border: 1px solid #454d55;
+}
+
+.aitrainer-header {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.aitrainer-text-right {
+  text-align: right;
+}
+.table-responsive{
+  text-align: left;
+}

@@ -31,8 +31,10 @@ import "react-calendar/dist/Calendar.css";
 import "./Profile.css";
 import axios from "axios";
 import run from "./caloriebot";
-
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import imageCompression from "browser-image-compression";
+import WorkoutSchedule from "./WorkoutSchedule";
 // import run from "./Ai/model";
 function Profile() {
   const navigate = useNavigate();
@@ -91,9 +93,9 @@ function Profile() {
   const [generatedText, setGeneratedText] = useState("");
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
+  const [isToday, setIsToday] = useState(true);
 
   const handleDrop = async (file) => {
-    console.log(file);
     if (file) {
       const options = {
         maxSizeMB: 3,
@@ -105,8 +107,6 @@ function Profile() {
         const compressedFile = await imageCompression(file, options);
         const base64Data = await fileToBase64(compressedFile);
         await setImages([{ src: base64Data, name: compressedFile.name }]);
-        // console.log(compressedFile);
-        // console.log(base64Data);
       } catch (error) {
         console.log(error);
       }
@@ -129,66 +129,85 @@ function Profile() {
   };
 
   const handleGenerate = async () => {
-    if (images.length === 0 || images === null) {
-      console.log("No image");
+    if (!images || images.length === 0) {
+      console.log("No image provided.");
       return;
     }
 
     setGeneratedText("");
+    setLoading(true);
 
     try {
       const apiKey = "AIzaSyDv5Vln4c6BHvz5hcMNdN7PjnMpqqxtFgs";
       const prompt =
-        'You are an expert nutritionist. Your task will be pretty simple. You will be gettig image url, look at the image in it, Look at every item carefully in the image and process. You have to return the amount of calories in it and name of the item in the specific format.If there are 4 idli, return calorie of 4 idli not one. And return all the items details, do not ever skip any. There might be multiple items, so return in the below format\n[\n{name:"apple",\nquantity:"",\ncalorie_count:"100",\nother_instructions:""\n}\n]\nJust retuurn the json object, and in calorie field only return a number. If you wan to add any other information, add it to the other_instructions array please.';
+        "You are an expert nutritionist. Analyze the image and provide a calorie breakdown of the food items present. " +
+        "Return the data only in JSON format as an array of objects. " +
+        "Each object should have the following structure: \n" +
+        `{
+          "name": "item name", 
+          "quantity": "estimated quantity (e.g., 1 slice, 200g)", 
+          "calorie_count": 120, // number only
+          "other_instructions": "Additional notes (optional)" 
+        }\n` +
+        "Ensure to identify all food items and provide calorie counts as accurately as possible. Do not return undefined or empty JSON.";
+
       const imagePart = {
-        inline_data: {
-          mime_type: "image/jpeg",
-          data: images[0].src,
+        image: {
+          source: images[0].src,
         },
       };
 
-      const requestData = {
-        contents: [
-          {
-            parts: [{ text: prompt }, imagePart],
-          },
-        ],
+      const genAI = new GoogleGenerativeAI(apiKey);
+
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const image = {
+        inlineData: {
+          data: images[0].src,
+          mimeType: "image/png",
+        },
       };
 
-      setLoading(true);
+      const result = await model.generateContent([prompt, image]);
+      // console.log(result.response.text());
 
-      const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent`,
-        requestData,
-        {
-          params: {
-            key: apiKey,
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // const requestData = {
+      //   model: 'models/gemini-pro-vision', // Specify the model
+      //   prompt: {
+      //     text: prompt,
+      //   },
+      //   input: imagePart,
+      // };
+
+      // const response = await axios.post(
+      //   `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent`,
+      //   requestData,
+      //   {
+      //     params: { key: apiKey },
+      //     headers: { "Content-Type": "application/json" },
+      //   }
+      // );
 
       setLoading(false);
+      const generatedText = result;
+      console.log("So it is " + generatedText);
 
-      let generatedText =
-        response.data?.candidates[0]?.content?.parts[0]?.text.toString();
-      let trimmedSentence = trimLeadingWhitespace(generatedText);
-      var firstCharSmallLetterSentences =
-        trimmedSentence.at(0).toLowerCase() + trimmedSentence.slice(1);
-      // setGeneratedText(firstCharSmallLetterSentences);
-      if (firstCharSmallLetterSentences.slice(-1) == ".") {
-        firstCharSmallLetterSentences = firstCharSmallLetterSentences.slice(
-          0,
-          -1
-        );
-        // setGeneratedText(deleteDot);
+      if (generatedText) {
+        try {
+          // Attempt to parse the response as JSON
+          const jsonData = JSON.parse(generatedText);
+          console.log(jsonData);
+          // return jsonData; // Return the parsed JSON data
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+          // Handle cases where the response is not valid JSON
+          return generatedText;
+        }
+      } else {
+        console.log("No text generated by the API.");
+        return null;
       }
-      // console.log(firstCharSmallLetterSentences);
-      return firstCharSmallLetterSentences;
     } catch (error) {
-      console.error("Error generating content :", error);
+      console.error("Error generating content:", error);
       setLoading(false);
     }
   };
@@ -200,7 +219,7 @@ function Profile() {
     const fetchUserData = async () => {
       const email = await localStorage.getItem("email");
       if (!email) {
-        navigate("/login");
+        navigate("/");
         return;
       }
       const userDoc = await getDoc(doc(db, "users", email));
@@ -374,7 +393,6 @@ function Profile() {
     setIsLoading(true);
     const storageRef = ref(storage, `food_images/${foodFile.name}`);
     const uploadTask = uploadBytesResumable(storageRef, foodFile);
-    // console.log(storageRef)
 
     uploadTask.on(
       "state_changed",
@@ -387,39 +405,46 @@ function Profile() {
         console.error("Upload failed:", error);
       },
       async () => {
-        // setImg(img.target.files[0]);
-
-        // await handleDrop(img.target.files[0]);
         const aiGeneratedFoodDetails = await handleGenerate();
-        // const data = await handleGenerate();
-        // console.log(img.target.files[0]);
-        // await handleDrop(img.target.files[0]);
-        // await handleGenerate();
-        // console.log(generatedText);
-        var totalCal = await totalCalorie(JSON.parse(aiGeneratedFoodDetails));
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        const newFoodItem = {
-          userEmail: user.email,
-          aiGeneratedFoodDetails: JSON.parse(aiGeneratedFoodDetails),
-          name: foodName,
-          type: foodType,
-          category: foodCategory,
-          section: foodSection,
-          totalCalorie: totalCal,
-          imageURL: downloadURL,
-          uploadTime: new Date(),
-        };
+        let foodDetailsString =
+          aiGeneratedFoodDetails.response.candidates[0].content.parts[0].text;
 
-        await setDoc(
-          doc(db, "food", `${user.email}_${new Date().getTime()}`),
-          newFoodItem
-        );
-        const updatedFoodItems = [...foodItems, newFoodItem];
-        localStorage.setItem("foodItems", JSON.stringify(updatedFoodItems));
-        setFoodItems(updatedFoodItems);
-        setIsLoading(false);
-        setFoodModal(false);
-        resetFoodForm();
+        // Remove any backticks or other unwanted characters
+        foodDetailsString = foodDetailsString.replace(/`/g, "");
+        foodDetailsString = foodDetailsString.replace(/json/g, "");
+
+        // Now attempt to parse the cleaned JSON string
+
+        try {
+          const foodDetailsJson = foodDetailsString;
+          var totalCal = await totalCalorie(JSON.parse(foodDetailsJson));
+          console.log(totalCal);
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          const newFoodItem = {
+            userEmail: user.email,
+            aiGeneratedFoodDetails: JSON.parse(foodDetailsJson),
+            name: foodName,
+            type: foodType,
+            category: foodCategory,
+            section: foodSection,
+            totalCalorie: totalCal,
+            imageURL: downloadURL,
+            uploadTime: new Date(),
+          };
+          await setDoc(
+            doc(db, "food", `${user.email}_${new Date().getTime()}`),
+            newFoodItem
+          );
+          const updatedFoodItems = [...foodItems, newFoodItem];
+          localStorage.setItem("foodItems", JSON.stringify(updatedFoodItems));
+          setFoodItems(updatedFoodItems);
+          setIsLoading(false);
+          setFoodModal(false);
+          resetFoodForm();
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
       }
     );
   };
@@ -569,7 +594,6 @@ function Profile() {
     doc.text(`Email: ${user.email}`, 10, (yOffset += 10));
     doc.text("Health Data:", 10, (yOffset += 20));
 
-    // Add calculated values to the report
     doc.text(`BMI: ${bmi}`, 10, (yOffset += 10));
     doc.text(`Body Fat: ${bodyFatPercentage}%`, 10, (yOffset += 10));
 
@@ -579,7 +603,7 @@ function Profile() {
         doc.text(`${key}: ${value}`, 10, (yOffset += 10));
       });
 
-    doc.text("Diet Data:", 10, (yOffset += 20));
+    doc.text("Add food item:", 10, (yOffset += 20));
 
     foodItems.forEach((item) => {
       const itemName = `Name: ${item.name}`;
@@ -617,7 +641,6 @@ function Profile() {
   };
 
   const goToPersonalWorkout = async (workout) => {
-    console.log(workout);
     await localStorage.setItem("personalworkout", JSON.stringify(workout));
     navigate("/personalworkout");
   };
@@ -626,8 +649,8 @@ function Profile() {
     <div className="profile-dark-theme">
       <Navbar />
       <Container className="profile-container">
-        <Row className="profile-row">
-          <Col md={4} className="profile-img-col">
+        <div className="row profile-row d-flex flex-row">
+          <div className="col-md-4 profile-img-col">
             <div className="profile-image-container">
               <img
                 src={`${user.photoURL}?t=${new Date().getTime()}`}
@@ -648,8 +671,8 @@ function Profile() {
             </div>
             <h2 className="mt-3">{user.displayName}</h2>
             <p>{user.email}</p>
-          </Col>
-          <Col md={8} className="profile-info-col">
+          </div>
+          <div className="col-md-8 profile-info-col">
             <div className="profile-card profile-card-dark">
               <h4>Health Data</h4>
               <div className="profile-btn-group">
@@ -672,14 +695,29 @@ function Profile() {
             <div className="profile-card profile-card-dark">
               <h4>Workout Plan</h4>
               <div className="profile-btn-group">
+                {workoutPlan.length > 1 ? (
+                  <Button
+                    variant="primary"
+                    className="profile-health-btn"
+                    onClick={() => setViewWorkout(true)}
+                  >
+                    View Complete Workout Plan
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </div>
+              {workoutPlan.length > 1 ? (
+                ""
+              ) : (
                 <Button
                   variant="primary"
-                  className="profile-health-btn"
-                  onClick={() => setViewWorkout(true)}
+                  className=""
+                  onClick={() => navigate("/trainer")}
                 >
-                  View Complete Workout Plan
+                  Create new workout plan
                 </Button>
-              </div>
+              )}
               {workoutPlan.map(
                 (dayPlan, index) =>
                   // Remove the extra <div> and else condition ("")
@@ -719,35 +757,60 @@ function Profile() {
             <div className="profile-card profile-card-dark">
               <h4>Diet Plan</h4>
               <div className="profile-btn-group">
+                {dietPlan.length > 1 ? (
+                  <Button
+                    variant="primary"
+                    className="profile-health-btn"
+                    onClick={() => setViewDiet(true)}
+                  >
+                    View Complete Diet Plan
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </div>
+              {dietPlan.length > 1 ? (
+                ""
+              ) : (
                 <Button
                   variant="primary"
-                  className="profile-health-btn"
-                  onClick={() => setViewDiet(true)}
+                  onClick={() => navigate("/neutritionist")}
                 >
-                  View Complete Diet Plan
+                  Create new diet plan
                 </Button>
-              </div>
+              )}
               {dietPlan.map(
                 (diet, index) =>
-                  // Remove the extra <div> and else condition ("")
                   day.toLowerCase() === diet.day.toLowerCase() && (
                     <div key={index} className="aitrainer-day-plan">
                       <h5 className="text-warning">
-                        Todays Meals (
+                        Today's Meals (
                         {diet.day.charAt(0).toUpperCase() + diet.day.slice(1)})
                       </h5>
-                      <ul>
-                        {Object.entries(diet.meals).map(
-                          ([mealTime, meal], idx) => (
-                            <li key={idx} className="list-group-item">
-                              <strong>{mealTime}:</strong> {meal}
-                            </li>
-                          )
-                        )}
-                      </ul>
+                      <table className="table table-dark table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">Meal Time</th>
+                            <th scope="col">Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(diet.meals)
+                            .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                            .map(([mealTime, meal], idx) => (
+                              <tr key={idx}>
+                                <td>
+                                  <strong>
+                                    {mealTime.split(" ").slice(1).join(" ")}
+                                  </strong>
+                                </td>
+                                <td>{meal}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
                       <Button
                         variant="primary"
-                        className=""
                         onClick={() => navigate("/neutritionist")}
                       >
                         Change plan
@@ -758,12 +821,26 @@ function Profile() {
             </div>
 
             <div className="profile-card profile-card-dark">
-              <h4>Diet Data</h4>
+              {foodItems.length > 0 && (
+                <div>
+                  <h4>
+                    Total calorie Intake:{" "}
+                    {foodItems.reduce(
+                      (acc, item) => acc + item.totalCalorie,
+                      0
+                    )}{" "}
+                    Calories
+                  </h4>
+                </div>
+              )}
+
+              {/* <h4>Add food item</h4> */}
               <div className="profile-btn-group">
                 <Button
                   variant="primary"
                   onClick={() => setFoodModal(true)}
                   className="profile-diet-btn"
+                  disabled={!isToday}
                 >
                   Add Food Item
                 </Button>
@@ -781,6 +858,12 @@ function Profile() {
                   onChange={(date) => {
                     setSelectedDate(date);
                     setShowCalendar(false);
+                    const today = new Date();
+                    setIsToday(
+                      date.getDate() === today.getDate() &&
+                        date.getMonth() === today.getMonth() &&
+                        date.getFullYear() === today.getFullYear()
+                    );
                   }}
                   className="mb-3"
                 />
@@ -793,7 +876,6 @@ function Profile() {
                   hover
                   variant="dark"
                 >
-                  {/* Bootstrap classes applied */}
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -807,6 +889,7 @@ function Profile() {
                   <tbody>
                     {foodItems.map((item, index) => (
                       <tr key={index}>
+                        {/* {JSON.stringify(item.uploadTime)} */}
                         <td>
                           <Button
                             variant="info"
@@ -833,16 +916,17 @@ function Profile() {
               ) : (
                 <p className="text-light">No food items found....</p>
               )}
-              <Button
-                variant="success"
-                onClick={downloadPDF}
-                className="profile-download-btn"
-              >
-                <FaFileDownload /> Download PDF
-              </Button>
             </div>
-          </Col>
-        </Row>
+            <WorkoutSchedule />
+            <Button
+              variant="success"
+              onClick={downloadPDF}
+              className="profile-download-btn"
+            >
+              <FaFileDownload /> Download PDF
+            </Button>
+          </div>
+        </div>
       </Container>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>

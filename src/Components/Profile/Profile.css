@@ -17,8 +17,9 @@ padding: 0;
 }
 
 .profile-row {
-  display: flex;
-  flex-wrap: wrap;
+
+display: flex;
+
   margin-bottom: 30px;
 }
 

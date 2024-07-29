@@ -1,0 +1,259 @@
+.workout-container {
+  background-color: #181818; /* Dark background */
+  padding: 20px;
+  color: #fff; /* Light text color */
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Choose a readable font family */
+  line-height: 1.6; /* Improved line height for readability */
+}
+
+.card {
+  background-color: #282828; /* Slightly lighter card background */
+  border: none;
+}
+
+.card-header {
+  background-color: #007bff; /* Primary blue color */
+  color: white;
+  border-top-left-radius: 10px; /* Rounded corners */
+  border-top-right-radius: 10px; /* Rounded corners */
+  padding: 10px 20px; /* Padding for header */
+  font-family: 'Roboto', Arial, sans-serif; /* Different font family for header */
+  font-size: 1.2rem; /* Larger font size */
+}
+
+.card-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.card-footer button {
+  width: 100%;
+  padding: 12px 20px; /* Larger padding for button */
+  font-size: 1rem; /* Font size for button */
+  font-family: 'Roboto', Arial, sans-serif; /* Font family for button */
+  background-color: #007bff; /* Primary blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.card-footer button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif; /* Stylish font for timer */
+  font-size: 2rem; /* Larger font size */
+  font-weight: bold;
+}
+
+.timer .value {
+  font-size: 3.5rem; /* Larger font size for timer value */
+}
+
+.timer .text {
+  font-size: 1.2rem; /* Font size for timer text */
+}
+
+.dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0000009c; /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.success-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000; /* Make sure it's on top */
+  pointer-events: none; /* Prevent clicking through confetti */
+}
+
+.success-message {
+  background-color: #282828;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  color: white;
+  font-family: 'Poppins', Arial, sans-serif; /* Elegant font for message */
+}
+
+.success-message h2 {
+  font-size: 2.5rem; /* Larger font size for heading */
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.success-message p {
+  font-size: 1.5rem; /* Font size for paragraph */
+  margin-bottom: 10px;
+}
+
+.success-message button {
+  padding: 12px 24px; /* Larger padding for button */
+  font-size: 1rem; /* Font size for button */
+  font-family: 'Roboto', Arial, sans-serif; /* Font family for button */
+  background-color: #007bff; /* Primary blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.success-message button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Additional styling for a dark theme */
+.btn-primary {
+  background-color: #007bff; /* Primary blue */
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.btn-success {
+  background-color: #28a745; /* Green */
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Red */
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+.btn-warning {
+  background-color: #ffc107; /* Yellow */
+  border: none;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800; /* Darker yellow on hover */
+}
+
+.btn-secondary {
+  background-color: #6c757d; /* Gray */
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268; /* Darker gray on hover */
+}
+
+.form-control {
+  background-color: #343a40; /* Darker input background */
+  color: white; /* Light text color */
+  border: none;
+}
+
+.form-label {
+  color: white; /* Light text color */
+}
+
+.progress {
+  background-color: #495057; /* Dark gray progress bar background */
+}
+
+.progress-bar {
+  background-color: #007bff; /* Primary blue progress bar fill */
+}
+
+.text-white {
+  color: white; /* Make sure any text that needs to be white is set */
+}
+
+.timer .value,
+.timer .text,
+.card-body strong,
+.card-body p {
+  color: rgb(205, 205, 205);
+}
+
+.instruction-card {
+  font-family: 'Roboto', Arial, sans-serif; /* Choose a readable font family */
+  background-color: #282828; /* Dark background */
+  padding: 20px;
+  border-radius: 8px ; /* Rounded corners */
+  margin-bottom: 20px; /* Space at the bottom */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.instruction-header {
+  font-weight: bold; /* Bold header */
+  font-size: x-large;
+}
+
+.instruction-card-body {
+  margin-top: 10px; /* Space above instructions */
+  width: 80%;
+  text-align: left;
+}
+
+.instruction-classname {
+  font-size: 16px; /* Font size for instructions */
+  line-height: 1.6; /* Line height for readability */
+  color: rgb(205, 205, 205);
+
+}
+
+@media (max-width: 768px) {
+  .instruction-card {
+    padding: 15px; /* Adjust padding for smaller screens */
+  }
+
+  .instruction-classname {
+    font-size: 14px; /* Decrease font size for smaller screens */
+  }
+  .instruction-card-body {
+    width: 100%;
+  
+  }
+}

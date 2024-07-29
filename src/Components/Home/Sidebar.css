@@ -1,0 +1,73 @@
+/* General Styles for the Sidebar */
+.home-sidebar {
+  display: flex;
+  flex-direction: column;
+  background-color: #2c2c2c;
+  padding: 70px 20px;
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  font-family: 'Roboto', Arial, sans-serif; /* Readable font family */
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Add subtle shadow */
+}
+
+/* General Styles for Sidebar Buttons */
+.home-sidebar-btn {
+  background-color: transparent;
+  border: 2px solid transparent;
+  color: #ff7300;
+  padding: 12px 16px;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  font-weight: 500; /* Medium font weight for buttons */
+  margin-bottom: 10px; /* Spacing between buttons */
+}
+
+/* Hover State for Buttons */
+.home-sidebar-btn:hover {
+  background-color: #ff7300;
+  color: #ffffff;
+  border-color: #ff7300;
+}
+
+/* Selected Button State */
+.home-btn-selected {
+  background-color: #ff7300;
+  color: white;
+  border-color: #ff7300;
+  font-weight: bold; /* Bold font for selected button */
+}
+
+/* Focus State for Accessibility */
+.home-sidebar-btn:focus {
+  outline: 2px dashed #ff7300; /* Custom focus outline for accessibility */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .home-sidebar {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    position: relative; /* Change positioning for smaller screens */
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .home-sidebar-btn {
+    flex: 1;
+    text-align: center;
+    margin: 0 5px;
+    padding: 10px;
+  }
+
+  .home-btn-selected {
+    font-weight: 500; /* Adjust weight for smaller screens */
+  }
+}

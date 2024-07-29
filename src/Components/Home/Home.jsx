@@ -6,7 +6,6 @@ import Navbar from "../Navbar/Navbar";
 import { db } from "../../config";
 import { collection, getDocs } from "firebase/firestore";
 import axios from "axios";
-
 function App() {
   const navigate = useNavigate();
   const [workouts, setWorkout] = useState([]);
@@ -31,13 +30,30 @@ function App() {
   const auth = () => {
     const auth = localStorage.getItem("email");
     if (!auth) {
-      navigate("/login");
+      navigate("/");
     }
   };
 
   const getWorkout = async () => {
     try {
       const getWorkouts = await localStorage.getItem("workout");
+      const getYoga = await localStorage.getItem("yoga");
+      if (!getYoga) {
+        // alert("New item");
+        try {
+          const response = await axios.get(
+            "https://yoga-api-nzy4.onrender.com/v1/categories"
+          );
+          await localStorage.setItem("yoga", JSON.stringify(response.data));
+          setYogaCategories(response.data);
+        } catch (error) {
+          console.error("Error fetching yoga data:", error);
+        }
+      } else {
+        // alert("Local item");
+        setYogaCategories(JSON.parse(getYoga));
+      }
+
       if (!getWorkouts || getWorkouts.length < 100) {
         const workoutsCollection = collection(db, "workouts");
         const querySnapshot = await getDocs(workoutsCollection);
@@ -76,25 +92,32 @@ function App() {
             bodyPartSet.add(data.bodyPart);
           }
         });
-
         setEquipments([...equipmentSet]);
         setBodyParts([...bodyPartSet]);
+        function transformWorkoutData(workoutData) {
+          const result = {};
+          result.msg = {};
+
+          workoutData.forEach((workout) => {
+            const { bodyPart, name } = workout;
+
+            // If the bodyPart already exists in the result, push the exercise name.
+            if (result.msg[bodyPart]) {
+              result.msg[bodyPart].push(name);
+            } else {
+              // Otherwise, create a new array for the bodyPart and add the exercise.
+              result.msg[bodyPart] = [name];
+            }
+          });
+        }
+        await transformWorkoutData(workoutData);
       }
     } catch (error) {
       alert("Error occurred... Please try to load again later");
     }
   };
 
-  const fetchYogaData = async () => {
-    try {
-      const response = await axios.get(
-        "https://yoga-api-nzy4.onrender.com/v1/categories"
-      );
-      setYogaCategories(response.data);
-    } catch (error) {
-      console.error("Error fetching yoga data:", error);
-    }
-  };
+  const fetchYogaData = async () => {};
 
   const handleQuickAccess = (purpose) => {
     setSelectedItem(null);
@@ -125,13 +148,12 @@ function App() {
   };
 
   const handleYogaCategoryClick = async (category) => {
-    console.log(category);
     setSelectedYogaCategory(category);
     // try {
     //   const response = await axios.get(
     //     `https://yoga-api-nzy4.onrender.com/v1/categories/${category.id}/poses`
     //   );
-      setYogaData(category.poses);
+    setYogaData(category.poses);
     // } catch (error) {
     //   console.error("Error fetching yoga poses:", error);
     // }
@@ -167,12 +189,32 @@ function App() {
 
   const renderMainButtons = () => (
     <div className="home-quick-access-container">
+      <div className="home-sidebar">
+        {["all", "equipment", "bodyPart", "calisthenics", "yoga"].map(
+          (item, index) => (
+            <button
+              key={index}
+              onClick={() => handleQuickAccess(item)}
+              className={`home-sidebar-btn ${
+                selectedType === item ? "home-btn-selected" : ""
+              }`}
+            >
+              {item.toUpperCase()}
+            </button>
+          )
+        )}
+      </div>
+    </div>
+  );
+
+  const renderMainButtonsSmallScreen = () => (
+    <div className="home-quick-access-container-small-screen">
       {["all", "equipment", "bodyPart", "calisthenics", "yoga"].map(
         (item, index) => (
           <div key={index} className="home-quick-access-item">
             <button
               onClick={() => handleQuickAccess(item)}
-              className={`home-btn-primary ${
+              className={`home-btn-primary-smallscreen ${
                 selectedType === item ? "home-btn-selected" : ""
               }`}
             >
@@ -249,11 +291,17 @@ function App() {
             key={item.id}
             className="home-workout-item home-card animate__animated animate__fadeIn"
           >
-            <img
-              src={item.gifUrl}
-              alt={item.name}
-              className="home-card-img-top"
-            />
+            <button
+              onClick={() =>
+                navigate(`/workout/${encodeURIComponent(item.name)}`)
+              }
+            >
+              <img
+                src={item.gifUrl}
+                alt="Loading....."
+                className="home-card-img-top"
+              />
+            </button>
           </div>
         ))
       ) : (
@@ -283,6 +331,11 @@ function App() {
     </div>
   );
 
+  const gotoSingleYoga = async(pose) => {
+    // await localStorage.setItem("selectedYoga", JSON.stringify(pose))
+    navigate(`/yoga/${encodeURIComponent(pose.sanskrit_name)}`)
+  };
+
   const renderYogaData = () => (
     <div className="home-workout-list">
       {yogaData.length > 0 ? (
@@ -291,12 +344,14 @@ function App() {
             key={index}
             className="home-workout-item home-card animate__animated animate__fadeIn"
           >
-            {/* {console.log(pose)} */}
-            <img
-              src={pose.url_png} // Ensure this key name matches the data structure
-              alt={pose.sanskrit_name} // Ensure this key name matches the data structure
-              className="home-card-img-top"
-            />
+            <button onClick={() => gotoSingleYoga(pose)}>
+              <img
+                src={pose.url_png} // Ensure this key name matches the data structure
+                alt={pose.sanskrit_name} // Ensure this key name matches the data structure
+                className="home-card-img-top"
+              />
+            </button>
+
             {/* <div className="home-card-body">
               <h5 className="home-card-title">{pose.english_name}</h5>
               <p>{pose.sanskrit_name}</p>
@@ -311,20 +366,32 @@ function App() {
   );
 
   return (
-    <div>
-      <Navbar />
-      {renderMainButtons()}
-      {selectedType === "equipment" && renderEquipmentButtons()}
-      {selectedType === "bodyPart" && renderBodyPartButtons()}
-      {targets.length > 0 && renderTargetButtons()}
-      {quickAccess === "yoga" ? (
-        <>
-          {renderYogaCategories()}
-          {renderYogaData()}
-        </>
-      ) : (
-        renderFilteredWorkouts()
-      )}
+    <div className="">
+      <div className="row home-navbar">
+        <Navbar />
+      </div>
+      <div className="row">{renderMainButtonsSmallScreen()}</div>
+      <div className="row">
+        <div className="row">
+          <div className="col-md-2">
+            {/* <Sidebar /> */}
+            {renderMainButtons()}
+          </div>
+          <div className="col-md-10 home-output">
+            {selectedType === "equipment" && renderEquipmentButtons()}
+            {selectedType === "bodyPart" && renderBodyPartButtons()}
+            {targets.length > 0 && renderTargetButtons()}
+            {quickAccess === "yoga" ? (
+              <>
+                {renderYogaCategories()}
+                {renderYogaData()}
+              </>
+            ) : (
+              renderFilteredWorkouts()
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

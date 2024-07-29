@@ -1,91 +1,88 @@
 /* General Styles */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Hero Section */
-  .hero {
-    
-    background: url('https://propakistani.pk/how-to/wp-content/uploads/2020/07/sxsasd.jpg') no-repeat center center/cover;
-    background-attachment: fixed;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
 
-    height: 100vh;
-    color: white;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Hero Section */
+.landing-hero {
+  background: url('https://propakistani.pk/how-to/wp-content/uploads/2020/07/sxsasd.jpg') no-repeat center center/cover;
+  background-attachment: fixed;
+  height: 100vh;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-hero h1 {
+  font-size: 4rem;
+  animation: landing-fadeInDown 1s ease-out;
+}
+
+.landing-hero p {
+  font-size: 1.5rem;
+  animation: landing-fadeInUp 1s ease-out;
+}
+
+.landing-hero button {
+  margin-top: 20px;
+}
+
+/* Features Section */
+.landing-features .landing-feature-box {
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: transform 0.3s;
+}
+
+.landing-features .landing-feature-box:hover {
+  transform: scale(1.05);
+}
+
+/* Trainers Section */
+.landing-trainers .card {
+  margin-bottom: 30px;
+}
+
+/* Membership Section */
+.landing-membership .card {
+  margin-bottom: 30px;
+}
+
+/* Testimonials Section */
+.landing-testimonials .card {
+  margin-bottom: 30px;
+}
+
+/* Footer */
+.landing-footer {
+  background-color: #343a40;
+  color: white;
+  padding: 20px;
+}
+
+/* Animations */
+@keyframes landing-fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
   }
-  
-  .hero h1 {
-    font-size: 4rem;
-    animation: fadeInDown 1s ease-out;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .hero p {
-    font-size: 1.5rem;
-    animation: fadeInUp 1s ease-out;
+}
+
+@keyframes landing-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
   }
-  
-  .hero button {
-    margin-top: 20px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Features Section */
-  .features .feature-box {
-    padding: 30px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: transform 0.3s;
-  }
-  
-  .features .feature-box:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Trainers Section */
-  .trainers .card {
-    margin-bottom: 30px;
-  }
-  
-  /* Membership Section */
-  .membership .card {
-    margin-bottom: 30px;
-  }
-  
-  /* Testimonials Section */
-  .testimonials .card {
-    margin-bottom: 30px;
-  }
-  
-  /* Footer */
-  .footer {
-    background-color: #343a40;
-    color: white;
-    padding: 20px;
-  }
-  
-  /* Animations */
-  @keyframes fadeInDown {
-    from {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}

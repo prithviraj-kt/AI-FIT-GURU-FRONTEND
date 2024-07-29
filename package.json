@@ -15,6 +15,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
     "axios": "^1.7.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
@@ -42,6 +43,7 @@
     "react-toastify": "^10.0.5",
     "reactour": "^1.19.4",
     "three": "^0.165.0",
+    "toast": "^0.5.4",
     "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
