@@ -26,7 +26,6 @@ function Home() {
 
   const auth = async () => {
     const data = await localStorage.getItem("email");
-    // console.log(data);
     setValue(data);
   };
 
@@ -138,7 +137,6 @@ function Home() {
     );
   };
   const renderJSONTable = (jsonData) => {
-    console.log(JSON.stringify(jsonData));
     return (
       <div className="aitrainer-json-table">
         <div>
@@ -154,8 +152,8 @@ function Home() {
                         <th scope="col">Breakfast</th>
                         <th scope="col">Lunch</th>
                         <th scope="col">Evening Snack</th>
-                        <th scope="col">Mid-Morning Snack</th>
-                        <th scope="col">Mid-night Snack</th>
+                        <th scope="col">Late-Morning Snack</th>
+                        <th scope="col">Late night Snack</th>
                         <th scope="col">Dinner</th>
                       </tr>
                     </thead>
@@ -163,12 +161,12 @@ function Home() {
                       {jsonData.modifydietplan.diet.map((dayPlan, index) => (
                         <tr key={index}>
                           <td>{dayPlan.day}</td>
-                          <td>{dayPlan.meals?.Breakfast || "-"}</td>
-                          <td>{dayPlan.meals?.Lunch || "-"}</td>
-                          <td>{dayPlan.meals?.["Evening Snack"] || "-"}</td>
-                          <td>{dayPlan.meals?.["Mid-Morning Snack"] || "-"}</td>
-                          <td>{dayPlan.meals?.["Mid-night Snack"] || "-"}</td>
-                          <td>{dayPlan.meals?.Dinner || "-"}</td>
+                          <td>{dayPlan.meals?.['1. Breakfast'] || "-"}</td>
+                          <td>{dayPlan.meals?.['3. Lunch'] || "-"}</td>
+                          <td>{dayPlan.meals?.['4. Evening Snack'] || "-"}</td>
+                          <td>{dayPlan.meals?.['2. Late-Morning Snack'] || "-"}</td>
+                          <td>{dayPlan.meals?.['6. Late night Snack'] || "-"}</td>
+                          <td>{dayPlan.meals?.['5. Dinner'] || "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -207,6 +205,7 @@ function Home() {
       </div>
     );
   };
+  
   const navigate = useNavigate();
 
   const savePlan = async (diet) => {
@@ -303,7 +302,6 @@ function Home() {
           question: JSON.stringify(modifiedDiets),
         });
         handleSubmit();
-        // console.log(modifiedDiets);
       } else {
         console.log("No such document!");
       }
