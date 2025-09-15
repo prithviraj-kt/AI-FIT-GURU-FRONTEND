@@ -178,8 +178,7 @@ function SingleWorkout() {
     <div style={{ 
       backgroundColor: colors.dark, 
       minHeight: "100vh", 
-      color: colors.textPrimary,
-      paddingTop: "76px"
+      color: colors.textPrimary
     }}>
       <Navbar />
       

@@ -95,6 +95,14 @@ function Profile() {
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
   const [isToday, setIsToday] = useState(true);
   const [activeSection, setActiveSection] = useState("personal");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    try {
+      const isDesktop = window.innerWidth > 1024;
+      setSidebarOpen(isDesktop);
+    } catch (e) {}
+  }, []);
 
   const handleDrop = async (file) => {
     if (file) {
@@ -1165,24 +1173,80 @@ const downloadPDF = () => {
   return (
     <div className="profile-dark-theme container-fluid p-0 m-0">
       <Navbar />
-      <div className="profile-layout">
+      <div className={`profile-layout ${sidebarOpen ? '' : 'sidebar-collapsed'}`}>
+        {!sidebarOpen && typeof window !== 'undefined' && window.innerWidth <= 1024 && (
+          <button
+            className="sidebar-reopen"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open sidebar"
+            title="Open menu"
+          >
+            ☰
+          </button>
+        )}
         {/* Sidebar */}
-        <div className="profile-sidebar">
+        <div className={`profile-sidebar ${sidebarOpen ? 'open' : ''}`}>
           <div className="sidebar-header">
-            <h3>Profile Menu</h3>
+            <div className="sidebar-brand">
+              <div className="brand-icon">
+                <img
+                  src={`${user.photoURL}?t=${new Date().getTime()}`}
+                  alt="User"
+                  className="brand-avatar-img"
+                />
+              </div>
+              <h3>Profile</h3>
+            </div>
+            <button 
+              className="sidebar-toggle" 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle sidebar"
+            >
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </button>
           </div>
-          <nav className="sidebar-nav">
-            {sidebarItems.map((item) => (
-              <button
-                key={item.id}
-                className={`sidebar-item ${activeSection === item.id ? 'active' : ''}`}
-                onClick={() => setActiveSection(item.id)}
-              >
-                <span className="sidebar-icon">{item.icon}</span>
-                <span className="sidebar-label">{item.label}</span>
-              </button>
-            ))}
-          </nav>
+          
+          <div className="sidebar-content">
+            <nav className="sidebar-nav">
+              {sidebarItems.map((item) => (
+                <button
+                  key={item.id}
+                  className={`sidebar-item ${activeSection === item.id ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    // Close sidebar only on tablet/mobile
+                    if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+                      setSidebarOpen(false);
+                    }
+                  }}
+                >
+                  <div className="sidebar-item-content">
+                    <span className="sidebar-icon">{item.icon}</span>
+                    <span className="sidebar-label">{item.label}</span>
+                  </div>
+                  {activeSection === item.id && <div className="active-indicator"></div>}
+                </button>
+              ))}
+            </nav>
+            
+            <div className="sidebar-footer">
+              <div className="user-info">
+                <div className="user-avatar">
+                  <img 
+                    src={`${user.photoURL}?t=${new Date().getTime()}`} 
+                    alt="User Avatar" 
+                    className="avatar-img"
+                  />
+                </div>
+                <div className="user-details">
+                  <div className="user-name">{user.displayName}</div>
+                  <div className="user-email">{user.email}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}

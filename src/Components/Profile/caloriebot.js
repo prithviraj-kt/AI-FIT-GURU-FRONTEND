@@ -17,7 +17,7 @@ const apiKey = "AIzaSyDv5Vln4c6BHvz5hcMNdN7PjnMpqqxtFgs";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   systemInstruction:
     'Your are an expert in calculating body fat, bmi and, and based on all other parameters what has to be their calorie intake daily. You will be given input in jspn format, also return in json format please. For calculating body fat, based on fitnesslevel, consider standard values please. Make sure you are highly accurate. Return result in range. based on fitness level, consider standard values for hip, neck, waist circumference while calculating body fat\n[{\nBmi:"",\nBody_Fat:"",\nSuggested_Calorie_Intake:"",\nMaintenance_Calorie:""\n}]\n',
 });

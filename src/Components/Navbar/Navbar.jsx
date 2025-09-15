@@ -11,11 +11,42 @@ import "react-toastify/dist/ReactToastify.css";
 function Navbar() {
   const navigate = useNavigate();
   const [mail, setMail] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
 
   useEffect(() => {
     const emailId = localStorage.getItem("email");
     if (emailId) setMail(emailId);
+    const storedTheme = localStorage.getItem("theme") || "dark";
+    setTheme(storedTheme);
+    document.documentElement.setAttribute("data-theme", storedTheme);
   }, []);
+
+  // Handle body padding when mobile menu is open
+  useEffect(() => {
+    const updateBodyPadding = () => {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        if (menuOpen) {
+          document.body.style.paddingTop = "200px"; // Extra space for mobile menu
+        } else {
+          document.body.style.paddingTop = "70px"; // Normal mobile navbar height
+        }
+      } else {
+        document.body.style.paddingTop = "80px"; // Desktop navbar height
+        setMenuOpen(false); // Close menu when switching to desktop
+      }
+    };
+
+    updateBodyPadding();
+    window.addEventListener('resize', updateBodyPadding);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', updateBodyPadding);
+      document.body.style.paddingTop = "80px";
+    };
+  }, [menuOpen]);
 
   const logout = async () => {
     await localStorage.removeItem("email");
@@ -50,6 +81,13 @@ function Navbar() {
     }
   };
 
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    localStorage.setItem("theme", nextTheme);
+    document.documentElement.setAttribute("data-theme", nextTheme);
+  };
+
   return (
     <>
       <ToastContainer />
@@ -59,32 +97,111 @@ function Navbar() {
             🏋️‍♂️ Lets Workout
           </Link>
 
-          <div className="navigation-links">
-            {mail ? (
-              <>
-                <NavLink to="/home" className="navigation-link">
-                  Home
-                </NavLink>
-                <NavLink to="/profile" className="navigation-link">
-                  Profile
-                </NavLink>
-                <NavLink to="/neutritionist" className="navigation-link">
-                  Dietician
-                </NavLink>
-                <NavLink to="/trainer" className="navigation-link">
-                  Trainer
-                </NavLink>
-                <NavLink to="https://d24g442oi5klok.cloudfront.net/" className="navigation-link">
-                  Developer
-                </NavLink>
-                <button onClick={logout} className="navigation-btn">
-                  Logout
-                </button>
-              </>
-            ) : (
-              <GoogleButton className="google-btn" onClick={handleGoogleSignIn} />
-            )}
+          <div className="navigation-actions">
+            {/* Desktop navigation links */}
+            <div className="navigation-links-desktop">
+              {mail ? (
+                <>
+                  <NavLink 
+                    to="/home" 
+                    className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                  >
+                    Home
+                  </NavLink>
+                  <NavLink 
+                    to="/profile" 
+                    className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                  >
+                    Profile
+                  </NavLink>
+                  <NavLink 
+                    to="/neutritionist" 
+                    className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                  >
+                    Dietician
+                  </NavLink>
+                  <NavLink 
+                    to="/trainer" 
+                    className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                  >
+                    Trainer
+                  </NavLink>
+                  <NavLink 
+                    to="https://d24g442oi5klok.cloudfront.net/" 
+                    className="navigation-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Developer
+                  </NavLink>
+                  <button onClick={logout} className="navigation-btn">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <GoogleButton className="google-btn" onClick={handleGoogleSignIn} />
+              )}
+            </div>
+
+            {/* Mobile toggle button */}
+            <button
+              className="nav-toggle"
+              aria-label="Toggle navigation menu"
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              ☰
+            </button>
           </div>
+        </div>
+        
+        {/* Mobile menu */}
+        <div className={`navigation-links-mobile ${menuOpen ? "open" : ""}`}>
+          {mail ? (
+            <>
+              <NavLink 
+                to="/home" 
+                className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Home
+              </NavLink>
+              <NavLink 
+                to="/profile" 
+                className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Profile
+              </NavLink>
+              <NavLink 
+                to="/neutritionist" 
+                className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Dietician
+              </NavLink>
+              <NavLink 
+                to="/trainer" 
+                className={({ isActive }) => `navigation-link ${isActive ? 'active' : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Trainer
+              </NavLink>
+              <NavLink 
+                to="https://d24g442oi5klok.cloudfront.net/" 
+                className="navigation-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+              >
+                Developer
+              </NavLink>
+              <button onClick={logout} className="navigation-btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <GoogleButton className="google-btn" onClick={handleGoogleSignIn} />
+          )}
         </div>
       </nav>
     </>

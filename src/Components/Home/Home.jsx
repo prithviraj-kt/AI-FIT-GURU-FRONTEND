@@ -31,7 +31,7 @@ function App() {
     { key: "equipment", label: "Equipment", icon: <Dumbbell size={18} /> },
     { key: "bodyPart", label: "Body Part", icon: <Activity size={18} /> },
     { key: "calisthenics", label: "Calisthenics", icon: <StretchHorizontal size={18} /> },
-    { key: "yoga", label: "Yoga", icon: <Flower2 size={18} /> },
+    // { key: "yoga", label: "Yoga", icon: <Flower2 size={18} /> },
   ];
 
   const navigate = useNavigate();
@@ -274,7 +274,7 @@ function App() {
       {/* Navbar */}
       <Navbar />
       
-      <div style={{ paddingTop: "76px" }}>
+      <div>
         {/* Sidebar */}
         <aside style={sidebarStyle} className="d-none d-md-block">
           <div style={{ padding: "20px 15px" }}>

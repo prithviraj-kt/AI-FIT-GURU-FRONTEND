@@ -17,7 +17,7 @@ const apiKey = "AIzaSyDv5Vln4c6BHvz5hcMNdN7PjnMpqqxtFgs";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   systemInstruction:
     'You are expert in calorie calculator, you will be given type of workout and the duration performed, you have to return the amount of calories burnt by that person. And the workout duration will be in minutes. Be highly accurate please\nreturn in the format\n{\n"calories_burnt":value\n}',
 });

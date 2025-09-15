@@ -10,7 +10,7 @@ function Sidebar({ handleQuickAccess, selectedType }) {
     { key: "equipment", label: "Equipment", icon: <Dumbbell size={18} /> },
     { key: "bodyPart", label: "Body Part", icon: <Flower2 size={18} /> },
     { key: "calisthenics", label: "Calisthenics", icon: <StretchHorizontal size={18} /> },
-    { key: "yoga", label: "Yoga", icon: <Flower2 size={18} /> },
+    // { key: "yoga", label: "Yoga", icon: <Flower2 size={18} /> },
   ];
 
   return (

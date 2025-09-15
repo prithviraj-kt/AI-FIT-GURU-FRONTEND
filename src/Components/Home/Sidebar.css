@@ -1,10 +1,10 @@
 /* Sidebar container */
 .home-sidebar {
-  background: linear-gradient(180deg, #141e30, #243b55);
+  background: linear-gradient(180deg, var(--color-elevated), var(--color-surface));
   min-height: 100vh;
   width: 240px;
   padding: 1rem;
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
   transition: width 0.3s ease, padding 0.3s ease;
@@ -12,6 +12,7 @@
   flex-direction: column;
   backdrop-filter: blur(8px); /* glass effect */
   z-index: 1000;
+  border-right: 1px solid var(--color-border);
 }
 
 /* Collapsed state */
@@ -38,25 +39,25 @@
   border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #eaeaea;
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .home-sidebar-btn:hover {
-  background: rgba(0, 255, 204, 0.1);
-  border-color: #00ffcc;
-  color: #00ffcc;
+  background: rgba(108, 140, 255, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
   transform: translateX(5px);
 }
 
 /* Selected button */
 .home-btn-selected {
-  background: #00ffcc;
-  color: #141e30;
+  background: var(--color-primary);
+  color: var(--color-bg);
   font-weight: 600;
-  border: 1px solid #00ffcc;
-  box-shadow: 0 0 10px rgba(0, 255, 204, 0.7);
+  border: 1px solid var(--color-primary);
+  box-shadow: 0 0 10px rgba(108, 140, 255, 0.7);
 }
 
 /* Sidebar icon */
@@ -82,7 +83,7 @@
   background: transparent;
   border: none;
   font-size: 1.5rem;
-  color: #00ffcc;
+  color: var(--color-primary);
   cursor: pointer;
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
