@@ -1,373 +1,134 @@
-/* Existing CSS */
-
-/* Reset and Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* Overall container */
 body {
-  font-family: 'Roboto', Arial, sans-serif;
-  background-color: #121212;
-  color: #f0f0f0;
-  line-height: 1.6;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #eaeaea;
+  font-family: "Poppins", sans-serif;
 }
 
-/* Container Styles */
-.home-container-fluid {
-  min-height: 100vh;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Navbar row */
+.home-navbar {
+  background: linear-gradient(90deg, #141e30, #243b55);
+  padding: 0.8rem 1.5rem;
+  border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.home-row {
-  width: 100%;
-  margin: 20px 0;
-}
-
-.home-quick-access-wrapper,
-.home-yoga-category-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
+/* Quick Access Containers */
 .home-quick-access-container,
-.home-yoga-category-container {
+.home-quick-access-container-small-screen {
   display: flex;
   justify-content: center;
-  width: 100%;
+  align-items: center;
+  gap: 12px;
+  margin: 1rem 0;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow-x: auto;
 }
-
-.home-quick-access-item,
-.home-yoga-category-item {
-  flex: 1;
-  min-width: 150px;
-}
-
-/* Sidebar Styles */
-.home-sidebar {
+.home-horizontal-scroll{
   display: flex;
-  flex-direction: column;
-  background-color: #2c2c2c;
-  padding: 20px;
-  width: 200px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  font-family: 'Roboto', Arial, sans-serif;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 1rem 0;
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  overflow-x: auto;
+}
+.home-quick-access-container-small-screen {
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.home-sidebar-btn {
-  background-color: #2c2c2c;
-  border: 3px solid #ff7300;
-  color: #ff7300;
-  padding: 12px 16px;
-  text-align: left;
-  text-transform: uppercase;
+/* Buttons */
+.home-sidebar-btn,
+.home-btn-primary,
+.home-btn-primary-smallscreen {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  color: #eaeaea;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  margin-bottom: 10px;
+  transition: all 0.3s ease;
 }
 
 .home-sidebar-btn:hover,
-.home-btn-selected {
-  background-color: #ff7300;
-  color: white;
-  border-color: #ff7300;
-}
-
-.home-sidebar-btn:focus {
-  outline: none;
-}
-
-/* Button Styles */
-.home-btn-primary {
-  background-color: #1f1f1f;
-  border: 2px solid #ff7300;
-  color: #ff7300;
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-  width: 100%;
-  cursor: pointer;
-}
-.home-btn-primary-smallscreen{
-  background-color: #1f1f1f;
-  border: 2px solid #ff7300;
-  color: #ff7300;
-  padding: 10px 20px;
-  text-align: center;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
-  width: 100%;
-  cursor: pointer;
-}
-
 .home-btn-primary:hover,
+.home-btn-primary-smallscreen:hover {
+  border-color: #00ffcc;
+  color: #00ffcc;
+  background: rgba(0, 255, 204, 0.1);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+}
+
 .home-btn-selected {
-  background-color: #ff7300;
-  color: white;
+  background: #00ffcc;
+  color: #141e30 !important;
+  font-weight: 600;
+  border-color: #00ffcc;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.9);
 }
 
-/* Scrollable Containers */
-.home-horizontal-scroll {
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-}
-
-.home-horizontal-scroll::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
-
-/* Workout and Yoga Item Styles */
-.home-workout-list,
-.home-yoga-pose-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+/* Workout & Yoga Cards */
+.home-workout-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 20px;
-  padding: 20px;
+  margin-top: 1.5rem;
+  padding: 0.5rem;
 }
 
-.home-workout-item,
-.home-yoga-pose-item {
-  width: 100%;
-  max-width: 300px;
-  background-color: #1f1f1f;
-  border: 1px solid #333;
-  border-radius: 10px;
+.home-workout-item {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
   overflow: hidden;
-  position: relative;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.home-workout-item:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
 }
 
 .home-card-img-top {
   width: 100%;
-  height: auto;
-  transition: transform 0.3s ease;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(0, 255, 204, 0.3);
 }
 
-.home-card-img-top:hover {
-  transform: scale(1.1);
-}
-
+/* Card Titles (if added later) */
 .home-card-body {
-  padding: 15px;
+  padding: 10px;
+  text-align: center;
 }
 
 .home-card-title {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  color: #bb86fc;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #00ffcc;
 }
 
-/* Overlay for Instructions */
-.instructions-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  text-align: center;
-  z-index: 10;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate__animated {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-}
-
-.animate__fadeIn {
-  animation-name: fadeIn;
-}
-
-/* General Styles for the Sidebar */
-.home-sidebar {
-  display: flex;
-  flex-direction: column;
-  background-color: #2c2c2c;
-  padding: 70px 20px;
-  width: 200px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  font-family: 'Roboto', Arial, sans-serif; /* Readable font family */
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Add subtle shadow */
-}
-
-/* General Styles for Sidebar Buttons */
-.home-sidebar-btn {
-  background-color: transparent;
-  border: 2px solid transparent;
-  color: #ff7300;
-  padding: 12px 16px;
-  text-align: left;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  font-weight: 500; /* Medium font weight for buttons */
-  margin-bottom: 10px; /* Spacing between buttons */
-}
-
-/* Hover State for Buttons */
-.home-sidebar-btn:hover {
-  background-color: #ff7300;
-  color: #ffffff;
-  border-color: #ff7300;
-  width: 100%;
-}
-
-/* Selected Button State */
-.home-btn-selected {
-  background-color: #ff7300;
-  color: white;
-  border-color: #ff7300;
-  font-weight: bold; /* Bold font for selected button */
-}
-
-/* Focus State for Accessibility */
-.home-sidebar-btn:focus {
-  outline: 2px dashed #ff7300; /* Custom focus outline for accessibility */
-}
-.mainButtonResponsive{
-  /* height: 100vh; */
-  /* display: none; */
-}
-/* Responsive Styles */
+/* Responsive */
 @media (max-width: 768px) {
-  /* .mainButtonResponsive{
-    background-color: blue;
-  } */
-  .home-sidebar {
-    top: 7%;
-    width: 100%;
-    height: auto;
-    padding: 20px;
-    position: absolute;
-    /* flex-direction: row;
-    justify-content: space-around; */
-    overflow-y: scroll;
-    scrollbar-width: none; /* Firefox */
-}
-
-.navbar {
-    --navbar-height: 100px; /* Adjust this value to match your navbar height */
-}
-
-
-.home-sidebar::-webkit-scrollbar {
-    display: none;
-}
-
-
-  .home-sidebar-btn {
-    flex: 1;
-    text-align: center;
-    margin: 0 5px;
-    padding: 10px;
+  .home-workout-list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
   }
 
-  .home-btn-selected {
-    font-weight: 500; 
-  }
-  
-  
-}
-
- /* .home-navbar{
-  background-color: red;
- } */
- .row{
-  /* margin: 0;
-  padding: 0; */
- }
-
-/* New Custom CSS for Improved Responsiveness */
-@media (max-width: 1024px) {
-  .home-sidebar {
-    width: 150px;
-  }
-  .home-sidebar-btn {
-    font-size: 14px;
-    padding: 10px 14px;
-  }
-}
-
-@media (max-width: 768px) {
-  .home-sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px 5px;
-  }
-  .home-sidebar-btn {
-    flex: 1;
-    text-align: center;
-    padding: 8px 10px;
-  }
-  .home-btn-selected {
-    font-weight: 500; 
-  }
-}
-
-@media (max-width: 480px) {
-  
-}
-.home-quick-access-container-small-screen{
-  display: none;
-}
-@media (max-width: 768px) {
-  .home-sidebar {
-    overflow-y: auto;
-    scrollbar-width: none;
-    z-index: 1000;
-  }
-  .home-sidebar::-webkit-scrollbar {
-    display: none;
-  }
-  .home-quick-access-container-small-screen{
-    display: flex;
-    overflow-y: auto;
-    scrollbar-width: none;
-  }
-  .home-output{
-    width: 100vw;
-
+  .home-card-img-top {
+    height: 150px;
   }
 }

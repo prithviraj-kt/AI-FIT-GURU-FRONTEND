@@ -94,6 +94,7 @@ function Profile() {
   const [showFoodDetailsModal, setShowFoodDetailsModal] = useState(false);
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
   const [isToday, setIsToday] = useState(true);
+  const [activeSection, setActiveSection] = useState("personal");
 
   const handleDrop = async (file) => {
     if (file) {
@@ -586,41 +587,207 @@ function Profile() {
     return (bmr * activityMultiplier).toFixed(0); // Round to nearest whole number
   };
 
-  const downloadPDF = () => {
+const downloadPDF = () => {
     const doc = new jsPDF();
-    let yOffset = 10;
+    let yOffset = 20; // Starting Y-position
 
-    doc.text(`Name: ${user.displayName} `, 10, yOffset);
-    doc.text(`Email: ${user.email}`, 10, (yOffset += 10));
-    doc.text("Health Data:", 10, (yOffset += 20));
+    // Font and Style Definitions for a professional report
+    const headingFont = 'helvetica';
+    const headingFontStyle = 'bold';
+    const headingFontSize = 20;
+    const headingColor = '#2c3e50';
 
-    doc.text(`BMI: ${bmi}`, 10, (yOffset += 10));
-    doc.text(`Body Fat: ${bodyFatPercentage}%`, 10, (yOffset += 10));
+    const subHeadingFont = 'helvetica';
+    const subHeadingFontStyle = 'bold';
+    const sectionHeadingFontSize = 14;
+    const sectionHeadingColor = '#34495e';
 
-    Object.entries(healthData)
-      .filter(([key]) => key !== "BMI" && key !== "bodyFat")
-      .forEach(([key, value]) => {
-        doc.text(`${key}: ${value}`, 10, (yOffset += 10));
-      });
+    const normalFont = 'helvetica';
+    const normalFontStyle = 'normal';
+    const normalFontSize = 10;
+    const normalColor = '#555555';
 
-    doc.text("Add food item:", 10, (yOffset += 20));
+    const smallFontSize = 9;
 
-    foodItems.forEach((item) => {
-      const itemName = `Name: ${item.name}`;
-      const itemType = `Type: ${item.type}`;
-      const itemCategory = `Category: ${item.category}`;
-      const itemSection = `Section: ${item.section}`;
+    // Function to check for page breaks and add a new page if needed
+    const checkPageBreak = (currentY, minSpace = 20) => {
+        if (currentY > doc.internal.pageSize.height - minSpace) {
+            doc.addPage();
+            return 20;
+        }
+        return currentY;
+    };
 
-      doc.text(itemName, 10, (yOffset += 10));
-      doc.text(itemType, 10, (yOffset += 10));
-      doc.text(itemCategory, 10, (yOffset += 10));
-      doc.text(itemSection, 10, (yOffset += 10));
+    // 1. Report Header and Metadata
+    doc.setFont(headingFont, headingFontStyle);
+    doc.setFontSize(headingFontSize);
+    doc.setTextColor(headingColor);
+    doc.text("Personal Health & Fitness Report", 105, yOffset, null, null, "center");
+    yOffset += 10;
 
-      yOffset += 10;
+    doc.setFont(normalFont, normalFontStyle);
+    doc.setFontSize(normalFontSize);
+    doc.setTextColor(normalColor);
+    doc.text(`Report Date: ${new Date().toLocaleDateString()}`, 105, yOffset, null, null, "center");
+    yOffset += 15;
+
+    // 2. User Information
+    yOffset = checkPageBreak(yOffset);
+    doc.setDrawColor('#cccccc');
+    doc.line(20, yOffset, 190, yOffset);
+    yOffset += 8;
+
+    doc.setFont(subHeadingFont, subHeadingFontStyle);
+    doc.setFontSize(sectionHeadingFontSize);
+    doc.setTextColor(sectionHeadingColor);
+    doc.text("User Information", 20, yOffset);
+    yOffset += 8;
+
+    doc.setFont(normalFont, normalFontStyle);
+    doc.setFontSize(normalFontSize);
+    doc.setTextColor(normalColor);
+    doc.text(`Name:`, 25, yOffset);
+    doc.text(`${user.displayName}`, 60, yOffset);
+    yOffset += 6;
+    doc.text(`Email:`, 25, yOffset);
+    doc.text(`${user.email}`, 60, yOffset);
+    yOffset += 15;
+
+    // 3. Health Data Summary
+    yOffset = checkPageBreak(yOffset);
+    doc.setDrawColor('#cccccc');
+    doc.line(20, yOffset, 190, yOffset);
+    yOffset += 8;
+
+    doc.setFont(subHeadingFont, subHeadingFontStyle);
+    doc.setFontSize(sectionHeadingFontSize);
+    doc.setTextColor(sectionHeadingColor);
+    doc.text("Health Data Summary", 20, yOffset);
+    yOffset += 8;
+
+    doc.setFont(normalFont, normalFontStyle);
+    doc.setFontSize(normalFontSize);
+    doc.setTextColor(normalColor);
+
+    const healthDataPairs = Object.entries(healthData).filter(([key, value]) => value !== "" && value !== undefined && value !== null);
+    healthDataPairs.forEach(([key, value]) => {
+        const formattedKey = key.replace(/([A-Z])/g, ' $1').trim();
+        doc.text(`${formattedKey}:`, 25, yOffset);
+        doc.text(`${value}`, 60, yOffset);
+        yOffset += 6;
     });
 
-    doc.save("health_and_diet_data.pdf");
-  };
+    // 4. Weekly Workout Plan
+    yOffset = checkPageBreak(yOffset);
+    doc.line(20, yOffset, 190, yOffset);
+    yOffset += 8;
+
+    doc.setFont(subHeadingFont, subHeadingFontStyle);
+    doc.setFontSize(sectionHeadingFontSize);
+    doc.setTextColor(sectionHeadingColor);
+    doc.text("Weekly Workout Plan", 20, yOffset);
+    yOffset += 8;
+
+    doc.setFontSize(normalFontSize);
+    workoutPlan.forEach((dayPlan) => {
+        yOffset = checkPageBreak(yOffset, 30);
+        doc.setFont(normalFont, 'bold');
+        doc.text(`Day: ${dayPlan.day.charAt(0).toUpperCase() + dayPlan.day.slice(1)}`, 25, yOffset);
+        yOffset += 6;
+        doc.setFont(normalFont, normalFontStyle);
+        doc.text(`Body Parts: ${dayPlan.bodyPart.join(", ")}`, 25, yOffset);
+        yOffset += 6;
+        doc.text(`Workouts:`, 25, yOffset);
+        yOffset += 6;
+
+        dayPlan.workout.forEach((exercise) => {
+            yOffset = checkPageBreak(yOffset, 15);
+            doc.text(`  • ${exercise.name} (${exercise.bodyPart})`, 30, yOffset);
+            yOffset += 5;
+        });
+        yOffset += 5;
+    });
+
+    // 5. Weekly Diet Plan
+    yOffset = checkPageBreak(yOffset);
+    doc.line(20, yOffset, 190, yOffset);
+    yOffset += 8;
+
+    doc.setFont(subHeadingFont, subHeadingFontStyle);
+    doc.setFontSize(sectionHeadingFontSize);
+    doc.setTextColor(sectionHeadingColor);
+    doc.text("Weekly Diet Plan", 20, yOffset);
+    yOffset += 8;
+
+    doc.setFontSize(normalFontSize);
+    dietPlan.forEach((dayDiet) => {
+        yOffset = checkPageBreak(yOffset, 30);
+        doc.setFont(normalFont, 'bold');
+        doc.text(`Day: ${dayDiet.day.charAt(0).toUpperCase() + dayDiet.day.slice(1)}`, 25, yOffset);
+        yOffset += 6;
+        doc.setFont(normalFont, normalFontStyle);
+
+        Object.entries(dayDiet.meals).forEach(([mealTime, mealDescription]) => {
+            yOffset = checkPageBreak(yOffset, 15);
+            doc.text(`  • ${mealTime}: ${mealDescription}`, 30, yOffset);
+            yOffset += 5;
+        });
+        yOffset += 5;
+    });
+
+    // // 6. Daily Food Log
+    // yOffset = checkPageBreak(yOffset);
+    // doc.line(20, yOffset, 190, yOffset);
+    // yOffset += 8;
+
+    // doc.setFont(subHeadingFont, subHeadingFontStyle);
+    // doc.setFontSize(sectionHeadingFontSize);
+    // doc.setTextColor(sectionHeadingColor);
+    // doc.text("Daily Food Log", 20, yOffset);
+    // yOffset += 8;
+
+    // doc.setFont(normalFont, normalFontStyle);
+    // doc.setFontSize(normalFontSize);
+    // doc.setTextColor(normalColor);
+
+    // foodItems.forEach((item) => {
+    //     yOffset = checkPageBreak(yOffset, 25);
+    //     doc.setFont(normalFont, 'bold');
+    //     doc.text(`${item.name || 'N/A'}:`, 25, yOffset);
+    //     doc.setFont(normalFont, normalFontStyle);
+    //     yOffset += 6;
+    //     doc.text(`  - Type: ${item.type || 'N/A'}`, 30, yOffset);
+    //     yOffset += 5;
+    //     doc.text(`  - Category: ${item.category || 'N/A'}`, 30, yOffset);
+    //     yOffset += 5;
+    //     doc.text(`  - Total Calories: ${item.totalCalorie || 'N/A'}`, 30, yOffset);
+    //     yOffset += 10;
+    // });
+
+    // 7. Signature and Page Numbering
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        // Page border
+        doc.setDrawColor('#45a29e');
+        doc.rect(15, 15, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 30);
+
+        // Page number in footer
+        doc.setFontSize(smallFontSize);
+        doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 25, doc.internal.pageSize.height - 15, null, null, "right");
+    }
+
+    // Signature on the last page
+    doc.setPage(pageCount);
+    const signatureY = doc.internal.pageSize.height - 50;
+
+    doc.setFontSize(normalFontSize);
+    doc.text("Generated by Prithviraj K Tagadinamani", doc.internal.pageSize.width - 60, signatureY, null, null, "right");
+    doc.setDrawColor('#000000');
+    doc.line(doc.internal.pageSize.width - 60, signatureY + 3, doc.internal.pageSize.width - 20, signatureY + 3);
+
+    doc.save("health_and_diet_report.pdf");
+};
 
   const resetFoodForm = () => {
     setFoodName("");
@@ -641,293 +808,392 @@ function Profile() {
   };
 
   const goToPersonalWorkout = async (workout) => {
+    console.log(workout);
     await localStorage.setItem("personalworkout", JSON.stringify(workout));
     navigate("/personalworkout");
   };
 
-  return (
-    <div className="profile-dark-theme">
-      <Navbar />
-      <Container className="profile-container">
-        <div className="row profile-row d-flex flex-row">
-          <div className="col-md-4 profile-img-col">
-            <div className="profile-image-container">
-              <img
-                src={`${user.photoURL}?t=${new Date().getTime()}`}
-                alt="Profile"
-                className="profile-img"
-              />
-              <div className="profile-upload-btn-container">
-                <label htmlFor="fileInput" className="profile-upload-btn">
-                  Upload Profile Picture
-                </label>
-                <input
-                  id="fileInput"
-                  type="file"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
+  // Sidebar navigation items
+  const sidebarItems = [
+    { id: "personal", label: "Personal", icon: "👤" },
+    { id: "health", label: "Health Data", icon: "🏥" },
+    { id: "workout", label: "Workout Plan", icon: "💪" },
+    { id: "diet", label: "Diet Plan", icon: "🥗" },
+    { id: "add-workout", label: "Add Workout", icon: "➕" },
+    { id: "add-food", label: "Add Food", icon: "🍎" },
+    { id: "download", label: "Download", icon: "📥" }
+  ];
+
+  // Render content based on active section
+  const renderContent = () => {
+    switch (activeSection) {
+      case "personal":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Personal Information</h4>
+            <div className="profile-img-col">
+              <div className="profile-image-container">
+                <img
+                  src={`${user.photoURL}?t=${new Date().getTime()}`}
+                  alt="Profile"
+                  className="profile-img"
                 />
+                <div className="profile-upload-btn-container">
+                  <label htmlFor="fileInput" className="profile-upload-btn">
+                    Upload Profile Picture
+                  </label>
+                  <input
+                    id="fileInput"
+                    type="file"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+                </div>
               </div>
+              <h2 className="mt-3">{user.displayName}</h2>
+              <p>{user.email}</p>
             </div>
-            <h2 className="mt-3">{user.displayName}</h2>
-            <p>{user.email}</p>
           </div>
-          <div className="col-md-8 profile-info-col">
-            <div className="profile-card profile-card-dark">
-              <h4>Health Data</h4>
-              <div className="profile-btn-group">
-                <Button
-                  variant="primary"
-                  onClick={() => setViewReportModal(true)}
-                  className="profile-health-btn"
-                >
-                  View Report
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => setShowHealthModal(true)}
-                  className="profile-health-btn"
-                >
-                  Edit Health Data
-                </Button>
-              </div>
+        );
+      
+      case "health":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Health Data</h4>
+            <div className="profile-btn-group">
+              <Button
+                variant="primary"
+                onClick={() => setViewReportModal(true)}
+                className="profile-health-btn"
+              >
+                View Report
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => setShowHealthModal(true)}
+                className="profile-health-btn"
+              >
+                Edit Health Data
+              </Button>
             </div>
-            <div className="profile-card profile-card-dark">
-              <h4>Workout Plan</h4>
-              <div className="profile-btn-group">
-                {workoutPlan.length > 1 ? (
-                  <Button
-                    variant="primary"
-                    className="profile-health-btn"
-                    onClick={() => setViewWorkout(true)}
-                  >
-                    View Complete Workout Plan
-                  </Button>
-                ) : (
-                  ""
-                )}
+            {Object.keys(healthData).length > 0 && (
+              <div className="health-data-summary">
+                <h5>Current Health Summary</h5>
+                <div className="health-stats">
+                  {healthData.BMI && <div className="stat-item">BMI: {healthData.BMI}</div>}
+                  {healthData.Body_Fat && <div className="stat-item">Body Fat: {healthData.Body_Fat}%</div>}
+                  {healthData.Suggested_Calorie_Intake && <div className="stat-item">Daily Calories: {healthData.Suggested_Calorie_Intake}</div>}
+                </div>
               </div>
+            )}
+          </div>
+        );
+      
+      case "workout":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Workout Plan</h4>
+            <div className="profile-btn-group">
               {workoutPlan.length > 1 ? (
-                ""
-              ) : (
                 <Button
                   variant="primary"
-                  className=""
-                  onClick={() => navigate("/trainer")}
+                  className="profile-health-btn"
+                  onClick={() => setViewWorkout(true)}
                 >
-                  Create new workout plan
+                  View Complete Workout Plan
                 </Button>
-              )}
-              {workoutPlan.map(
-                (dayPlan, index) =>
-                  // Remove the extra <div> and else condition ("")
-                  day.toLowerCase() === dayPlan.day.toLowerCase() && (
-                    <div key={index} className="aitrainer-day-plan">
-                      <h5 className="text-warning">
-                        Todays workout plan ({" "}
-                        {dayPlan.day.charAt(0).toUpperCase() +
-                          dayPlan.day.slice(1)}
-                        : {dayPlan.bodyPart.join(", ")})
-                      </h5>
-                      <ul>
-                        {dayPlan.workout.map((exercise, i) => (
-                          <li key={i}>{exercise.name}</li>
-                        ))}
-                      </ul>
-                      <div className="profile-btn-group">
-                        <Button
-                          variant="primary"
-                          className=""
-                          onClick={() => goToPersonalWorkout(dayPlan.workout)}
-                        >
-                          Lets start
-                        </Button>
-                        <Button
-                          variant="primary"
-                          className=""
-                          onClick={() => navigate("/trainer")}
-                        >
-                          Change plan
-                        </Button>
-                      </div>
-                    </div>
-                  )
+              ) : (
+                ""
               )}
             </div>
-            <div className="profile-card profile-card-dark">
-              <h4>Diet Plan</h4>
-              <div className="profile-btn-group">
-                {dietPlan.length > 1 ? (
-                  <Button
-                    variant="primary"
-                    className="profile-health-btn"
-                    onClick={() => setViewDiet(true)}
-                  >
-                    View Complete Diet Plan
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </div>
-              {dietPlan.length > 1 ? (
-                ""
-              ) : (
-                <Button
-                  variant="primary"
-                  onClick={() => navigate("/neutritionist")}
-                >
-                  Create new diet plan
-                </Button>
-              )}
-              {dietPlan.map(
-                (diet, index) =>
-                  day.toLowerCase() === diet.day.toLowerCase() && (
-                    <div key={index} className="aitrainer-day-plan">
-                      <h5 className="text-warning">
-                        Today's Meals (
-                        {diet.day.charAt(0).toUpperCase() + diet.day.slice(1)})
-                      </h5>
-                      <table className="table table-dark table-striped">
-                        <thead>
-                          <tr>
-                            <th scope="col">Meal Time</th>
-                            <th scope="col">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {Object.entries(diet.meals)
-                            .sort(([a], [b]) => parseInt(a) - parseInt(b))
-                            .map(([mealTime, meal], idx) => (
-                              <tr key={idx}>
-                                <td>
-                                  <strong>
-                                    {mealTime.split(" ").slice(1).join(" ")}
-                                  </strong>
-                                </td>
-                                <td>{meal}</td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
+            {workoutPlan.length > 1 ? (
+              ""
+            ) : (
+              <Button
+                variant="primary"
+                className=""
+                onClick={() => navigate("/trainer")}
+              >
+                Create new workout plan
+              </Button>
+            )}
+            {workoutPlan.map(
+              (dayPlan, index) =>
+                day.toLowerCase() === dayPlan.day.toLowerCase() && (
+                  <div key={index} className="aitrainer-day-plan">
+                    <h5 className="text-warning">
+                      Todays workout plan ({" "}
+                      {dayPlan.day.charAt(0).toUpperCase() +
+                        dayPlan.day.slice(1)}
+                      : {dayPlan.bodyPart.join(", ")})
+                    </h5>
+                    <ul>
+                      {dayPlan.workout.map((exercise, i) => (
+                        <li key={i}>{exercise.name}</li>
+                      ))}
+                    </ul>
+                    <div className="profile-btn-group">
                       <Button
                         variant="primary"
-                        onClick={() => navigate("/neutritionist")}
+                        className=""
+                        onClick={() =>
+                          goToPersonalWorkout(dayPlan.workout)
+                        }
+                      >
+                        Lets start
+                      </Button>
+                      <Button
+                        variant="primary"
+                        className=""
+                        onClick={() => navigate("/trainer")}
                       >
                         Change plan
                       </Button>
                     </div>
-                  )
-              )}
-            </div>
-
-            <div className="profile-card profile-card-dark">
-              {foodItems.length > 0 && (
-                <div>
-                  <h4>
-                    Total calorie Intake:{" "}
-                    {foodItems.reduce(
-                      (acc, item) => acc + item.totalCalorie,
-                      0
-                    )}{" "}
-                    Calories
-                  </h4>
-                </div>
-              )}
-
-              {/* <h4>Add food item</h4> */}
-              <div className="profile-btn-group">
+                  </div>
+                )
+            )}
+          </div>
+        );
+      
+      case "diet":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Diet Plan</h4>
+            <div className="profile-btn-group">
+              {dietPlan.length > 1 ? (
                 <Button
                   variant="primary"
-                  onClick={() => setFoodModal(true)}
-                  className="profile-diet-btn"
-                  disabled={!isToday}
+                  className="profile-health-btn"
+                  onClick={() => setViewDiet(true)}
                 >
-                  Add Food Item
+                  View Complete Diet Plan
                 </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowCalendar(!showCalendar)}
-                  className="profile-calendar-btn"
-                >
-                  <FaCalendarAlt />
-                </Button>
-              </div>
-              {showCalendar && (
-                <Calendar
-                  value={selectedDate}
-                  onChange={(date) => {
-                    setSelectedDate(date);
-                    setShowCalendar(false);
-                    const today = new Date();
-                    setIsToday(
-                      date.getDate() === today.getDate() &&
-                        date.getMonth() === today.getMonth() &&
-                        date.getFullYear() === today.getFullYear()
-                    );
-                  }}
-                  className="mb-3"
-                />
-              )}
-              {foodItems.length > 0 ? (
-                <Table
-                  className="profile-diet-data"
-                  striped
-                  bordered
-                  hover
-                  variant="dark"
-                >
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Type</th>
-                      <th>Category</th>
-                      <th>Section</th>
-                      <th>Total Calories</th>
-                      <th>Image</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {foodItems.map((item, index) => (
-                      <tr key={index}>
-                        {/* {JSON.stringify(item.uploadTime)} */}
-                        <td>
-                          <Button
-                            variant="info"
-                            onClick={() => handleViewFoodDetails(item)}
-                          >
-                            View Details
-                          </Button>
-                        </td>
-                        <td>{item.type}</td>
-                        <td>{item.category}</td>
-                        <td>{item.section}</td>
-                        <td>{item.totalCalorie}</td>
-                        <td>
-                          <img
-                            src={item.imageURL}
-                            alt={item.name}
-                            className="food-img"
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
               ) : (
-                <p className="text-light">No food items found....</p>
+                ""
               )}
             </div>
+            {dietPlan.length > 1 ? (
+              ""
+            ) : (
+              <Button
+                variant="primary"
+                onClick={() => navigate("/neutritionist")}
+              >
+                Create new diet plan
+              </Button>
+            )}
+            {dietPlan.map(
+              (diet, index) =>
+                day.toLowerCase() === diet.day.toLowerCase() && (
+                  <div key={index} className="aitrainer-day-plan">
+                    <h5 className="text-warning">
+                      Today's Meals (
+                      {diet.day.charAt(0).toUpperCase() +
+                        diet.day.slice(1)}
+                      )
+                    </h5>
+                    <table className="table table-dark table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Meal Time</th>
+                          <th scope="col">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(diet.meals)
+                          .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                          .map(([mealTime, meal], idx) => (
+                            <tr key={idx}>
+                              <td>
+                                <strong>
+                                  {mealTime.split(" ").slice(1).join(" ")}
+                                </strong>
+                              </td>
+                              <td>{meal}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    <Button
+                      variant="primary"
+                      onClick={() => navigate("/neutritionist")}
+                    >
+                      Change plan
+                    </Button>
+                  </div>
+                )
+            )}
+          </div>
+        );
+      
+      case "add-workout":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Add Workout</h4>
+            <p>Create a new personalized workout plan with our AI trainer.</p>
+            <Button
+              variant="primary"
+              onClick={() => navigate("/trainer")}
+              className="profile-health-btn"
+            >
+              Go to AI Trainer
+            </Button>
             <WorkoutSchedule />
+          </div>
+        );
+      
+      case "add-food":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Add Food Item</h4>
+            {foodItems.length > 0 && (
+              <div>
+                <h5>
+                  Total calorie Intake:{" "}
+                  {foodItems.reduce(
+                    (acc, item) => acc + item.totalCalorie,
+                    0
+                  )}{" "}
+                  Calories
+                </h5>
+              </div>
+            )}
+            <div className="profile-btn-group">
+              <Button
+                variant="primary"
+                onClick={() => setFoodModal(true)}
+                className="profile-diet-btn"
+                disabled={!isToday}
+              >
+                Add Food Item
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setShowCalendar(!showCalendar)}
+                className="profile-calendar-btn"
+              >
+                <FaCalendarAlt />
+              </Button>
+            </div>
+            {showCalendar && (
+              <Calendar
+                value={selectedDate}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  setShowCalendar(false);
+                  const today = new Date();
+                  setIsToday(
+                    date.getDate() === today.getDate() &&
+                      date.getMonth() === today.getMonth() &&
+                      date.getFullYear() === today.getFullYear()
+                  );
+                }}
+                className="mb-3"
+              />
+            )}
+            {foodItems.length > 0 ? (
+              <Table
+                className="profile-diet-data"
+                striped
+                bordered
+                hover
+                variant="dark"
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Section</th>
+                    <th>Total Calories</th>
+                    <th>Image</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {foodItems.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <Button
+                          variant="info"
+                          onClick={() => handleViewFoodDetails(item)}
+                        >
+                          View Details
+                        </Button>
+                      </td>
+                      <td>{item.type}</td>
+                      <td>{item.category}</td>
+                      <td>{item.section}</td>
+                      <td>{item.totalCalorie}</td>
+                      <td>
+                        <img
+                          src={item.imageURL}
+                          alt={item.name}
+                          className="food-img"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <p className="text-light">No food items found....</p>
+            )}
+          </div>
+        );
+      
+      case "download":
+        return (
+          <div className="profile-card profile-card-dark">
+            <h4>Download Reports</h4>
+            <p>Download your complete health and fitness report as a PDF.</p>
             <Button
               variant="success"
               onClick={downloadPDF}
               className="profile-download-btn"
             >
-              <FaFileDownload /> Download PDF
+              <FaFileDownload /> Download PDF Report
             </Button>
           </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="profile-dark-theme container-fluid p-0 m-0">
+      <Navbar />
+      <div className="profile-layout">
+        {/* Sidebar */}
+        <div className="profile-sidebar">
+          <div className="sidebar-header">
+            <h3>Profile Menu</h3>
+          </div>
+          <nav className="sidebar-nav">
+            {sidebarItems.map((item) => (
+              <button
+                key={item.id}
+                className={`sidebar-item ${activeSection === item.id ? 'active' : ''}`}
+                onClick={() => setActiveSection(item.id)}
+              >
+                <span className="sidebar-icon">{item.icon}</span>
+                <span className="sidebar-label">{item.label}</span>
+              </button>
+            ))}
+          </nav>
         </div>
-      </Container>
+
+        {/* Main Content */}
+        <div className="profile-main-content">
+          <Container className="profile-container">
+            {renderContent()}
+          </Container>
+        </div>
+      </div>
+
+      {/* Modals */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Crop Image</Modal.Title>
@@ -967,6 +1233,7 @@ function Profile() {
           </Button>
         </Modal.Footer>
       </Modal>
+      
       <Modal show={foodModal} onHide={() => setFoodModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add Food Item</Modal.Title>
@@ -999,7 +1266,9 @@ function Profile() {
                 {["Veg", "Non-Veg", "Vegan"].map((type) => (
                   <Button
                     key={type}
-                    variant={foodType === type ? "primary" : "outline-primary"}
+                    variant={
+                      foodType === type ? "primary" : "outline-primary"
+                    }
                     onClick={() => setFoodType(type)}
                     className="mr-2"
                   >
@@ -1024,7 +1293,9 @@ function Profile() {
                   <Button
                     key={category}
                     variant={
-                      foodCategory === category ? "primary" : "outline-primary"
+                      foodCategory === category
+                        ? "primary"
+                        : "outline-primary"
                     }
                     onClick={() => setFoodCategory(category)}
                     className="mr-2"
@@ -1048,7 +1319,9 @@ function Profile() {
                   <Button
                     key={section}
                     variant={
-                      foodSection === section ? "primary" : "outline-primary"
+                      foodSection === section
+                        ? "primary"
+                        : "outline-primary"
                     }
                     onClick={() => setFoodSection(section)}
                     className="mr-2"
@@ -1073,7 +1346,11 @@ function Profile() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal show={showHealthModal} onHide={() => setShowHealthModal(false)}>
+      
+      <Modal
+        show={showHealthModal}
+        onHide={() => setShowHealthModal(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Edit Health Data</Modal.Title>
         </Modal.Header>
@@ -1152,7 +1429,9 @@ function Profile() {
                   <Button
                     key={gender}
                     variant={
-                      formData.gender === gender ? "primary" : "outline-primary"
+                      formData.gender === gender
+                        ? "primary"
+                        : "outline-primary"
                     }
                     onClick={() => handleButtonClick("gender", gender)}
                     className="mr-2"
@@ -1260,7 +1539,9 @@ function Profile() {
                         ? "primary"
                         : "outline-primary"
                     }
-                    onClick={() => handleButtonClick("dailyActiveLevel", level)}
+                    onClick={() =>
+                      handleButtonClick("dailyActiveLevel", level)
+                    }
                     className="mr-2"
                     type="button"
                   >
@@ -1308,7 +1589,9 @@ function Profile() {
                         ? "primary"
                         : "outline-primary"
                     }
-                    onClick={() => handleButtonClick("sleepDuration", duration)}
+                    onClick={() =>
+                      handleButtonClick("sleepDuration", duration)
+                    }
                     className="mr-2"
                     type="button"
                   >
@@ -1339,6 +1622,7 @@ function Profile() {
           </Form>
         </Modal.Body>
       </Modal>
+      
       <Modal show={viewDiet} onHide={() => setViewDiet(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Complete Diet Plan</Modal.Title>
@@ -1365,6 +1649,7 @@ function Profile() {
           </Button>
         </Modal.Footer>
       </Modal>
+      
       <Modal show={viewWorkout} onHide={() => setViewWorkout(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Complete Workout Plan</Modal.Title>
@@ -1405,7 +1690,11 @@ function Profile() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal show={viewReportModal} onHide={() => setViewReportModal(false)}>
+      
+      <Modal
+        show={viewReportModal}
+        onHide={() => setViewReportModal(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>View Health Report</Modal.Title>
         </Modal.Header>
@@ -1417,12 +1706,15 @@ function Profile() {
           ))}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setViewReportModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setViewReportModal(false)}
+          >
             Close
           </Button>
         </Modal.Footer>
       </Modal>
-      // ... [rest of your component code]
+      
       {/* Food Details Modal - Dark Theme */}
       <Modal
         show={showFoodDetailsModal}
@@ -1437,22 +1729,25 @@ function Profile() {
           Array.isArray(selectedFoodItem.aiGeneratedFoodDetails) &&
           selectedFoodItem.aiGeneratedFoodDetails.length > 0 ? (
             <div>
-              {selectedFoodItem.aiGeneratedFoodDetails.map((food, index) => (
-                <div key={index} className="mb-3">
-                  <h4>{food.name}</h4>
-                  <ul className="list-unstyled">
-                    <li>
-                      <strong>Quantity:</strong> {food.quantity}
-                    </li>
-                    <li>
-                      <strong>Calories:</strong> {food.calorie_count}
-                    </li>
-                    <li>
-                      <strong>Instructions:</strong> {food.other_instructions}
-                    </li>
-                  </ul>
-                </div>
-              ))}
+              {selectedFoodItem.aiGeneratedFoodDetails.map(
+                (food, index) => (
+                  <div key={index} className="mb-3">
+                    <h4>{food.name}</h4>
+                    <ul className="list-unstyled">
+                      <li>
+                        <strong>Quantity:</strong> {food.quantity}
+                      </li>
+                      <li>
+                        <strong>Calories:</strong> {food.calorie_count}
+                      </li>
+                      <li>
+                        <strong>Instructions:</strong>{" "}
+                        {food.other_instructions}
+                      </li>
+                    </ul>
+                  </div>
+                )
+              )}
             </div>
           ) : (
             <p>No food details available for this item.</p>
@@ -1467,7 +1762,6 @@ function Profile() {
           </Button>
         </Modal.Footer>
       </Modal>
-      // ... [rest of your component code]
     </div>
   );
 }

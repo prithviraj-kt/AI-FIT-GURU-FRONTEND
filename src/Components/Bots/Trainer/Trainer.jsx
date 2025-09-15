@@ -4,13 +4,14 @@ import run from "./Aibot";
 import Navbar from "../../Navbar/Navbar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { storage, db } from "../../../config";
-import { Modal, Button, Row, Col } from "react-bootstrap";
+import { db } from "../../../config";
+import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-function Home() {
+function Trainer() {
   const [value, setValue] = useState("");
   const [prompt, setPrompt] = useState({ question: "" });
   const [history, setHistory] = useState([]);
@@ -22,511 +23,210 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    auth();
+    setValue(localStorage.getItem("email"));
   }, []);
 
-  const auth = async () => {
-    const data = await localStorage.getItem("email");
-    console.log(data);
-    setValue(data);
-  };
-
-  const handleChange = (e) => {
-    setPrompt({ question: e.target.value });
-  };
+  const handleChange = (e) => setPrompt({ question: e.target.value });
 
   const handleSubmit = async () => {
-    if (!prompt.question.trim()) {
-      return;
-    }
-
+    if (!prompt.question.trim()) return;
     setLoading(true);
     setCurrentQuestion(prompt.question);
 
     try {
-      const newUserMessage = {
-        role: "user",
-        parts: [{ text: prompt.question }],
-      };
+      const newUserMessage = { role: "user", parts: [{ text: prompt.question }] };
+      const ans = await run([...history, newUserMessage], prompt.question);
+      console.log(ans)
+      const coachAnswer = ans.msg.response.candidates[0].content.parts[0].text;
+      const newModelMessage = { role: "model", parts: [{ text: coachAnswer }] };
 
-      const newHistory = [...history, newUserMessage];
+      // ✅ Add both user + model messages to history
+      setHistory([...history, newUserMessage, newModelMessage]);
 
-      const ans = await run(newHistory, prompt.question);
-      const coachAnswer = JSON.parse(
-        ans.msg.response.candidates[0].content.parts[0].text
-      );
-
-      const newModelMessage = {
-        role: "model",
-        parts: [{ text: JSON.stringify(coachAnswer) }],
-      };
-      const updatedHistory = [...history, newUserMessage, newModelMessage];
-      console.log(JSON.stringify(updatedHistory));
-
-      setHistory(updatedHistory);
       setPrompt({ question: "" });
       setCurrentQuestion("");
     } catch (error) {
-      console.error("Error fetching answer:", error);
-      const errorMessage = {
-        role: "model",
-        parts: [
-          { text: "Problem occured from our side. Please try again later." },
-        ],
-      };
-      setHistory([...history, errorMessage]);
-      setCurrentQuestion("");
+      console.error("Error:", error);
+      setHistory([
+        ...history,
+        { role: "model", parts: [{ text: "⚠️ Something went wrong." }] },
+      ]);
     }
-
     setLoading(false);
   };
 
   const savePlan = async (workoutPlan) => {
-    const email = await localStorage.getItem("email");
+    const email = localStorage.getItem("email");
     try {
       await setDoc(doc(db, "workoutplan", email), { workoutPlan });
-      toast.success("Workout plan saved successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      setTimeout(() => navigate("/profile"), 3000);
-    } catch (error) {
-      console.error("Error saving workout plan:", error);
-      toast.error("Failed to save workout plan. Please try again.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.success("✅ Workout plan saved!", { autoClose: 2000 });
+      setTimeout(() => navigate("/profile"), 2000);
+    } catch {
+      toast.error("❌ Failed to save plan.");
     }
   };
 
-  const renderMessageContent = (text) => {
+  // --- Render structured workout plan if JSON ---
+  const renderStructuredMessage = (text) => {
     try {
-      const jsonData = JSON.parse(text);
-      if (typeof jsonData === "object" && jsonData !== null) {
-        if (jsonData.workout_plan) {
-          return (
-            <div>
-              {/* <h1>Workout Plan</h1> */}
-              {jsonData.workout_plan.map((dayPlan, index) => (
-                <div key={index} className="aitrainer-day-plan">
-                  <h5 className="text-warning">
-                    {dayPlan.day.charAt(0).toUpperCase() + dayPlan.day.slice(1)}
-                    : {dayPlan.bodyPart.join(", ")}
-                  </h5>
-                  <ul>
-                    {dayPlan.workout.map((exercise, i) => (
-                      <li key={i}>{exercise.name}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-              {jsonData.workout_plan.length > 0 && (
-                <Button
-                  variant="primary"
-                  onClick={() => savePlan(jsonData.workout_plan)}
-                >
-                  Save this workout Plan?
-                </Button>
-              )}
-              <h4>General Instructions</h4>
-              <ul>
-                {jsonData.general_instructions.map((instruction, index) => (
-                  <li key={index}>{instruction}</li>
-                ))}
-              </ul>
-            </div>
-          );
-        }
-      }
-    } catch (e) {
-      return <span dangerouslySetInnerHTML={{ __html: text }} />;
-    }
-  };
+      const json = JSON.parse(text);
 
-  const renderJSONTable = (jsonData) => {
-    // console.log(JSON.stringify(jsonData.modifyworkoutplan))
-    if (jsonData.modifyworkoutplan) {
-      return <div>
-        <div className="aitrainer-container">
-      <h2 className="aitrainer-header">Weekly Workout Plan</h2>
-      <div className="aitrainer-table-responsive">
-        <table className="table table-dark table-bordered table-striped aitrainer-table aitrainer-dark-theme">
-          <thead>
-            <tr>
-              <th scope="col">Day</th>
-              <th scope="col">Body Part</th>
-              <th scope="col">Workout</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jsonData.modifyworkoutplan.map((dayPlan, index) => (
-              <tr key={index}>
-                <td>{dayPlan.day}</td>
-                <td>
-                  <ul>
-                    {dayPlan.bodyPart.map((part, i) => (
-                      <li key={i}>{part}</li>
-                    ))}
-                  </ul>
-                </td>
-                <td>
-                  <ul>
-                    {dayPlan.workout.length > 0 ? (
-                      dayPlan.workout.map((workout, i) => (
-                        <li key={i}>
-                          {workout.bodyPart}: {workout.name}
-                        </li>
-                      ))
-                    ) : (
-                      <li>Rest</li>
-                    )}
-                  </ul>
-                </td>
-              </tr>
+      if (json?.workout_plan) {
+        return (
+          <div className="workout-plan">
+            {json.workout_plan.map((dayPlan, idx) => (
+              <motion.div
+                key={idx}
+                className="day-card"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <h6>
+                  {dayPlan.day} –{" "}
+                  <span className="highlight">
+                    {dayPlan.bodyPart?.join(", ")}
+                  </span>
+                </h6>
+                <ul>
+                  {dayPlan.workout.map((exercise, i) => (
+                    <li key={i}>• {exercise.name}</li>
+                  ))}
+                </ul>
+              </motion.div>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-      </div>;
-    } else {
-      return (
-        <div className="container">
-          <h2 className="text-center mt-4 mb-4">JSON Data Table</h2>
-          <div className="table-responsive">
-            <table className="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th scope="col">Key</th>
-                  <th scope="col">Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(jsonData).map(([key, value]) => (
-                  <tr key={key}>
-                    <td>{key}</td>
-                    <td>
-                      {typeof value === "object"
-                        ? JSON.stringify(value, null, 2)
-                        : value}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <Button
+              variant="success"
+              className="mt-3"
+              onClick={() => savePlan(json.workout_plan)}
+            >
+              💾 Save Plan
+            </Button>
+            <h6 className="mt-3">📌 General Instructions</h6>
+            <ul>
+              {json.general_instructions?.map((tip, i) => (
+                <li key={i}>{tip}</li>
+              ))}
+            </ul>
           </div>
-        </div>
-      );
-    }
-    // return (
-    //   <table className="aitrainer-json-table">
-    //     <tbody>
-    //       {Object.entries(jsonData).map(([key, value]) => (
-    //         <tr key={key}>
-    //           <td>{key}</td>
-    //           <td>{JSON.stringify(value, null, 2)}</td>
-    //         </tr>
-    //       ))}
-    //     </tbody>
-    //   </table>
-    // );
-  };
+        );
+      }
 
-  const isJSON = (str) => {
-    try {
-      JSON.parse(str);
-      return true;
-    } catch (e) {
-      return false;
+      return <div className="message-text">{text}</div>;
+    } catch {
+      return <div className="message-text">{text}</div>;
     }
   };
 
-  useEffect(() => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [history, loading]);
+  const renderMessage = (message, index) => (
+    <motion.div
+      key={index}
+      className={`message ${message.role}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {renderStructuredMessage(message.parts[0].text)}
+    </motion.div>
+  );
 
   const loadReport = async () => {
-    const email = await localStorage.getItem("email");
     try {
+      const email = localStorage.getItem("email");
       const healthDoc = await getDoc(doc(db, "healthdata", email));
       if (healthDoc.exists()) {
         const healthData = healthDoc.data();
         setReport(healthData);
         setModalIsOpen(true);
         setPrompt({ question: JSON.stringify(healthData) });
-        handleSubmit(); // Send the health data to the AI model
-      }
-    } catch (error) {
-      toast.error("Internal error occurred. Please try again later.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
-  };
-  const [explore, setExplore] = useState(false);
-  const [modifyWorkoutPlan, setModifyWorkoutPlan] = useState(false);
-  const [existingWorkoutPlan, setExistingWorkoutPlan] = useState([]);
-  const getWorkoutPlan = async () => {
-    setModifyWorkoutPlan(true);
-    try {
-      const existingWorkoutPlan = await getDoc(doc(db, "workoutplan", value));
-      if (existingWorkoutPlan.exists()) {
-        const workouts = existingWorkoutPlan.data();
-        const modifiedWorkouts = {
-          modifyworkoutplan: workouts.workoutPlan,
-        }; // Create a new object with the desired key
-
-        setExistingWorkoutPlan(workouts);
-        // Set the prompt to modify the existing workout plan
-        setPrompt({
-          question: JSON.stringify(modifiedWorkouts),
-        });
-        handleSubmit(); // Send the prompt to the AI model
-        console.log(modifiedWorkouts); // Logging the new object with the modified key
       } else {
-        console.log("No such document!");
+        toast.info("No saved health report found.");
       }
-    } catch (error) {
-      console.log("error: " + error);
+    } catch {
+      toast.error("⚠️ Internal error, try again later.");
     }
   };
 
-  const letsExploreButton = () => {
-    setExplore(true);
-  };
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history, loading]);
 
   return (
     <div>
       <Navbar />
-      <div className="aitrainer-container">
+      <div className="chat-container">
         {value ? (
-          <div className="aitrainer-chat-box">
-            <h4>
-              <center>FITNESS COACH: SHIVA</center>
-            </h4>
-            <div className="aitrainer-message-container">
-              <div className="aitrainer-model-message aitrainer-message">
-                <p className="aitrainer-message-text">
-                  Namaste! I am Shiva, your personal strength and wellness
-                  coach. Tell me, what brings you to Let's Workout? To best
-                  guide your training, please tell me what you'd like to focus
-                  on this week. Would you like a balanced workout routine
-                  targeting all muscle groups or something specific? 💪 Let's
-                  create a routine that will make you feel your best! 😄
-                </p>
-                <div className="row">
-                  <Row className=" d-flex justify-content-center">
-                    {/* <Col xs="auto"> */}
-                    <Button
-                      className="w-25 m-3"
-                      onClick={() => getWorkoutPlan()}
-                      variant="primary"
-                    >
-                      Modify Workout Plan
-                    </Button>
-                    {/* </Col> */}
-                    {/* <Col xs="auto"> */}
-                    <Button
-                      onClick={() => setExplore(true)}
-                      className="w-25 m-3"
-                      variant="secondary"
-                    >
-                      Create Workout Plan
-                    </Button>
-                    {/* </Col> */}
-                    {/* <Col xs="auto"> */}
-                    <Button
-                      className="w-25 m-3"
-                      onClick={() => letsExploreButton()}
-                      variant="success"
-                    >
-                      Just Explore
-                    </Button>
-                    {/* </Col> */}
-                  </Row>
-                </div>
-              </div>
-              {modifyWorkoutPlan && (
-                <div className="aitrainer-model-message aitrainer-message">
-                  <p className="aitrainer-message-text">
-                    Workout loaded successfully💪 click on chat to chat with
-                    model
-                  </p>
-                </div>
-              )}
+          <div className="chat-box">
+            <h3 className="chat-title neon-text">💪 Arjun – Your Fitness Coach</h3>
 
-              {explore && (
-                <div className="aitrainer-model-message aitrainer-message">
-                  <p className="aitrainer-message-text">
-                    Let me know how can I help you dear 😄
-                  </p>
-                </div>
-              )}
+            <div className="messages-container">
+              {history.map((msg, i) => renderMessage(msg, i))}
 
-              {history.map((message, index) => (
-                <div
-                  key={index}
-                  className={`${
-                    message.role === "user"
-                      ? "aitrainer-user-message"
-                      : "aitrainer-model-message"
-                  } aitrainer-message`}
-                >
-                  <p className="aitrainer-message-text">
-                    {message.role === "user" && isJSON(message.parts[0].text)
-                      ? renderJSONTable(JSON.parse(message.parts[0].text))
-                      : renderMessageContent(message.parts[0].text)}
-                  </p>
-                </div>
-              ))}
               {currentQuestion && (
-                <div className="aitrainer-user-message aitrainer-message">
-                  <p className="aitrainer-message-text">
-                    {isJSON(currentQuestion)
-                      ? renderJSONTable(JSON.parse(currentQuestion))
-                      : renderMessageContent(currentQuestion)}
-                  </p>
-                </div>
+                <motion.div className="message user">
+                  <div className="message-text">{currentQuestion}</div>
+                </motion.div>
               )}
+
               {loading && (
-                <div className="aitrainer-model-message aitrainer-message loading-animation">
-                  <div className="loading-balls">
-                    <div
-                      className="ball"
-                      style={{ backgroundColor: "#e74c3c" }}
-                    ></div>
-                    <div
-                      className="ball"
-                      style={{ backgroundColor: "#f39c12" }}
-                    ></div>
-                    <div
-                      className="ball"
-                      style={{ backgroundColor: "#f1c40f" }}
-                    ></div>
-                    <div
-                      className="ball"
-                      style={{ backgroundColor: "#2ecc71" }}
-                    ></div>
-                  </div>
+                <div className="typing-loader">
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
               )}
+
               <div ref={messageEndRef}></div>
             </div>
-            {/* {explore && (
-              <div className="aitrainer-input-container">
-                <input
-                  type="text"
-                  className="aitrainer-user-input"
-                  value={prompt.question}
-                  onChange={handleChange}
-                  placeholder="Type your question here..."
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSubmit();
-                  }}
-                />
-                <button
-                  className="aitrainer-submit-button m-1"
-                  onClick={handleSubmit}
-                  disabled={loading}
-                >
-                  {loading ? "Loading..." : "Chat"}
-                </button>
 
-                <button
-                  className="aitrainer-submit-button m-1"
-                  onClick={loadReport}
-                  disabled={loading}
-                >
-                  Load report
-                </button>
-              </div>
-            )} */}
-
-            {(modifyWorkoutPlan || explore) && (
-              <div className="aitrainer-input-container">
-                <input
-                  type="text"
-                  className="aitrainer-user-input"
-                  value={prompt.question}
-                  onChange={handleChange}
-                  placeholder="Type your question here..."
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSubmit();
-                  }}
-                />
-                <button
-                  className="aitrainer-submit-button m-1"
-                  onClick={handleSubmit}
-                  disabled={loading}
-                >
-                  {loading ? "Loading..." : "Chat"}
-                </button>
-
-                <button
-                  className="aitrainer-submit-button m-1"
-                  onClick={loadReport}
-                  disabled={loading}
-                >
-                  Load report
-                </button>
-              </div>
-            )}
+            <div className="input-dock">
+              <input
+                type="text"
+                className="chat-input"
+                value={prompt.question}
+                onChange={handleChange}
+                placeholder="Type your message..."
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              />
+              <button
+                className="send-btn glow-btn"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                ➤
+              </button>
+              <button className="report-btn glow-btn" onClick={loadReport}>
+                📊
+              </button>
+            </div>
           </div>
         ) : (
-          <div className="aitrainer-login-box">
-            <h4>Welcome to the Fitness Trainer App!</h4>
-            <p>Please log in to start your session.</p>
-            {/* Add your login form or component here */}
-          </div>
+          <h4 className="login-warning">⚠️ Please log in to continue.</h4>
         )}
-        <Modal
-          show={modalIsOpen}
-          onHide={() => setModalIsOpen(false)}
-          backdrop="static"
-          keyboard={false}
-        >
+
+        <Modal show={modalIsOpen} onHide={() => setModalIsOpen(false)}>
           <Modal.Header closeButton>
-            <Modal.Title>Report Data</Modal.Title>
+            <Modal.Title>📊 Health Report</Modal.Title>
           </Modal.Header>
-          <div className="row">
-            <p className="text-warning mx-3">
-              Please visit profile page to change your health data
-            </p>
-          </div>
           <Modal.Body>
-            {Object.keys(report).map((key) => (
-              <div key={key} className="report-item">
-                <strong>{key}:</strong> {report[key]}
-              </div>
-            ))}
+            {Object.keys(report).length === 0 ? (
+              <div>No data</div>
+            ) : (
+              Object.keys(report).map((key) => (
+                <div key={key} className="report-item">
+                  <strong>{key}: </strong> {report[key]}
+                </div>
+              ))
+            )}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setModalIsOpen(false)}>
-              Close
-            </Button>
+            <Button onClick={() => setModalIsOpen(false)}>Close</Button>
           </Modal.Footer>
         </Modal>
+
         <ToastContainer />
       </div>
     </div>
   );
 }
 
-export default Home;
+export default Trainer;

@@ -1,8 +1,8 @@
 /* Signup.css */
 
 .signup-container {
-    background-color: #121212;
-    color: #f0f0f0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -16,38 +16,42 @@
   }
   
   .signup-form {
-    background-color: #1f1f1f;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
     padding: 40px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
   }
   
   .signup-form-control {
-    background-color: #1f1f1f;
-    color: #f0f0f0;
-    border: 1px solid #444;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
+    background-color: var(--color-elevated);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
   }
   
   .signup-form-control:focus {
-    background-color: #333;
-    border-color: #6200ea;
-    color: #f0f0f0;
+    background-color: var(--color-elevated);
+    border-color: var(--color-primary-700);
+    color: var(--color-text);
     outline: none;
+    box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.15);
   }
   
   .signup-btn-primary {
-    background-color: #6200ea;
+    background-color: var(--color-primary);
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: #f0f0f0;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    color: #fff;
     cursor: pointer;
+    transition: background 0.2s ease;
   }
   
   .signup-btn-primary:hover {
-    background-color: #3700b3;
+    background-color: var(--color-primary-600);
   }
   
   .signup-invalid-feedback {
@@ -55,15 +59,15 @@
   }
   
   .signup-text-muted {
-    color: #b0b0b0;
+    color: var(--color-text-muted);
   }
   
   .signup-link-primary {
-    color: #6200ea;
+    color: var(--color-primary);
     text-decoration: none;
   }
   
   .signup-link-primary:hover {
-    color: #3700b3;
+    color: var(--color-primary-600);
   }
   

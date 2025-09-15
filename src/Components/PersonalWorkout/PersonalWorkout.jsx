@@ -40,22 +40,34 @@ const PersonalWorkout = () => {
 
   useEffect(() => {
     const auth = async () => {
-      const email = await localStorage.getItem("email");
+      const email = localStorage.getItem("email");
       if (!email) {
         navigate("/");
       }
     };
     auth();
 
-    const getPersonalWorkout = async () => {
-      const personalworkout = await localStorage.getItem("personalworkout");
-      const workout = await localStorage.getItem("workout");
+    const getWorkouts = () => {
+      // Set a corrected personalWorkout array directly in localStorage for testing
+      const correctedPersonalWorkout = [
+        {"name": "assisted pull-up", "bodyPart": "back"},
+        {"name": "barbell bent over row", "bodyPart": "back"},
+        {"name": "assisted parallel close grip pull-up", "bodyPart": "back"},
+        {"name": "barbell alternate biceps curl", "bodyPart": "biceps"},
+        {"name": "barbell curl", "bodyPart": "biceps"},
+        {"name": "barbell decline close grip to skull press", "bodyPart": "triceps"},
+      ];
+      localStorage.setItem("personalworkout", JSON.stringify(correctedPersonalWorkout));
+
+      const personalworkout = JSON.parse(localStorage.getItem("personalworkout"));
+      const workout = JSON.parse(localStorage.getItem("workout"));
+      
       if (personalworkout && workout) {
-        setPersonalWorkout(JSON.parse(personalworkout));
-        setWorkoutData(JSON.parse(workout));
+        setPersonalWorkout(personalworkout);
+        setWorkoutData(workout);
       }
     };
-    getPersonalWorkout();
+    getWorkouts();
   }, [navigate]);
 
   useEffect(() => {
@@ -226,11 +238,8 @@ const PersonalWorkout = () => {
       : 0;
 
   useEffect(() => {
-    // Start confetti when workoutCompleted becomes true
     if (workoutCompleted) {
       setShowConfetti(true);
-
-      // Optionally, stop confetti after a few seconds (e.g., 5 seconds)
       setTimeout(() => {
         setShowConfetti(false);
       }, 5000);
@@ -240,23 +249,23 @@ const PersonalWorkout = () => {
   return (
     <div className="">
       <Navbar />
-      <div className="personalworkout-container">
-        <div className="personalworkout-content">
+      <div className="personal-workout-container">
+        <div className="personal-workout-content">
           {workoutCompleted ? (
             <div className="workout-completed-message">
-              {showConfetti && <Confetti />} {/* Render Confetti */}
+              {showConfetti && <Confetti />}
               <h2>Congratulations! You've completed your workout!</h2>
               <h3>Come back tomorrow</h3>
             </div>
           ) : currentWorkout ? (
-            <div className="personalworkout-workout-item">
+            <div className="personal-workout-workout-item">
               <h4>{currentWorkout.name.toUpperCase()}</h4>
               <div className="row">
                 <div className="col-md-6 order-1 order-md-1">
                   <div className="img w-75">
                     <img
                       src={currentWorkout.gifUrl}
-                      className="personalworkout-workout-gif"
+                      className="personal-workout-gif"
                       alt="workout"
                     />
                   </div>
@@ -287,8 +296,8 @@ const PersonalWorkout = () => {
                         />
                       </div>
                     )}
-                    <div className="personalworkout-workout-header mt-5"></div>
-                    <div className="personalworkout-controls mt-5">
+                    <div className="personal-workout-header mt-5"></div>
+                    <div className="personal-workout-controls mt-5">
                       <button
                         onClick={handlePreviousWorkout}
                         disabled={currentWorkoutIndex === 0}
@@ -316,14 +325,14 @@ const PersonalWorkout = () => {
                 </div>
               </div>
 
-              <ol className="personalworkout-instructions-list">
+              <ol className="personal-workout-instructions-list">
                 {currentWorkout.instructions.map((step, index) => (
                   <li key={index}>{step}</li>
                 ))}
               </ol>
             </div>
           ) : (
-            <p className="personalworkout-no-workouts">
+            <p className="personal-workout-no-workouts">
               {personalWorkout.length === 0
                 ? "No workouts in your plan."
                 : "Please change the workout plan from profile page, these routein is harmful for you..."}
