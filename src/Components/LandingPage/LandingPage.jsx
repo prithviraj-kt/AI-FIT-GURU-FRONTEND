@@ -708,19 +708,55 @@ function LandingPage() {
       </section>
 
       {/* Call to Action */}
-      <section style={ctaSectionStyle}>
+      <section
+        style={{
+          background: `linear-gradient(135deg, #1A1F31 0%, #2C2C4A 100%)`,
+          color: "#fff",
+          padding: "6rem 0",
+          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
         <Container>
           <Row className="justify-content-center">
             <Col lg={8} className="text-center">
-              <h2 className="fw-bold mb-3">Ready to Transform Your Life?</h2>
-              <p className="lead mb-4 opacity-75">
+              <h2
+                className="fw-bold mb-3"
+                style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
+              >
+                Ready to Transform Your Life?
+              </h2>
+              <p
+                className="lead mb-4 opacity-75"
+                style={{
+                  fontSize: "clamp(1rem, 2vw, 1.25rem)",
+                  color: "#B0B0C4",
+                }}
+              >
                 Join our community of thousands who are achieving their fitness
                 goals with our expert-backed programs.
               </p>
-              <Button style={primaryButtonStyle} size="lg" className="mt-3">
+              <Button
+                style={{
+                  padding: "1rem 2.5rem",
+                  fontWeight: "600",
+                  borderRadius: "50px",
+                  boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+                  transition: "all 0.3s ease",
+                  border: "none",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  fontSize: "0.9rem",
+                  background: `linear-gradient(135deg, #FF6B6B 0%, #E63946 100%)`, // A bold, fiery gradient
+                  color: "#fff",
+                }}
+                size="lg"
+                className="mt-3"
+              >
                 Start Your Journey Today
               </Button>
-              <p className="mt-4 small opacity-75">
+              <p className="mt-4 small opacity-75" style={{ color: "#B0B0C4" }}>
                 No credit card required • Free 14-day trial • Cancel anytime
               </p>
             </Col>
