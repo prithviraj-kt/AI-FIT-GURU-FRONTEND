@@ -3,7 +3,16 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../Navbar/Navbar";
-import { FaDumbbell, FaHeartbeat, FaRunning, FaArrowRight, FaCheck, FaChartLine, FaUserFriends, FaAward } from "react-icons/fa";
+import {
+  FaDumbbell,
+  FaHeartbeat,
+  FaRunning,
+  FaArrowRight,
+  FaCheck,
+  FaChartLine,
+  FaUserFriends,
+  FaAward,
+} from "react-icons/fa";
 import "animate.css";
 
 function LandingPage() {
@@ -11,14 +20,14 @@ function LandingPage() {
 
   // Futuristic color palette
   const colors = {
-    primary: "#6366F1",      // Electric indigo
-    secondary: "#10B981",    // Emerald green
-    accent: "#F59E0B",       // Amber
-    dark: "#0F172A",         // Deep navy
-    lightDark: "#1E293B",    // Lighter navy
-    light: "#F1F5F9",        // Light background
-    textPrimary: "#E2E8F0",  // Light text
-    textSecondary: "#94A3B8" // Muted text
+    primary: "#6366F1", // Electric indigo
+    secondary: "#10B981", // Emerald green
+    accent: "#F59E0B", // Amber
+    dark: "#0F172A", // Deep navy
+    lightDark: "#1E293B", // Lighter navy
+    light: "#F1F5F9", // Light background
+    textPrimary: "#E2E8F0", // Light text
+    textSecondary: "#94A3B8", // Muted text
   };
 
   const heroSectionStyle = {
@@ -31,7 +40,7 @@ function LandingPage() {
     textAlign: "center",
     padding: "2rem 0",
     position: "relative",
-    overflow: "hidden"
+    overflow: "hidden",
   };
 
   // Add futuristic background elements
@@ -46,7 +55,7 @@ function LandingPage() {
       radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
       radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 40%)
     `,
-    zIndex: 0
+    zIndex: 0,
   };
 
   const featureCardStyle = {
@@ -58,13 +67,13 @@ function LandingPage() {
     textAlign: "center",
     overflow: "hidden",
     height: "100%",
-    border: `1px solid rgba(255, 255, 255, 0.05)`
+    border: `1px solid rgba(255, 255, 255, 0.05)`,
   };
 
   const featureCardHoverStyle = {
     transform: "translateY(-12px)",
     boxShadow: `0 15px 35px rgba(99, 102, 241, 0.2)`,
-    border: `1px solid rgba(99, 102, 241, 0.3)`
+    border: `1px solid rgba(99, 102, 241, 0.3)`,
   };
 
   const ctaSectionStyle = {
@@ -117,12 +126,14 @@ function LandingPage() {
   };
 
   return (
-    <div style={{ 
-      fontFamily: "'Inter', sans-serif", 
-      overflowX: "hidden",
-      backgroundColor: colors.dark,
-      color: colors.textPrimary
-    }}>
+    <div
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        overflowX: "hidden",
+        backgroundColor: colors.dark,
+        color: colors.textPrimary,
+      }}
+    >
       <Navbar />
 
       {/* Hero Section */}
@@ -131,21 +142,42 @@ function LandingPage() {
         <Container style={{ position: "relative", zIndex: 1 }}>
           <Row className="justify-content-center">
             <Col lg={10}>
-              <h6 className="text-uppercase mb-3 animate__animated animate__fadeIn" 
-                  style={{ color: colors.accent, letterSpacing: "3px", fontSize: "0.9rem" }}>
+              <h6
+                className="text-uppercase mb-3 animate__animated animate__fadeIn"
+                style={{
+                  color: colors.accent,
+                  letterSpacing: "3px",
+                  fontSize: "0.9rem",
+                }}
+              >
                 Premium Fitness Experience
               </h6>
-              <h1 className="display-3 fw-bold mb-4 animate__animated animate__fadeInDown" style={{ lineHeight: "1.2" }}>
+              <h1
+                className="display-3 fw-bold mb-4 animate__animated animate__fadeInDown"
+                style={{ lineHeight: "1.2" }}
+              >
                 Transform Your Body, <br />
-                <span style={{ 
-                  background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
-                }}>Transform Your Life</span>
+                <span
+                  style={{
+                    background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  Transform Your Life
+                </span>
               </h1>
-              <p className="lead mb-5 animate__animated animate__fadeInUp" 
-                 style={{ fontSize: "1.3rem", maxWidth: "700px", margin: "0 auto", color: colors.textSecondary }}>
-                Expert coaching, measurable results, and a supportive community designed to help you achieve your fitness goals.
+              <p
+                className="lead mb-5 animate__animated animate__fadeInUp"
+                style={{
+                  fontSize: "1.3rem",
+                  maxWidth: "700px",
+                  margin: "0 auto",
+                  color: colors.textSecondary,
+                }}
+              >
+                Expert coaching, measurable results, and a supportive community
+                designed to help you achieve your fitness goals.
               </p>
               {/* <div className="d-flex gap-3 justify-content-center flex-wrap animate__animated animate__fadeInUp animate__delay-1s">
                 <Button style={primaryButtonStyle} className="btn-hover">
@@ -166,23 +198,55 @@ function LandingPage() {
         <Container style={{ position: "relative", zIndex: 1 }}>
           <Row className="text-center">
             <Col md={3} className="mb-5 mb-md-0">
-              <FaUserFriends size={40} style={{ color: colors.primary, marginBottom: "1rem" }} />
-              <h2 className="fw-bold display-4" style={{ color: colors.textPrimary }}>15K+</h2>
+              <FaUserFriends
+                size={40}
+                style={{ color: colors.primary, marginBottom: "1rem" }}
+              />
+              <h2
+                className="fw-bold display-4"
+                style={{ color: colors.textPrimary }}
+              >
+                15K+
+              </h2>
               <p style={{ color: colors.textSecondary }}>Active Members</p>
             </Col>
             <Col md={3} className="mb-5 mb-md-0">
-              <FaAward size={40} style={{ color: colors.accent, marginBottom: "1rem" }} />
-              <h2 className="fw-bold display-4" style={{ color: colors.textPrimary }}>98%</h2>
+              <FaAward
+                size={40}
+                style={{ color: colors.accent, marginBottom: "1rem" }}
+              />
+              <h2
+                className="fw-bold display-4"
+                style={{ color: colors.textPrimary }}
+              >
+                98%
+              </h2>
               <p style={{ color: colors.textSecondary }}>Satisfaction Rate</p>
             </Col>
             <Col md={3} className="mb-5 mb-md-0">
-              <FaDumbbell size={40} style={{ color: colors.secondary, marginBottom: "1rem" }} />
-              <h2 className="fw-bold display-4" style={{ color: colors.textPrimary }}>250+</h2>
+              <FaDumbbell
+                size={40}
+                style={{ color: colors.secondary, marginBottom: "1rem" }}
+              />
+              <h2
+                className="fw-bold display-4"
+                style={{ color: colors.textPrimary }}
+              >
+                250+
+              </h2>
               <p style={{ color: colors.textSecondary }}>Expert Coaches</p>
             </Col>
             <Col md={3}>
-              <FaChartLine size={40} style={{ color: colors.primary, marginBottom: "1rem" }} />
-              <h2 className="fw-bold display-4" style={{ color: colors.textPrimary }}>10+</h2>
+              <FaChartLine
+                size={40}
+                style={{ color: colors.primary, marginBottom: "1rem" }}
+              />
+              <h2
+                className="fw-bold display-4"
+                style={{ color: colors.textPrimary }}
+              >
+                10+
+              </h2>
               <p style={{ color: colors.textSecondary }}>Years Experience</p>
             </Col>
           </Row>
@@ -194,116 +258,333 @@ function LandingPage() {
         <Container>
           <Row className="justify-content-center mb-5">
             <Col lg={8} className="text-center">
-              <h6 className="text-uppercase mb-3" style={{ color: colors.accent, letterSpacing: "2px" }}>Why Choose Us</h6>
-              <h2 className="fw-bold mb-4" style={{ color: colors.textPrimary }}>Professional Approach to Your Fitness Journey</h2>
-              <p style={{ color: colors.textSecondary }}>Our scientifically-backed methods and personalized approach ensure you get the results you deserve.</p>
+              <h6
+                className="text-uppercase mb-3"
+                style={{ color: colors.accent, letterSpacing: "2px" }}
+              >
+                Why Choose Us
+              </h6>
+              <h2
+                className="fw-bold mb-4"
+                style={{ color: colors.textPrimary }}
+              >
+                Professional Approach to Your Fitness Journey
+              </h2>
+              <p style={{ color: colors.textSecondary }}>
+                Our scientifically-backed methods and personalized approach
+                ensure you get the results you deserve.
+              </p>
             </Col>
           </Row>
           <Row className="g-4">
-            <Col md={4}>
+            <Col md={3}>
               <Card
                 style={{
                   ...featureCardStyle,
-                  ...(hoveredCard === 1 ? featureCardHoverStyle : {})
-                }}
-                onMouseEnter={() => setHoveredCard(1)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <div className="p-4">
-                  <div className="mb-4" style={{ 
-                    width: "80px", 
-                    height: "80px", 
-                    borderRadius: "20px", 
-                    background: `linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%)`, 
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    margin: "0 auto",
-                    transform: "rotate(45deg)",
-                    transition: "transform 0.3s ease"
-                  }}>
-                    <FaDumbbell size={30} style={{ color: colors.primary, transform: "rotate(-45deg)" }} />
-                  </div>
-                  <Card.Title className="fw-bold mb-3 fs-5" style={{ color: colors.textPrimary }}>Personalized Workouts</Card.Title>
-                  <Card.Text style={{ color: colors.textSecondary }}>
-                    Custom training plans tailored to your body type, goals, and lifestyle with regular adjustments based on progress.
-                  </Card.Text>
-                  <div className="text-start mt-4">
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Goal-specific programming</p>
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Form correction guidance</p>
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Progressive overload tracking</p>
-                  </div>
-                </div>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card
-                style={{
-                  ...featureCardStyle,
-                  ...(hoveredCard === 2 ? featureCardHoverStyle : {})
+                  ...(hoveredCard === 2 ? featureCardHoverStyle : {}),
                 }}
                 onMouseEnter={() => setHoveredCard(2)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <div className="p-4">
-                  <div className="mb-4" style={{ 
-                    width: "80px", 
-                    height: "80px", 
-                    borderRadius: "20px", 
-                    background: `linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, transparent 100%)`, 
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    margin: "0 auto",
-                    transform: "rotate(45deg)",
-                    transition: "transform 0.3s ease"
-                  }}>
-                    <FaHeartbeat size={30} style={{ color: colors.accent, transform: "rotate(-45deg)" }} />
+                  <div
+                    className="mb-4"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "20px",
+                      background: `linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, transparent 100%)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 auto",
+                      transform: "rotate(45deg)",
+                      transition: "transform 0.3s ease",
+                    }}
+                  >
+                    <FaHeartbeat
+                      size={30}
+                      style={{
+                        color: colors.accent,
+                        transform: "rotate(-45deg)",
+                      }}
+                    />
                   </div>
-                  <Card.Title className="fw-bold mb-3 fs-5" style={{ color: colors.textPrimary }}>Health & Nutrition</Card.Title>
+                  <Card.Title
+                    className="fw-bold mb-3 fs-5"
+                    style={{ color: colors.textPrimary }}
+                  >
+                    1000+ workout catelog
+                  </Card.Title>
                   <Card.Text style={{ color: colors.textSecondary }}>
-                    Comprehensive nutrition planning with evidence-based recommendations and personalized macro tracking.
+                    Choose workout from 1000+ exercises with detailed
+                    instructions and demonstrations.
                   </Card.Text>
                   <div className="text-start mt-4">
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Custom meal plans</p>
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Supplement guidance</p>
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Habit formation system</p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Calisthenics workouts
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Filter by equipment and body parts
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Multi-level filtering options
+                    </p>
                   </div>
                 </div>
               </Card>
             </Col>
-            <Col md={4}>
+            <Col md={3}>
               <Card
                 style={{
                   ...featureCardStyle,
-                  ...(hoveredCard === 3 ? featureCardHoverStyle : {})
+                  ...(hoveredCard === 1 ? featureCardHoverStyle : {}),
+                }}
+                onMouseEnter={() => setHoveredCard(1)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div className="p-4">
+                  <div
+                    className="mb-4"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "20px",
+                      background: `linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 auto",
+                      transform: "rotate(45deg)",
+                      transition: "transform 0.3s ease",
+                    }}
+                  >
+                    <FaDumbbell
+                      size={30}
+                      style={{
+                        color: colors.primary,
+                        transform: "rotate(-45deg)",
+                      }}
+                    />
+                  </div>
+                  <Card.Title
+                    className="fw-bold mb-3 fs-5"
+                    style={{ color: colors.textPrimary }}
+                  >
+                    Personalized Workouts
+                  </Card.Title>
+                  <Card.Text style={{ color: colors.textSecondary }}>
+                    Custom training plans tailored to your body type, goals, and
+                    lifestyle with regular adjustments based on progress.
+                  </Card.Text>
+                  <div className="text-start mt-4">
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Goal-specific programming
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Form correction guidance
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Progressive overload tracking
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col md={3}>
+              <Card
+                style={{
+                  ...featureCardStyle,
+                  ...(hoveredCard === 2 ? featureCardHoverStyle : {}),
+                }}
+                onMouseEnter={() => setHoveredCard(2)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div className="p-4">
+                  <div
+                    className="mb-4"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "20px",
+                      background: `linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, transparent 100%)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 auto",
+                      transform: "rotate(45deg)",
+                      transition: "transform 0.3s ease",
+                    }}
+                  >
+                    <FaHeartbeat
+                      size={30}
+                      style={{
+                        color: colors.accent,
+                        transform: "rotate(-45deg)",
+                      }}
+                    />
+                  </div>
+                  <Card.Title
+                    className="fw-bold mb-3 fs-5"
+                    style={{ color: colors.textPrimary }}
+                  >
+                    Health & Nutrition
+                  </Card.Title>
+                  <Card.Text style={{ color: colors.textSecondary }}>
+                    Comprehensive nutrition planning with evidence-based
+                    recommendations and personalized macro tracking.
+                  </Card.Text>
+                  <div className="text-start mt-4">
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Custom meal plans
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Supplement guidance
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Habit formation system
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+            <Col md={3}>
+              <Card
+                style={{
+                  ...featureCardStyle,
+                  ...(hoveredCard === 3 ? featureCardHoverStyle : {}),
                 }}
                 onMouseEnter={() => setHoveredCard(3)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <div className="p-4">
-                  <div className="mb-4" style={{ 
-                    width: "80px", 
-                    height: "80px", 
-                    borderRadius: "20px", 
-                    background: `linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, transparent 100%)`, 
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    margin: "0 auto",
-                    transform: "rotate(45deg)",
-                    transition: "transform 0.3s ease"
-                  }}>
-                    <FaRunning size={30} style={{ color: colors.secondary, transform: "rotate(-45deg)" }} />
+                  <div
+                    className="mb-4"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "20px",
+                      background: `linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, transparent 100%)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 auto",
+                      transform: "rotate(45deg)",
+                      transition: "transform 0.3s ease",
+                    }}
+                  >
+                    <FaRunning
+                      size={30}
+                      style={{
+                        color: colors.secondary,
+                        transform: "rotate(-45deg)",
+                      }}
+                    />
                   </div>
-                  <Card.Title className="fw-bold mb-3 fs-5" style={{ color: colors.textPrimary }}>Progress Analytics</Card.Title>
+                  <Card.Title
+                    className="fw-bold mb-3 fs-5"
+                    style={{ color: colors.textPrimary }}
+                  >
+                    Progress Analytics
+                  </Card.Title>
                   <Card.Text style={{ color: colors.textSecondary }}>
-                    Advanced tracking with visual analytics to monitor performance, body composition, and milestone achievements.
+                    Advanced tracking with visual analytics to monitor
+                    performance, body composition, and milestone achievements.
                   </Card.Text>
                   <div className="text-start mt-4">
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Body measurement tracking</p>
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Performance analytics</p>
-                    <p className="small" style={{ color: colors.textSecondary }}><FaCheck className="me-2" style={{ color: colors.secondary }} />Custom report generation</p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Body measurement tracking
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Performance analytics
+                    </p>
+                    <p
+                      className="small"
+                      style={{ color: colors.textSecondary }}
+                    >
+                      <FaCheck
+                        className="me-2"
+                        style={{ color: colors.secondary }}
+                      />
+                      Custom report generation
+                    </p>
                   </div>
                 </div>
               </Card>
@@ -317,59 +598,107 @@ function LandingPage() {
         <Container>
           <Row className="justify-content-center mb-5">
             <Col lg={8} className="text-center">
-              <h6 className="text-uppercase mb-3" style={{ color: colors.accent, letterSpacing: "2px" }}>Success Stories</h6>
-              <h2 className="fw-bold mb-4" style={{ color: colors.textPrimary }}>Hear From Our Members</h2>
+              <h6
+                className="text-uppercase mb-3"
+                style={{ color: colors.accent, letterSpacing: "2px" }}
+              >
+                Success Stories
+              </h6>
+              <h2
+                className="fw-bold mb-4"
+                style={{ color: colors.textPrimary }}
+              >
+                Hear From Our Members
+              </h2>
             </Col>
           </Row>
           <Row>
             <Col md={6} className="mb-4">
-              <Card style={{ 
-                border: "none", 
-                background: `linear-gradient(145deg, ${colors.lightDark} 0%, #1a243d 100%)`,
-                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)", 
-                borderRadius: "16px",
-                border: `1px solid rgba(255, 255, 255, 0.05)`
-              }}>
+              <Card
+                style={{
+                  border: "none",
+                  background: `linear-gradient(145deg, ${colors.lightDark} 0%, #1a243d 100%)`,
+                  boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+                  borderRadius: "16px",
+                  border: `1px solid rgba(255, 255, 255, 0.05)`,
+                }}
+              >
                 <Card.Body className="p-4">
                   <div className="d-flex align-items-center mb-4">
-                    <img 
-                      src="https://randomuser.me/api/portraits/women/45.jpg" 
-                      alt="User" 
-                      style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
+                    <img
+                      src="https://randomuser.me/api/portraits/women/45.jpg"
+                      alt="User"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
                     />
                     <div className="ms-3">
-                      <h6 className="mb-0 fw-bold" style={{ color: colors.textPrimary }}>Sarah Johnson</h6>
-                      <small style={{ color: colors.textSecondary }}>Lost 32lbs in 4 months</small>
+                      <h6
+                        className="mb-0 fw-bold"
+                        style={{ color: colors.textPrimary }}
+                      >
+                        Sarah Johnson
+                      </h6>
+                      <small style={{ color: colors.textSecondary }}>
+                        Lost 32lbs in 4 months
+                      </small>
                     </div>
                   </div>
-                  <p style={{ color: colors.textSecondary, fontStyle: "italic" }} className="mb-0">
-                    "The personalized approach completely changed my relationship with fitness. I've not only reached my goal weight but have maintained it for over a year now."
+                  <p
+                    style={{ color: colors.textSecondary, fontStyle: "italic" }}
+                    className="mb-0"
+                  >
+                    "The personalized approach completely changed my
+                    relationship with fitness. I've not only reached my goal
+                    weight but have maintained it for over a year now."
                   </p>
                 </Card.Body>
               </Card>
             </Col>
             <Col md={6} className="mb-4">
-              <Card style={{ 
-                border: "none", 
-                background: `linear-gradient(145deg, ${colors.lightDark} 0%, #1a243d 100%)`,
-                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)", 
-                borderRadius: "16px",
-                border: `1px solid rgba(255, 255, 255, 0.05)`
-              }}>
+              <Card
+                style={{
+                  border: "none",
+                  background: `linear-gradient(145deg, ${colors.lightDark} 0%, #1a243d 100%)`,
+                  boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
+                  borderRadius: "16px",
+                  border: `1px solid rgba(255, 255, 255, 0.05)`,
+                }}
+              >
                 <Card.Body className="p-4">
                   <div className="d-flex align-items-center mb-4">
-                    <img 
-                      src="https://randomuser.me/api/portraits/men/32.jpg" 
-                      alt="User" 
-                      style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
+                    <img
+                      src="https://randomuser.me/api/portraits/men/32.jpg"
+                      alt="User"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
                     />
                     <div className="ms-3">
-                      <h6 className="mb-0 fw-bold" style={{ color: colors.textPrimary }}>Michael Thompson</h6>
-                      <small style={{ color: colors.textSecondary }}>Gained 15lbs of muscle</small>
+                      <h6
+                        className="mb-0 fw-bold"
+                        style={{ color: colors.textPrimary }}
+                      >
+                        Michael Thompson
+                      </h6>
+                      <small style={{ color: colors.textSecondary }}>
+                        Gained 15lbs of muscle
+                      </small>
                     </div>
                   </div>
-                  <p style={{ color: colors.textSecondary, fontStyle: "italic" }} className="mb-0">
-                    "As someone who struggled to gain weight my whole life, the tailored nutrition plan and workout regimen helped me build muscle I never thought possible."
+                  <p
+                    style={{ color: colors.textSecondary, fontStyle: "italic" }}
+                    className="mb-0"
+                  >
+                    "As someone who struggled to gain weight my whole life, the
+                    tailored nutrition plan and workout regimen helped me build
+                    muscle I never thought possible."
                   </p>
                 </Card.Body>
               </Card>
@@ -385,12 +714,15 @@ function LandingPage() {
             <Col lg={8} className="text-center">
               <h2 className="fw-bold mb-3">Ready to Transform Your Life?</h2>
               <p className="lead mb-4 opacity-75">
-                Join our community of thousands who are achieving their fitness goals with our expert-backed programs.
+                Join our community of thousands who are achieving their fitness
+                goals with our expert-backed programs.
               </p>
               <Button style={primaryButtonStyle} size="lg" className="mt-3">
                 Start Your Journey Today
               </Button>
-              <p className="mt-4 small opacity-75">No credit card required • Free 14-day trial • Cancel anytime</p>
+              <p className="mt-4 small opacity-75">
+                No credit card required • Free 14-day trial • Cancel anytime
+              </p>
             </Col>
           </Row>
         </Container>
