@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -20,17 +20,26 @@ jobs:
         with:
           node-version: '18'
 
-      # 3. Install dependencies
+      # 3. Cache npm dependencies
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 4. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Build React app (ignore warnings, fail on real errors)
+      # 5. Build React app (ignore warnings, fail on real errors)
       - name: Build React app
         run: |
           set -e
           CI=false npm run build
 
-      # 5. Verify build folder exists
+      # 6. Verify build folder exists
       - name: Verify build folder
         run: |
           if [ ! -d "build" ]; then
@@ -40,7 +49,7 @@ jobs:
           echo "Build folder exists."
           ls -R build/
 
-      # 6. Configure AWS credentials
+      # 7. Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -48,10 +57,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      # 7. Sync build folder to S3
+      # 8. Sync build folder to S3
       - name: Sync build folder to S3
         run: aws s3 sync build/ s3://letsworkout --delete
 
-      # 8. Invalidate CloudFront cache
+      # 9. Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id E1HLQPG5MI6CKF --paths "/*"

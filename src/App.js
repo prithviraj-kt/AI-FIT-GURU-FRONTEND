@@ -19,6 +19,7 @@ import PersonalWorkout from "./Components/PersonalWorkout/PersonalWorkout";
 import Demoexercise from "./Components/Profile/Demo";
 import Yoga from "./Components/Home/Yoga";
 import Homedemo from "./Components/Home/Homedemo";
+import NotFound from "./Components/NotFound/NotFound";
 function App() {
   return (
     <div className="App">
@@ -42,6 +43,9 @@ function App() {
           <Route exact path="/neutritionist" element={<Neutritionist />} />
           <Route exact path="/demo" element={<Demoexercise />} />
           <Route exact path="/yoga/:id" element={<Yoga />} />
+          
+          {/* Catch-all route for 404 Not Found */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </div>
