@@ -75,7 +75,7 @@ function Home() {
   const savePlan = async (plan) => {
     try {
       const email = localStorage.getItem("email");
-      await setDoc(doc(db, "plans", email), { plan }, { merge: true });
+      await setDoc(doc(db, "dietPlan", email), { plan }, { merge: true });
       toast.success("✅ Plan saved to profile!");
     } catch {
       toast.error("❌ Failed to save plan.");
