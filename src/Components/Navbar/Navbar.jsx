@@ -132,7 +132,7 @@ function Navbar() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Developer
+                    Meet the engineer
                   </NavLink>
                   <button onClick={logout} className="navigation-btn">
                     Logout

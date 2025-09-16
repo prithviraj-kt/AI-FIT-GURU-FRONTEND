@@ -44,6 +44,10 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedTarget, setSelectedTarget] = useState(null);
+  // New: multi-select filters
+  const [selectedEquipments, setSelectedEquipments] = useState([]);
+  const [selectedBodyPartsMulti, setSelectedBodyPartsMulti] = useState([]);
+  const [selectedTargetsMulti, setSelectedTargetsMulti] = useState([]);
   const [yogaCategories, setYogaCategories] = useState([]);
   const [yogaData, setYogaData] = useState([]);
   const [selectedYogaCategory, setSelectedYogaCategory] = useState(null);
@@ -101,7 +105,7 @@ function App() {
         setYogaCategories(JSON.parse(getYoga));
       }
 
-      if (!getWorkouts || getWorkouts.length < 100) {
+      if (!getWorkouts || getWorkouts.length < 10) {
         const workoutsCollection = collection(db, "workouts");
         const querySnapshot = await getDocs(workoutsCollection);
         const workoutData = [];
@@ -149,6 +153,12 @@ function App() {
     setSelectedYogaCategory(null);
     setShowFilters(false);
     setActiveFilterLevel(1);
+    // Reset multi-selects when choosing non granular quick filters
+    if (purpose !== "equipment" && purpose !== "bodyPart") {
+      setSelectedEquipments([]);
+      setSelectedBodyPartsMulti([]);
+      setSelectedTargetsMulti([]);
+    }
 
     if (purpose === "yoga") {
       setQuickAccess("yoga");
@@ -177,28 +187,58 @@ function App() {
     setYogaData(category.poses);
   };
 
+  const computeFiltered = (base = workouts) => {
+    let result = base;
+    if (selectedEquipments.length > 0) {
+      result = result.filter((w) => selectedEquipments.includes(w.equipment));
+    }
+    if (selectedBodyPartsMulti.length > 0) {
+      result = result.filter((w) => selectedBodyPartsMulti.includes(w.bodyPart));
+    }
+    if (selectedTargetsMulti.length > 0) {
+      result = result.filter((w) => selectedTargetsMulti.includes(w.target));
+    }
+    return result;
+  };
+
   const handleItemClick = (item) => {
     setSelectedItem(item);
     setSelectedTarget(null);
 
     if (selectedType === "equipment") {
-      setFilteredWorkouts(workouts.filter((w) => w.equipment === item));
-      setActiveFilterLevel(0);
+      const next = selectedEquipments.includes(item)
+        ? selectedEquipments.filter((e) => e !== item)
+        : [...selectedEquipments, item];
+      setSelectedEquipments(next);
+      const result = computeFiltered(workouts);
+      setFilteredWorkouts(result);
+      setActiveFilterLevel( (selectedBodyPartsMulti.length>0 || selectedTargetsMulti.length>0) ? 2 : 0);
     } else if (selectedType === "bodyPart") {
-      const filtered = workouts.filter((w) => w.bodyPart === item);
+      const next = selectedBodyPartsMulti.includes(item)
+        ? selectedBodyPartsMulti.filter((b) => b !== item)
+        : [...selectedBodyPartsMulti, item];
+      setSelectedBodyPartsMulti(next);
+      // Recompute available targets from selected body parts
+      const pool = workouts.filter((w) => (next.length ? next.includes(w.bodyPart) : true));
       const targetSet = new Set();
-      filtered.forEach((d) => d.target && targetSet.add(d.target));
+      pool.forEach((d) => d.target && targetSet.add(d.target));
       setTargets([...targetSet]);
-      setFilteredWorkouts(filtered);
-      setActiveFilterLevel(targets.length > 0 ? 2 : 0);
+      const result = computeFiltered(workouts);
+      setFilteredWorkouts(result);
+      setActiveFilterLevel(targetSet.size > 0 ? 2 : 0);
     }
     setCurrentPage(1);
   };
 
   const handleTargetClick = (target) => {
-    setFilteredWorkouts(workouts.filter((w) => w.target === target));
+    const next = selectedTargetsMulti.includes(target)
+      ? selectedTargetsMulti.filter((t) => t !== target)
+      : [...selectedTargetsMulti, target];
+    setSelectedTargetsMulti(next);
     setSelectedTarget(target);
     setQuickAccess("filtered");
+    const result = computeFiltered(workouts);
+    setFilteredWorkouts(result);
     setActiveFilterLevel(0);
     setCurrentPage(1);
   };
@@ -211,6 +251,9 @@ function App() {
     setFilteredWorkouts(workouts);
     setActiveFilterLevel(0);
     setCurrentPage(1);
+    setSelectedEquipments([]);
+    setSelectedBodyPartsMulti([]);
+    setSelectedTargetsMulti([]);
   };
 
   const gotoSingleYoga = async (pose) => {
@@ -533,13 +576,13 @@ function App() {
                         padding: "8px 16px",
                         borderRadius: "20px",
                         border: "none",
-                        background: selectedItem === item 
+                        background: (selectedItem === item || selectedEquipments.includes(item)) 
                           ? `linear-gradient(135deg, ${colors.primary} 0%, #818cf8 100%)` 
                           : "rgba(255, 255, 255, 0.08)",
-                        color: selectedItem === item ? "#fff" : colors.textPrimary,
+                        color: (selectedItem === item || selectedEquipments.includes(item)) ? "#fff" : colors.textPrimary,
                         cursor: "pointer",
                         fontSize: "0.85rem",
-                        fontWeight: selectedItem === item ? "600" : "400",
+                        fontWeight: (selectedItem === item || selectedEquipments.includes(item)) ? "600" : "400",
                         transition: "all 0.2s ease",
                         display: "flex",
                         alignItems: "center",
@@ -574,13 +617,13 @@ function App() {
                         padding: "8px 16px",
                         borderRadius: "20px",
                         border: "none",
-                        background: selectedItem === item 
+                        background: (selectedItem === item || selectedBodyPartsMulti.includes(item)) 
                           ? `linear-gradient(135deg, ${colors.primary} 0%, #818cf8 100%)` 
                           : "rgba(255, 255, 255, 0.08)",
-                        color: selectedItem === item ? "#fff" : colors.textPrimary,
+                        color: (selectedItem === item || selectedBodyPartsMulti.includes(item)) ? "#fff" : colors.textPrimary,
                         cursor: "pointer",
                         fontSize: "0.85rem",
-                        fontWeight: selectedItem === item ? "600" : "400",
+                        fontWeight: (selectedItem === item || selectedBodyPartsMulti.includes(item)) ? "600" : "400",
                         transition: "all 0.2s ease",
                         display: "flex",
                         alignItems: "center",
@@ -619,13 +662,13 @@ function App() {
                           padding: "8px 16px",
                           borderRadius: "20px",
                           border: "none",
-                          background: selectedTarget === item 
+                          background: (selectedTarget === item || selectedTargetsMulti.includes(item)) 
                             ? `linear-gradient(135deg, ${colors.secondary} 0%, #34d399 100%)` 
                             : "rgba(255, 255, 255, 0.08)",
-                          color: selectedTarget === item ? "#fff" : colors.textPrimary,
+                          color: (selectedTarget === item || selectedTargetsMulti.includes(item)) ? "#fff" : colors.textPrimary,
                           cursor: "pointer",
                           fontSize: "0.85rem",
-                          fontWeight: selectedTarget === item ? "600" : "400",
+                          fontWeight: (selectedTarget === item || selectedTargetsMulti.includes(item)) ? "600" : "400",
                           transition: "all 0.2s ease",
                           display: "flex",
                           alignItems: "center",
