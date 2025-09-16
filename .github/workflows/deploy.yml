@@ -3,27 +3,44 @@ name: Deploy React App to S3 + CloudFront
 on:
   push:
     branches:
-      - main  # runs on every push to main
+      - main  # Runs on every push to main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # 4. Build React app (ignore warnings, fail on real errors)
       - name: Build React app
-        run: npm run build
+        run: |
+          set -e
+          CI=false npm run build
 
+      # 5. Verify build folder exists
+      - name: Verify build folder
+        run: |
+          if [ ! -d "build" ]; then
+            echo "Error: build folder not found!"
+            exit 1
+          fi
+          echo "Build folder exists."
+          ls -R build/
+
+      # 6. Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -31,8 +48,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      # 7. Sync build folder to S3
       - name: Sync build folder to S3
         run: aws s3 sync build/ s3://letsworkout --delete
 
+      # 8. Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id E1HLQPG5MI6CKF --paths "/*"
